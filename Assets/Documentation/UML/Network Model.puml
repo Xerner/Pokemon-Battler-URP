@@ -1,0 +1,22 @@
+@startuml "System Overview"
+
+label label as "System Overview"
+
+package Tables {
+	collections Accounts
+	collections Games
+	collections Assets
+}
+
+database MongoDB
+node Server
+
+actor UnityClient
+
+label -[hidden]-> Games
+Games <--> MongoDB
+MongoDB <--> Server : "Data queries"
+
+Server <--> UnityClient : "Request handling"
+
+@enduml

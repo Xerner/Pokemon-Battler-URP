@@ -1,0 +1,30 @@
+@startuml "General Workflow"
+
+state Launch : Game launches 
+state ConnectToServer as "Connect To Server"
+state FailedToConnect as "Failed To Connect"
+state Connected : Download asset files
+state Login : Enter username
+state NewTrainer : Enter trainer details
+state MainMenu
+state Ingame as "In Game" : Player sits in game waiting\n for players to join
+state JoinGame
+state Settings : Essentially the same\n as New Trainer
+
+[*] --> Launch
+Launch --> ConnectToServer : Assuming hardcoded IP and port
+ConnectToServer --> FailedToConnect : Fail
+FailedToConnect --> ConnectToServer : Refresh Connection
+ConnectToServer --> Connected : Success
+Connected --> Login : Clicks login
+Connected --> NewTrainer : Clicks new trainer
+Login --> MainMenu : Clicks go
+NewTrainer --> MainMenu : Clicks go
+MainMenu --> Connected : Logs out
+MainMenu --> Ingame : Clicks new game
+MainMenu --> JoinGame : Clicks join game
+JoinGame --> Ingame : Enters game ID
+MainMenu --> Settings : Clicks settings
+Settings --> MainMenu : Clicks ok
+
+@enduml

@@ -1,0 +1,19 @@
+@startuml
+
+hide empty members
+
+state JoinGame
+state ReadyUpPhase {
+	state Unready {
+
+	}
+
+	state Ready {
+		
+	}
+}
+
+[*] --> Launch
+Launch --> ReadyUpPhase
+
+@enduml

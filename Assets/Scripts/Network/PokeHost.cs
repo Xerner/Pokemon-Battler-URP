@@ -93,7 +93,7 @@ public class PokeHost : MonoBehaviour
         // and...we're off! Netcode will establish a socket connection to the host.
         //  If the socket connection fails, we'll hear back by getting an OnClientDisconnect callback for ourselves and get a message telling us the reason
         //  If the socket connection succeeds, we'll get our RecvConnectFinished invoked. This is where game-layer failures will be reported.
-        PopupManager.Instance.CreatePopupMessage($"Connecting to\n\n{transport.ConnectAddress}:{transport.ConnectPort}");
+        UIWindowManager.Instance.CreatePopupMessage($"Connecting to\n\n{transport.ConnectAddress}:{transport.ConnectPort}");
         netManager.StartClient(); // synchronous
         // I would've thought that StartClient() would return false if the server doesn't exist
         // but it actually still returns true... although IsConnectedClient is false. Don't know why
@@ -141,7 +141,7 @@ public class PokeHost : MonoBehaviour
         statusText.text = $"Connected to host {ipAddress}:{port}";
         connectionText.text = "Connected";
         connectionStatus.color = new Color(0f, 255f, 0f);
-        PopupManager.Instance.CreatePopupMessage("Connected to server");
+        UIWindowManager.Instance.CreatePopupMessage("Connected to server");
     }
 
     public void OnClientDisconnect(ulong clientId, string ipAddress, int port)
@@ -150,7 +150,7 @@ public class PokeHost : MonoBehaviour
         netManager.Shutdown();
         statusText.text = $"Failed to connect to host {ipAddress}:{port}";
         connectionStatus.color = new Color(255f, 0f, 0f);
-        PopupManager.Instance.CreatePopupMessage($"Failed to connect to server\n\nIP: {transport.ConnectAddress}\nPort: {transport.ConnectPort}");
+        UIWindowManager.Instance.CreatePopupMessage($"Failed to connect to server\n\nIP: {transport.ConnectAddress}\nPort: {transport.ConnectPort}");
     }
 
     //[ClientRpc]

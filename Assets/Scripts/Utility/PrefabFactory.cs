@@ -15,7 +15,7 @@ public class PrefabFactory<T> : MonoBehaviour where T : MonoBehaviour {
     /// </summary>
     /// <returns>New instance of prefab.</returns>
     public T Create() { 
-        OnCreate.Invoke(prefab);
+        OnCreate?.Invoke(prefab);
         return Instantiate(prefab); 
     }
 
@@ -24,15 +24,16 @@ public class PrefabFactory<T> : MonoBehaviour where T : MonoBehaviour {
     /// </summary>
     /// <returns>New instance of prefab.</returns>
     public T Create(Transform transform) {
-        OnCreate.Invoke(prefab);
-        return Instantiate(prefab, transform);
+        OnCreate?.Invoke(prefab);
+        T creation = Instantiate(prefab, transform).GetComponent<T>();
+        return creation;
     }
 
     /// <summary>
     /// Destroy this instance
     /// </summary>
     public void Destroy() {
-        Destroy();
-        OnDestroy.Invoke(prefab);
+        GameObject.Destroy(gameObject);
+        OnDestroy?.Invoke(prefab);
     }
 }

@@ -14,6 +14,7 @@ public class ViewManager : SingletonBehaviour<ViewManager>
     private static readonly Stack<GameObject> previousViews = new Stack<GameObject>();
 
     private void Start() {
+        base.Start();
         if (UseChildren) {
             if (transform.childCount == 0) throw new System.Exception("View Manager is set to use its children, but it has none!");
             addChildrenToViews();
@@ -33,7 +34,10 @@ public class ViewManager : SingletonBehaviour<ViewManager>
     }
 
     private void turnOffAllExceptFirst() {
-        foreach (var view in Views) view.SetActive(false);
+        foreach (var view in Views) {
+            if (view == null) throw new System.Exception("A view listed in View Manager is null! Maybe a view was deleted?");
+            view.SetActive(false);
+        }
         Views[0].SetActive(true);
     }
 

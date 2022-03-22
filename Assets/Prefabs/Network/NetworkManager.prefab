@@ -438,7 +438,7 @@ GameObject:
   - component: {fileID: 9006010649624356931}
   - component: {fileID: 3156959525659798688}
   - component: {fileID: 558872175283158666}
-  - component: {fileID: 1708664850576130102}
+  - component: {fileID: 7335407118148396858}
   m_Layer: 0
   m_Name: Popup Manager & Canvas
   m_TagString: Untagged
@@ -543,7 +543,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   backdrop: {fileID: 648463186}
---- !u!114 &1708664850576130102
+--- !u!114 &7335407118148396858
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -552,10 +552,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 6680967076851013907}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 45c9c6bcd39c7374db451efe89df4949, type: 3}
+  m_Script: {fileID: 11500000, guid: eb182df1ad3315b4390aebaef6b4351a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefab: {fileID: 7878922247095037375, guid: 6885453390775bc4dacb5e0ede8eeaf5, type: 3}
+  prefab: {fileID: 4441493516921702177, guid: 6885453390775bc4dacb5e0ede8eeaf5, type: 3}
   message: {fileID: 0}
 --- !u!1 &6899167114736774140
 GameObject:

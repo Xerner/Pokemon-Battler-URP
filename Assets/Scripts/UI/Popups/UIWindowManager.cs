@@ -2,14 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(PopupMessage))]
-public class PopupManager : SingletonBehaviour<PopupManager>
+[RequireComponent(typeof(UIModal))]
+public class UIWindowManager : SingletonBehaviour<UIWindowManager>
 {
     [SerializeField]
     private Transform backdrop;
     //private Dictionary<string, UIPopup> popupOptions = new Dictionary<string, UIPopup>();
 
-    private void Start() {
+    void Start() {
+        base.Start();
         backdrop.gameObject.SetActive(false);
     }
 
@@ -18,13 +19,15 @@ public class PopupManager : SingletonBehaviour<PopupManager>
     /// </summary>
     /// <param name="message"></param>
     /// <returns></returns>
-    public PopupMessage CreatePopupMessage(string message, float? height = null) {
-        PopupMessage popup;
+    public UIModal CreatePopupMessage(string message, float? height = null) {
+        UIModal popup;
+        UIModal factory = GetComponent<UIModal>();
         if (height != null) {
-            popup = GetComponent<PopupMessage>().Create(message, backdrop, (float)height);
+            popup = factory.Create(message, backdrop, (float)height);
         } else {
-            popup = GetComponent<PopupMessage>().Create(message, backdrop);
+            popup = factory.Create(message, backdrop);
         }
+        if (popup.HasBackdrop) backdrop.gameObject.SetActive(true);
         popup.OnDestroy += PopupMessageDestroyed;
         return popup;
     }
@@ -32,8 +35,7 @@ public class PopupManager : SingletonBehaviour<PopupManager>
     /// <summary>
     /// Invoked when a PopupMessage is destroyed
     /// </summary>
-    /// <param name="popup"></param>
-    private void PopupMessageDestroyed(PopupMessage popup) {
-        if (backdrop.childCount == 0) backdrop.gameObject.SetActive(false);
+    private void PopupMessageDestroyed(UIModal popup) {
+        if (backdrop.childCount == 1) backdrop.gameObject.SetActive(false);
     }
 }

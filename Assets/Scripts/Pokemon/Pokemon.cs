@@ -28,7 +28,7 @@ public class Pokemon : MonoBehaviour
 
     private void OnDestroy()
     {
-        if (CurrentField is null) throw new System.Exception($"{id}\t{name} : CurrentField is null!");
+        if (CurrentField == null) throw new System.Exception($"{id}\t{name} : CurrentField == null!");
         CurrentField.Reset();
         OnDestroyed?.Invoke(this);
     }

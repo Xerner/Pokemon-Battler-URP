@@ -71,7 +71,7 @@ public class Arena : MonoBehaviour
                 default:
                     throw new System.Exception("Invalid arena direction");
             }
-            if (this[adjacent] is ArenaCard card && card.HeldPokemon is null)
+            if (this[adjacent] is ArenaCard card && card.HeldPokemon == null)
             {
                 return card;
             }

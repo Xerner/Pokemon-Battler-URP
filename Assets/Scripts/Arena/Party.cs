@@ -8,7 +8,7 @@ public class Party : MonoBehaviour
 
     public PokeContainer NextOpen()
     {
-        foreach (PokeContainer card in cards) if (card.HeldPokemon is null) return card;
+        foreach (PokeContainer card in cards) if (card.HeldPokemon == null) return card;
         return null;
     }
 }

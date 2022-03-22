@@ -40,7 +40,7 @@ public class ShopCard : MonoBehaviour
     {
         if (pokemonName.text == "") return;
         PokeContainer container = TrainerManager.ActiveTrainer.Arena.Party.NextOpen();
-        if (container is null && TrainerManager.ActiveTrainer.IsAboutToEvolve(pokemonName.text))
+        if (container == null && TrainerManager.ActiveTrainer.IsAboutToEvolve(pokemonName.text))
         {
             container = TrainerManager.ActiveTrainer.ActivePokemon[pokemonName.text][0].CurrentField;
         }

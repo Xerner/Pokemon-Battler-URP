@@ -21,7 +21,7 @@ public class Trainer
     {
         PokeContainer container = Arena.Party.NextOpen();
         bool evolving = IsAboutToEvolve(pokemon.name);
-        if (container is null && !evolving) return false; // no fucking room
+        if (container == null && !evolving) return false; // no fucking room
         if (evolving)
         {
             pokemon = pokemon.Evolve();

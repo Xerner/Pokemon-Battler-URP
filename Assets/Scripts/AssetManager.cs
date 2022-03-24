@@ -5,10 +5,8 @@ using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class AssetManager : MonoBehaviour
+public class AssetManager : SingletonBehaviour<AssetManager>
 {
-    public static AssetManager Singleton;
-
     #region Pokemon stuff
     public static Dictionary<string, GameObject> PokemonPrefabs;
     public static Dictionary<string, Pokemon> Pokemon;
@@ -22,14 +20,9 @@ public class AssetManager : MonoBehaviour
     public Sprite[] TrainerBackgrounds;
     public Sprite[] ShopCardSprites; // Initialized in the editor
 
-    private void Awake()
+    private new void Start()
     {
-        Singleton = this;
-    }
-
-    private void Start()
-    {
-
+        base.Start();
         //PokemonPrefabs = LoadResource<GameObject>("Prefabs/Pokemon", "*.prefab");
         //Pokemon = new Dictionary<string, Pokemon>();
         //foreach (string key in PokemonPrefabs.Keys)

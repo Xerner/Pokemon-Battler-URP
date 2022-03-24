@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class MainMenu : SingletonBehaviour<MainMenu>
 {
+    public void CreateGame() => PokeHost.Instance.CreateGame();
+
     public void JoinGame(string ipAddress, string port) {
         PokeHost pokehost = NetworkManager.Singleton.gameObject.GetComponent<PokeHost>();
         // port validation

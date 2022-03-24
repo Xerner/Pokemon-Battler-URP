@@ -9,11 +9,13 @@ using UnityEngine;
 public class SingletonBehaviour<T> : MonoBehaviour
 {
     public static T Instance;
+    public static T Singleton;
 
     protected void Start()
     {
         if (Instance == null) {
             Instance = GetComponent<T>();
+            Singleton = GetComponent<T>();
         } else {
             Destroy(this);
         }

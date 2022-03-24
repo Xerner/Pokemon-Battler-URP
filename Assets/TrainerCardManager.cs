@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
-public class TrainerCardManager : MonoBehaviour
+public class TrainerCardManager : SingletonBehaviour<TrainerCardManager>
 {
     public GameObject TrainerCardPrefab; // set in the editor
     public Transform VerticalLayoutGroup; // set in the editor
@@ -11,12 +11,10 @@ public class TrainerCardManager : MonoBehaviour
     public List<TrainerCard> TrainerCards = new List<TrainerCard>();
     private Dictionary<ulong, int> trainerCardIndexes = new Dictionary<ulong, int>();
 
-    public static TrainerCardManager Singleton;
-
     // Need to make sure the Network has a way to access this classes functions
-    private void Awake()
+    private new void Awake()
     {
-        Singleton = this;
+        base.Start();
     }
 
     /// <summary>

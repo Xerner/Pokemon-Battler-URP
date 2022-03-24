@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 [RequireComponent(typeof(NetworkManager))]
 [RequireComponent(typeof(UNetTransport))]
-public class PokeHost : MonoBehaviour
+public class PokeHost : SingletonBehaviour<PokeHost>
 {
     [HeaderAttribute("Debug")]
     public bool debugMode = false;
@@ -20,11 +20,10 @@ public class PokeHost : MonoBehaviour
     private const int maxConnections = 8;
     private bool alreadyInArena = false;
     public TrainerCardManager TrainerCardManager;
-    public static PokeHost Singleton;
 
-    private void Start()
+    private new void Start()
     {
-        Singleton = this;
+        base.Start();
         netManager = NetworkManager.Singleton;
         connectionText.text = "No connection";
         connectionStatus.color = new Color(255f, 0f, 0f);

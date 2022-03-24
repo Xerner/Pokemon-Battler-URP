@@ -9,7 +9,7 @@ using UnityEngine.UI;
 [RequireComponent(typeof(UNetTransport))]
 public class PokeHost : SingletonBehaviour<PokeHost>
 {
-    [HeaderAttribute("Debug")]
+    [Header("Debug")]
     public bool debugMode = false;
 
     [SerializeField] private TMPro.TextMeshProUGUI statusText;
@@ -31,21 +31,20 @@ public class PokeHost : SingletonBehaviour<PokeHost>
         if (SceneManager.GetActiveScene().name == "ArenaScene")
         {
             alreadyInArena = true;
-            ArenaInit();
+            InitializeArena();
             CreateGame();
         }
     }
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        Debug.Log("Loaded scene: " + scene.name);
         if (scene.name == "ArenaScene")
         {
-            ArenaInit();
+            InitializeArena();
         }
     }
 
-    public void ArenaInit()
+    public void InitializeArena()
     {
         TrainerCardManager = TrainerCardManager.Singleton;
         // Add the main user to the game

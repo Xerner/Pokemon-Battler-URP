@@ -3186,8 +3186,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 7867902448749005820}
-        m_TargetAssemblyTypeName: PokeHost, Assembly-CSharp
+      - m_Target: {fileID: 800616429}
+        m_TargetAssemblyTypeName: MainMenu, Assembly-CSharp
         m_MethodName: CreateGame
         m_Mode: 1
         m_Arguments:
@@ -3300,7 +3300,7 @@ GameObject:
   - component: {fileID: 800616430}
   - component: {fileID: 800616429}
   m_Layer: 0
-  m_Name: MainMenu
+  m_Name: Main Menu
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10688,17 +10688,6 @@ PrefabInstance:
     m_RemovedComponents:
     - {fileID: 1708664850576130102, guid: 835d2876ac01408468391bf5af86296a, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 835d2876ac01408468391bf5af86296a, type: 3}
---- !u!114 &7867902448749005820 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5149308573435766298, guid: 835d2876ac01408468391bf5af86296a, type: 3}
-  m_PrefabInstance: {fileID: 7867902448749005819}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1992945179}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c5fd4aecac0d218428a837ac7c07b88c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!224 &8304367356254978108
 RectTransform:
   m_ObjectHideFlags: 0

@@ -223,7 +223,7 @@ GameObject:
   - component: {fileID: 6121341742604699274}
   - component: {fileID: 5311317637698225811}
   m_Layer: 0
-  m_Name: Connection Status
+  m_Name: Connection Status Wrapper
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -569,7 +569,7 @@ GameObject:
   - component: {fileID: 1280626270767269313}
   - component: {fileID: 6544471757019299725}
   m_Layer: 0
-  m_Name: Status
+  m_Name: Connection Status
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -737,6 +737,7 @@ GameObject:
   - component: {fileID: 4152693586573581597}
   - component: {fileID: 5149308573435766298}
   - component: {fileID: 7867902448749005821}
+  - component: {fileID: 250643689748136486}
   m_Layer: 0
   m_Name: NetworkManager
   m_TagString: Untagged
@@ -825,11 +826,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5fd4aecac0d218428a837ac7c07b88c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMode: 0
-  statusText: {fileID: 694249950}
-  connectionText: {fileID: 3613876926326332368}
-  connectionStatus: {fileID: 6544471757019299725}
-  TrainerCardManager: {fileID: 0}
 --- !u!114 &7867902448749005821
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -847,6 +843,21 @@ MonoBehaviour:
     TrainerSpriteID: 2
     TrainerBackgroundID: 2
     GameID: 
+--- !u!114 &250643689748136486
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7867902448762367929}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 427db7232d677e244b2a40cf493ce731, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  statusText: {fileID: 694249950}
+  connectionStatusText: {fileID: 3613876926326332368}
+  connectionStatusImg: {fileID: 6544471757019299725}
 --- !u!1 &8252664544681582433
 GameObject:
   m_ObjectHideFlags: 0
@@ -857,7 +868,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3016952361671963654}
   m_Layer: 0
-  m_Name: Horizontal Group
+  m_Name: Connection Status UI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

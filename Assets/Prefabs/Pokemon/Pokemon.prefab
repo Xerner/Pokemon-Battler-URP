@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7741851509344071451}
   - component: {fileID: 7741851509344071450}
   - component: {fileID: 4322659992947128400}
-  - component: {fileID: 4823540650110455334}
+  - component: {fileID: 776073486359868073}
   m_Layer: 0
   m_Name: Pokemon
   m_TagString: Untagged
@@ -120,7 +120,7 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &4823540650110455334
+--- !u!114 &776073486359868073
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -129,7 +129,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7741851509344071454}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 07d159bedc3ed9249a03e01300079e65, type: 3}
+  m_Script: {fileID: 11500000, guid: 9d5fa1a3359fc8740a81d01dd07dc7e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   tier: 0

@@ -23,16 +23,16 @@ public class ShopCard : MonoBehaviour
 
     public void SetPokemon(PokemonBehaviour pokemon)
     {
-        background.sprite = AssetManager.Singleton.ShopCardSprites[pokemon.tier-1];
+        background.sprite = AssetManager.Singleton.ShopCardSprites[pokemon.pokemon.tier -1];
         pokemonSprite.sprite = AssetManager.PokemonSprites[pokemon.name];
         pokemonSprite.SetNativeSize();
-        type1.sprite = AssetManager.PokemonTypesSprites[pokemon.type1.ToString()].MiniSprite;
-        type2.sprite = AssetManager.PokemonTypesSprites[pokemon.type2.ToString()].MiniSprite;
+        type1.sprite = AssetManager.PokemonTypesSprites[pokemon.pokemon.type1.ToString()].MiniSprite;
+        type2.sprite = AssetManager.PokemonTypesSprites[pokemon.pokemon.type2.ToString()].MiniSprite;
         type1.SetNativeSize();
         type2.SetNativeSize();
         PokemonName = pokemon.name;
         pokeDollar.SetActive(true);
-        cost = pokemon.tier;
+        cost = pokemon.pokemon.tier;
         costText.text = cost.ToString();
     }
 

@@ -20,8 +20,7 @@ public class AssetManager : SingletonBehaviour<AssetManager>
     public Sprite[] TrainerBackgrounds;
     public Sprite[] ShopCardSprites; // Initialized in the editor
 
-    private new void Start()
-    {
+    private new void Start() {
         base.Start();
         //PokemonPrefabs = LoadResource<GameObject>("Prefabs/Pokemon", "*.prefab");
         //Pokemon = new Dictionary<string, Pokemon>();

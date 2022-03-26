@@ -11,12 +11,6 @@ public class TrainerCardManager : SingletonBehaviour<TrainerCardManager>
     public List<TrainerCard> TrainerCards = new List<TrainerCard>();
     private Dictionary<ulong, int> trainerCardIndexes = new Dictionary<ulong, int>();
 
-    // Need to make sure the Network has a way to access this classes functions
-    private new void Awake()
-    {
-        base.Start();
-    }
-
     /// <summary>
     /// Using a players account settings, a new trainer is added to the list of trainer cards
     /// </summary>

@@ -9,17 +9,13 @@ using UnityEngine.UI;
 [RequireComponent(typeof(UNetTransport))]
 public class PokeHost : SingletonBehaviour<PokeHost>
 {
-    [Header("Debug")]
-    public bool debugMode = false;
-
     [SerializeField] private TMPro.TextMeshProUGUI statusText;
     [SerializeField] private TMPro.TextMeshProUGUI connectionText;
     [SerializeField] private Image connectionStatus;
 
     private NetworkManager netManager;
     private const int maxConnections = 8;
-    private bool alreadyInArena = false;
-    public TrainerCardManager TrainerCardManager;
+    private bool arenaIsStartingScene = false;
 
     private new void Start()
     {
@@ -30,7 +26,7 @@ public class PokeHost : SingletonBehaviour<PokeHost>
         SceneManager.sceneLoaded += OnSceneLoaded;
         if (SceneManager.GetActiveScene().name == "ArenaScene")
         {
-            alreadyInArena = true;
+            arenaIsStartingScene = true;
             InitializeArena();
             CreateGame();
         }
@@ -46,7 +42,6 @@ public class PokeHost : SingletonBehaviour<PokeHost>
 
     public void InitializeArena()
     {
-        TrainerCardManager = TrainerCardManager.Singleton;
         // Add the main user to the game
         if (TryGetComponent<Account>(out var account))
         {
@@ -61,7 +56,7 @@ public class PokeHost : SingletonBehaviour<PokeHost>
 
     private void AddTrainerToGame(AccountSettings settings)
     {
-            TrainerCardManager.AddTrainer(settings, netManager.LocalClientId);
+            TrainerCardManager.Singleton.AddTrainer(settings, netManager.LocalClientId);
     }
 
     /// <summary>

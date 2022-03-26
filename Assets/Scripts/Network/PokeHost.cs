@@ -1,19 +1,15 @@
-using System;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UNET;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 [RequireComponent(typeof(NetworkManager))]
 [RequireComponent(typeof(UNetTransport))]
+[RequireComponent(typeof(UIPersistentStatus))]
 public class PokeHost : SingletonBehaviour<PokeHost>
 {
-    [SerializeField] private TMPro.TextMeshProUGUI statusText;
-    [SerializeField] private TMPro.TextMeshProUGUI connectionText;
-    [SerializeField] private Image connectionStatus;
-
     private NetworkManager netManager;
+    private UIPersistentStatus connectionStatus;
     private const int maxConnections = 8;
     private bool arenaIsStartingScene = false;
 
@@ -21,8 +17,7 @@ public class PokeHost : SingletonBehaviour<PokeHost>
     {
         base.Start();
         netManager = NetworkManager.Singleton;
-        connectionText.text = "No connection";
-        connectionStatus.color = new Color(255f, 0f, 0f);
+        connectionStatus = GetComponent<UIPersistentStatus>();
         SceneManager.sceneLoaded += OnSceneLoaded;
         if (SceneManager.GetActiveScene().name == "ArenaScene")
         {
@@ -34,23 +29,16 @@ public class PokeHost : SingletonBehaviour<PokeHost>
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        if (scene.name == "ArenaScene")
-        {
-            InitializeArena();
-        }
+        if (scene.name == "ArenaScene") InitializeArena();
     }
 
     public void InitializeArena()
     {
         // Add the main user to the game
         if (TryGetComponent<Account>(out var account))
-        {
             AddTrainerToGame(account.settings);
-        }
         else
-        {
             Debug.LogError("No Account component found on the NetworkManager object");
-        }
     }
 
 
@@ -65,8 +53,7 @@ public class PokeHost : SingletonBehaviour<PokeHost>
     public void CreateGame()
     {
         netManager.StartHost();
-        connectionText.text = "Hosting";
-        connectionStatus.color = new Color(0f, 255f, 0f);
+        connectionStatus.SetStatus("Hosting", UIPersistentStatus.ConnectionState.Good);
         SceneManager.LoadScene(1); // 1 = arena scene
     }
 
@@ -131,9 +118,8 @@ public class PokeHost : SingletonBehaviour<PokeHost>
 
     public void OnClientConnect(ulong clientId, string ipAddress, int port)
     {
-        statusText.text = $"Connected to host {ipAddress}:{port}";
-        connectionText.text = "Connected";
-        connectionStatus.color = new Color(0f, 255f, 0f);
+        connectionStatus.SetMessage($"Connected to host {ipAddress}:{port}");
+        connectionStatus.SetStatus("Connected", UIPersistentStatus.ConnectionState.Good);
         UIWindowManager.Instance.CreatePopupMessage("Connected to server");
     }
 
@@ -141,8 +127,8 @@ public class PokeHost : SingletonBehaviour<PokeHost>
     {
         UNetTransport transport = GetComponent<UNetTransport>();
         netManager.Shutdown();
-        statusText.text = $"Failed to connect to host {ipAddress}:{port}";
-        connectionStatus.color = new Color(255f, 0f, 0f);
+        connectionStatus.SetMessage($"Failed to connect to host {ipAddress}:{port}");
+        connectionStatus.SetIdle();
         UIWindowManager.Instance.CreatePopupMessage($"Failed to connect to server\n\nIP: {transport.ConnectAddress}\nPort: {transport.ConnectPort}");
     }
 

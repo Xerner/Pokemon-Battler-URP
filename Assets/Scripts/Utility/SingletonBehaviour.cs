@@ -19,7 +19,7 @@ public class SingletonBehaviour<T> : MonoBehaviour
             Instance = GetComponent<T>();
             Singleton = GetComponent<T>();
         } else {
-            Destroy(this);
+            Destroy(gameObject);
         }
     }
 
@@ -27,7 +27,7 @@ public class SingletonBehaviour<T> : MonoBehaviour
         if (instance == null) {
             throw new System.Exception("For some reason, a SingletonBehavior failed to instantiate its singleton!");
         } else {
-            if (instance != this) Destroy(this);
+            if (instance != this) Destroy(gameObject);
         }
     }
 }

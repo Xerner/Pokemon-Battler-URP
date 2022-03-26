@@ -9,7 +9,7 @@ public class AssetManager : SingletonBehaviour<AssetManager>
 {
     #region Pokemon stuff
     public static Dictionary<string, GameObject> PokemonPrefabs;
-    public static Dictionary<string, Pokemon> Pokemon;
+    public static Dictionary<string, PokemonBehaviour> Pokemon;
     public static string[] PokemonNames;
     public static Dictionary<string, Sprite> PokemonSprites;
     public static Dictionary<string, PokemonTypeSprites> PokemonTypesSprites = new Dictionary<string, PokemonTypeSprites>();

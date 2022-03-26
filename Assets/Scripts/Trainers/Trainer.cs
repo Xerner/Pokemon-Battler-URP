@@ -13,11 +13,11 @@ public class Trainer
     private int Level;
     private int Experience;
     public int Money;
-    private Dictionary<string, List<Pokemon>> activePokemon;
+    private Dictionary<string, List<PokemonBehaviour>> activePokemon;
 
-    public Dictionary<string, List<Pokemon>> ActivePokemon { get; private set; }
+    public Dictionary<string, List<PokemonBehaviour>> ActivePokemon { get; private set; }
 
-    public bool AddPokemon(Pokemon pokemon)
+    public bool AddPokemon(PokemonBehaviour pokemon)
     {
         PokeContainer container = Arena.Party.NextOpen();
         bool evolving = IsAboutToEvolve(pokemon.name);
@@ -33,10 +33,10 @@ public class Trainer
         }
         if (!ActivePokemon.ContainsKey(pokemon.name))
         {
-            ActivePokemon.Add(pokemon.name, new List<Pokemon>());
+            ActivePokemon.Add(pokemon.name, new List<PokemonBehaviour>());
         }
         ActivePokemon[pokemon.name].Add(pokemon);
-        pokemon.OnDestroyed += (Pokemon pokemon) => ActivePokemon[pokemon.name].Remove(pokemon);
+        pokemon.OnDestroyed += (PokemonBehaviour pokemon) => ActivePokemon[pokemon.name].Remove(pokemon);
         return true;
     }
 
@@ -49,7 +49,7 @@ public class Trainer
 
     private void DeletePokemonList(string pokemonName)
     {
-        foreach (Pokemon pokemon in ActivePokemon[pokemonName])
+        foreach (PokemonBehaviour pokemon in ActivePokemon[pokemonName])
         {
             Object.Destroy(pokemon);
         }

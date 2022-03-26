@@ -5,8 +5,8 @@ using UnityEngine;
 public abstract class PokeContainer : MonoBehaviour
 {
     [HideInInspector]
-    public Pokemon HeldPokemon;
+    public PokemonBehaviour HeldPokemon;
 
     public abstract void Reset();
-    public abstract void SetPokemon(Pokemon pokemon);
+    public abstract void SetPokemon(PokemonBehaviour pokemon);
 }

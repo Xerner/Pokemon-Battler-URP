@@ -3,13 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Pokemon : MonoBehaviour
+public class PokemonBehaviour : MonoBehaviour
 {
     public int tier;
     [HideInInspector] public string id;
     [HideInInspector] public PokeContainer CurrentField;
-    [SerializeField] private Pokemon evolution;
-    [SerializeField] private Pokemon baseEvolution;
+    [SerializeField] private PokemonBehaviour evolution;
+    [SerializeField] private PokemonBehaviour baseEvolution;
     [HideInInspector] public Trainer trainer;
     public PokemonType type1;
     public PokemonType type2;
@@ -18,13 +18,13 @@ public class Pokemon : MonoBehaviour
     public bool combatMode;
     public ArenaCard combatField;
     public Allegiance Allegiance;
-    private Pokemon targetEnemy;
+    private PokemonBehaviour targetEnemy;
     //private Pathing Path;
     public bool invulnerable;
 
-    public Action<Pokemon> OnDestroyed;
+    public Action<PokemonBehaviour> OnDestroyed;
 
-    public Pokemon Evolution { get; private set; }
+    public PokemonBehaviour Evolution { get; private set; }
 
     private void OnDestroy()
     {
@@ -33,9 +33,9 @@ public class Pokemon : MonoBehaviour
         OnDestroyed?.Invoke(this);
     }
 
-    public Pokemon Evolve()
+    public PokemonBehaviour Evolve()
     {
-        Pokemon evolution = Instantiate(this.evolution, transform).GetComponent<Pokemon>();
+        PokemonBehaviour evolution = Instantiate(this.evolution, transform).GetComponent<PokemonBehaviour>();
         evolution.id = id;
         //Network.IDtoPokemon[id] = evolution;
         Destroy(this);

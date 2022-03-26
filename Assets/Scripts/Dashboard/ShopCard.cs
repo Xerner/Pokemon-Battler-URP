@@ -21,7 +21,7 @@ public class ShopCard : MonoBehaviour
     public int Cost { get => cost; set => cost = value; }
     public string PokemonName { get => pokemonName.text; private set => pokemonName.text = value; }
 
-    public void SetPokemon(Pokemon pokemon)
+    public void SetPokemon(PokemonBehaviour pokemon)
     {
         background.sprite = AssetManager.Singleton.ShopCardSprites[pokemon.tier-1];
         pokemonSprite.sprite = AssetManager.PokemonSprites[pokemon.name];
@@ -45,6 +45,6 @@ public class ShopCard : MonoBehaviour
             container = TrainerManager.ActiveTrainer.ActivePokemon[pokemonName.text][0].CurrentField;
         }
         TrainerManager.ActiveTrainer.Money -= cost;
-        TrainerManager.ActiveTrainer.AddPokemon(AssetManager.PokemonPrefabs[pokemonName.text].GetComponent<Pokemon>());
+        TrainerManager.ActiveTrainer.AddPokemon(AssetManager.PokemonPrefabs[pokemonName.text].GetComponent<PokemonBehaviour>());
     }
 }

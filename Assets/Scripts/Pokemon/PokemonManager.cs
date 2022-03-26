@@ -5,7 +5,7 @@ using UnityEngine;
 public class PokemonManager : MonoBehaviour
 {
     public GameObject PokemonPrefab;
-    private Pokemon pokemon;
+    private PokemonBehaviour pokemon;
 }
 
 public enum PokemonType

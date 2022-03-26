@@ -10,7 +10,7 @@ public class PartyCard : PokeContainer
         displayedName.text = "";
     }
 
-    public override void SetPokemon(Pokemon pokemon)
+    public override void SetPokemon(PokemonBehaviour pokemon)
     {
         displayedName.text = pokemon.name;
     }

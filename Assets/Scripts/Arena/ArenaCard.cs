@@ -8,14 +8,14 @@ public class ArenaCard : PokeContainer
 
     public Vector2Int Index;
     public Allegiance Allegiance;
-    public Pokemon CombatPokemon;
+    public PokemonBehaviour CombatPokemon;
 
     public override void Reset()
     {
         
     }
 
-    public override void SetPokemon(Pokemon pokemon)
+    public override void SetPokemon(PokemonBehaviour pokemon)
     {
         throw new System.NotImplementedException();
     }

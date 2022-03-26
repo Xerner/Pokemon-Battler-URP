@@ -11,7 +11,7 @@ public class Arena : MonoBehaviour
     [HideInInspector] public Trainer Trainer;
     [HideInInspector] public Trainer EnemyTrainer;
     [HideInInspector] public bool CombatMode;
-    private readonly Dictionary<Allegiance, List<Pokemon>> CombatGroups = new Dictionary<Allegiance, List<Pokemon>>();
+    private readonly Dictionary<Allegiance, List<PokemonBehaviour>> CombatGroups = new Dictionary<Allegiance, List<PokemonBehaviour>>();
     public Party Party;
     public GameObject CameraAnchor;
     private ArenaCard[] ArenaCards = new ArenaCard[Rows*Columns];
@@ -30,13 +30,13 @@ public class Arena : MonoBehaviour
         }
     }
     
-    public void AddPokemon(Pokemon pokemon, Allegiance allegiance)
+    public void AddPokemon(PokemonBehaviour pokemon, Allegiance allegiance)
     {
         if (CombatGroups[allegiance].IndexOf(pokemon) < 0) 
             CombatGroups[allegiance].Add(pokemon);
     }
 
-    public void RemovePokemon(Pokemon pokemon, Allegiance allegiance)
+    public void RemovePokemon(PokemonBehaviour pokemon, Allegiance allegiance)
     {
         if (CombatGroups[allegiance].IndexOf(pokemon) > 0) 
             CombatGroups[allegiance].Remove(pokemon);

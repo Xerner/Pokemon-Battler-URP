@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,20 +6,20 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Pokemon", menuName = "Pokemon/Pokemon")]
 public class Pokemon : ScriptableObject
 {
-    [Header("General")]
     [PokemonTypeIcon]
-    public PokemonType type1;
+    public EPokemonType type1;
     [PokemonTypeIcon]
-    public PokemonType type2;
-    public PokemonBehaviour evolution;
-    public PokemonBehaviour baseEvolution;
+    public EPokemonType type2;
+
+    public Pokemon evolution;
+    public Pokemon baseEvolution;
     public int EvolutionStage;
     public int tier;
 
     [Header("Shop")]
     public Sprite shopSprite;
 
-    public enum PokemonType {
+    public enum EPokemonType {
         Mystery,
         Bug,
         Dark,
@@ -40,5 +41,3 @@ public class Pokemon : ScriptableObject
         Water
     }
 }
-
-

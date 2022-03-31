@@ -6,8 +6,7 @@ using UnityEngine;
 using static Pokemon;
 using JsonModel;
 
-public class PokemonBehaviour : MonoBehaviour
-{
+public class PokemonBehaviour : MonoBehaviour {
     public Pokemon pokemon;
     public int id;
     public new string name;
@@ -24,6 +23,11 @@ public class PokemonBehaviour : MonoBehaviour
     public Action<PokemonBehaviour> OnDestroyed;
 
     private void Start() {
+        foreach (int i in Enum.GetValues(typeof(PokemonConstants.PokemonName))) {
+            print(i.ToString());
+            //WebRequests.Get<string>($"https://pokeapi.co/api/v2/pokemon/{name}/", (error) => Debug.LogError(error), (json) => Debug.Log(JsonToStats(json)));
+        }
+        return;
         if (name != "") {
             WebRequests.Get<string>($"https://pokeapi.co/api/v2/pokemon/{name}/", (error) => Debug.LogError(error), (json) => Debug.Log(JsonToStats(json)));
         } else if (id > 0) {
@@ -33,8 +37,7 @@ public class PokemonBehaviour : MonoBehaviour
         }
     }
 
-    private void OnDestroy()
-    {
+    private void OnDestroy() {
         //if (CurrentField == null) throw new System.Exception($"{id}\t{name} : CurrentField == null!");
         CurrentField.Reset();
         OnDestroyed?.Invoke(this);
@@ -45,8 +48,11 @@ public class PokemonBehaviour : MonoBehaviour
         return pokemon;
     }
 
-    public PokemonBehaviour Evolve()
-    {
+    public Pokemon PokemonFromJson() {
+        return null;
+    }
+
+    public PokemonBehaviour Evolve() {
         ////PokemonBehaviour evolution = Instantiate(pokemon.evolution, transform).GetComponent<PokemonBehaviour>();
         //evolution.id = id;
         ////Network.IDtoPokemon[id] = evolution;

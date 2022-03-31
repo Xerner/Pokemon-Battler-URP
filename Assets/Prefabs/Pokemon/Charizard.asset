@@ -12,8 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07d159bedc3ed9249a03e01300079e65, type: 3}
   m_Name: Charizard
   m_EditorClassIdentifier: 
-  type1: 7
-  type2: 8
+  types: 0000000000000000
   evolution: {fileID: 0}
   baseEvolution: {fileID: 0}
   EvolutionStage: 0

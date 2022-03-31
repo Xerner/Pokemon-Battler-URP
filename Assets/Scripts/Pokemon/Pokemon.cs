@@ -49,6 +49,18 @@ public class Pokemon : ScriptableObject {
         Water
     }
 
+    /// <summary>
+    /// Returns a valid Pokemon name for querying Poke API from the given Pokemon name
+    /// </summary>
+    /// <param name="name">A possibly valid Pokemon name</param>
+    /// <returns>A valid Pokemon name, or an empty string if the given name was invalid</returns>
+    public static string GetValidPokemonName(string name) {
+        foreach (Enum pokeName in Enum.GetValues(typeof(PokemonConstants.PokemonName))) {
+            if (name.Trim().ToLower() == pokeName.ToString().ToLower()) return pokeName.ToString();
+        }
+        return "";
+    }
+
     public class PokemonStat {
         public int baseStat;
         public int effort;

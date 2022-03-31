@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using System.Collections.Generic;
 
 /// <summary>
@@ -21,7 +22,13 @@ namespace JsonModel {
         public int order;
         //past_types TODO
         //species TODO
+
+        public static PokemonJsonModel FromJson(string json) {
+            return JsonConvert.DeserializeObject<PokemonJsonModel>(json);
+        }
     }
+
+    #region subclasses
 
     public class PokemonAbilities {
         public NameAndURL ability;
@@ -70,4 +77,6 @@ namespace JsonModel {
         public string front_shiny_female;
         //other TODO
     }
+
+    #endregion
 }

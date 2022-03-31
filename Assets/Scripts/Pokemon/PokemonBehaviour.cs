@@ -8,6 +8,8 @@ using JsonModel;
 
 public class PokemonBehaviour : MonoBehaviour {
     public Pokemon pokemon;
+    [GetPokemon]
+    public string idOrName;
     public int id;
     public new string name;
     [HideInInspector] public PokeContainer CurrentField;
@@ -23,29 +25,19 @@ public class PokemonBehaviour : MonoBehaviour {
     public Action<PokemonBehaviour> OnDestroyed;
 
     private void Start() {
-        foreach (int i in Enum.GetValues(typeof(PokemonConstants.PokemonName))) {
-            print(i.ToString());
-            //WebRequests.Get<string>($"https://pokeapi.co/api/v2/pokemon/{name}/", (error) => Debug.LogError(error), (json) => Debug.Log(JsonToStats(json)));
-        }
-        return;
         if (name != "") {
-            WebRequests.Get<string>($"https://pokeapi.co/api/v2/pokemon/{name}/", (error) => Debug.LogError(error), (json) => Debug.Log(JsonToStats(json)));
+            WebRequests.Get<string>($"https://pokeapi.co/api/v2/pokemon/{name}/", (error) => Debug.LogError(error), (json) => Debug.Log(PokemonJsonModel.FromJson(json)));
         } else if (id > 0) {
-            WebRequests.Get<string>($"https://pokeapi.co/api/v2/pokemon/{id}/", (error) => Debug.LogError(error), (json) => Debug.Log(JsonToStats(json)));
+            WebRequests.Get<string>($"https://pokeapi.co/api/v2/pokemon/{id}/", (error) => Debug.LogError(error), (json) => Debug.Log(PokemonJsonModel.FromJson(json)));
         } else {
-            Debug.LogError("Pokemon instantiated without a name or id!");
+            Debug.LogWarning("Pokemon instantiated without a name or id!");
         }
     }
 
     private void OnDestroy() {
         //if (CurrentField == null) throw new System.Exception($"{id}\t{name} : CurrentField == null!");
-        CurrentField.Reset();
+        CurrentField?.Reset();
         OnDestroyed?.Invoke(this);
-    }
-
-    PokemonJsonModel JsonToStats(string json) {
-        PokemonJsonModel pokemon = JsonConvert.DeserializeObject<PokemonJsonModel>(json);
-        return pokemon;
     }
 
     public Pokemon PokemonFromJson() {

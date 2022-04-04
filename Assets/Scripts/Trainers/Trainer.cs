@@ -44,7 +44,7 @@ public class Trainer
     {
         return activePokemon.ContainsKey(pokemonName)
             && ActivePokemon[pokemonName].Count > 1
-            && activePokemon[pokemonName][0].pokemon.evolution != null;
+            && activePokemon[pokemonName][0].Pokemon.evolution != null;
     }
 
     private void DeletePokemonList(string pokemonName)

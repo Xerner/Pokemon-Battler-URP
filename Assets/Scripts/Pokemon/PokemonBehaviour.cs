@@ -1,20 +1,23 @@
-using Newtonsoft.Json;
 using System;
-using System.Collections;
-using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
-using static Pokemon;
-using JsonModel;
 
+[RequireComponent(typeof(SpriteRenderer))]
+[RequireComponent(typeof(Animator))]
 public class PokemonBehaviour : MonoBehaviour {
-    public Pokemon pokemon;
-    [GetPokemon]
-    public string idOrName;
-    public int id;
-    public new string name;
-    [HideInInspector] public PokeContainer CurrentField;
-    [HideInInspector] public Trainer trainer;
+    private SpriteRenderer sprite;
+    private Animator animator;
+
+    // TODO: create an Attribute to print the values of pokemon as uneditable labels
+    [SerializeField][Pokemon]
+    private Pokemon pokemon;
+    [HideInInspector]
+    public PokeContainer CurrentField;
+    [HideInInspector]
+    public Trainer trainer;
     //public bool isSelected;
+
+    [Header("Combat")]
     public bool combatMode;
     public ArenaCard combatField;
     public Allegiance Allegiance;
@@ -24,13 +27,32 @@ public class PokemonBehaviour : MonoBehaviour {
 
     public Action<PokemonBehaviour> OnDestroyed;
 
+    [Header("Pokemon API")]
+    [SerializeField]
+    private string idOrName;
+
+    public Pokemon Pokemon { get; private set; }
+
     private void Start() {
-        if (name != "") {
-            WebRequests.Get<string>($"https://pokeapi.co/api/v2/pokemon/{name}/", (error) => Debug.LogError(error), (json) => Debug.Log(PokemonJsonModel.FromJson(json)));
-        } else if (id > 0) {
-            WebRequests.Get<string>($"https://pokeapi.co/api/v2/pokemon/{id}/", (error) => Debug.LogError(error), (json) => Debug.Log(PokemonJsonModel.FromJson(json)));
+        InitializeComponents();
+    }
+
+    private void InitializeComponents() {
+        if (sprite == null) sprite = GetComponent<SpriteRenderer>();
+        if (animator == null) animator = GetComponent<Animator>();
+    }
+
+    public void Initialize() => Initialize(idOrName);
+
+    public void Initialize(string idOrName) {
+        InitializeComponents();
+        if (idOrName.All(char.IsDigit) || Pokemon.GetValidPokemonName(idOrName) != "") {
+            Pokemon.GetPokemonFromAPI(idOrName, (pokemon) => {
+                this.pokemon = pokemon;
+                sprite.sprite = pokemon.sprite;
+            });
         } else {
-            Debug.LogWarning("Pokemon instantiated without a name or id!");
+            Debug.LogError("Invalid pokemon ID or name given: " + idOrName);
         }
     }
 
@@ -38,10 +60,6 @@ public class PokemonBehaviour : MonoBehaviour {
         //if (CurrentField == null) throw new System.Exception($"{id}\t{name} : CurrentField == null!");
         CurrentField?.Reset();
         OnDestroyed?.Invoke(this);
-    }
-
-    public Pokemon PokemonFromJson() {
-        return null;
     }
 
     public PokemonBehaviour Evolve() {

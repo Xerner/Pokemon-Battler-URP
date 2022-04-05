@@ -56,7 +56,7 @@ public class Pokemon : ScriptableObject {
         Pokemon pokemon = CreateInstance<Pokemon>();
         var pokemonJson = PokemonJsonModel.FromJson(json);
         pokemon.id = pokemonJson.id;
-        pokemon.name = pokemonJson.name;
+        pokemon.name = pokemonJson.name.ToProper();
         pokemon.BaseExperience = pokemonJson.base_experience;
         pokemon.height = pokemonJson.height;
 
@@ -126,7 +126,7 @@ public class Pokemon : ScriptableObject {
             pokemonJson.sprites.versions["generation-v"]["black-white"].front_default,
             (error) => Debug.LogError(error),
             (texture) => {
-                pokemon.sprite = Sprite.Create(texture, new Rect(0.0f, 0.0f, texture.width, texture.height), new Vector2(0.5f, 0.5f), 100.0f);
+                pokemon.sprite = Sprite.Create(texture, new Rect(0.0f, 0.0f, texture.width, texture.height), new Vector2(0.5f, 0.5f), 1f);
                 onSuccess.Invoke(pokemon);
             }
         );

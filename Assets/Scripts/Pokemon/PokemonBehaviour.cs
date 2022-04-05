@@ -11,19 +11,11 @@ public class PokemonBehaviour : MonoBehaviour {
     // TODO: create an Attribute to print the values of pokemon as uneditable labels
     [SerializeField][Pokemon]
     private Pokemon pokemon;
-    [HideInInspector]
-    public PokeContainer CurrentField;
-    [HideInInspector]
-    public Trainer trainer;
+    [SerializeField] 
+    public PokemonCombat Combat;
     //public bool isSelected;
-
-    [Header("Combat")]
-    public bool combatMode;
-    public ArenaCard combatField;
-    public Allegiance Allegiance;
-    private PokemonBehaviour targetEnemy;
-    //private Pathing Path;
-    public bool invulnerable;
+    public PokeContainer CurrentField;
+    public Trainer trainer;
 
     public Action<PokemonBehaviour> OnDestroyed;
 
@@ -50,6 +42,7 @@ public class PokemonBehaviour : MonoBehaviour {
             Pokemon.GetPokemonFromAPI(idOrName, (pokemon) => {
                 this.pokemon = pokemon;
                 sprite.sprite = pokemon.sprite;
+                gameObject.name = pokemon.name;
             });
         } else {
             Debug.LogError("Invalid pokemon ID or name given: " + idOrName);

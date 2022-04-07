@@ -36,6 +36,16 @@ namespace JsonModel {
             public int slot;
         }
 
+        public class PokemonJsonAbilityWithDescription {
+            public List<PokemonJsonAbilityEffect> effect_entries;
+        }
+
+        public class PokemonJsonAbilityEffect {
+            public string effect;
+            public NameAndURL language;
+            public string short_effect;
+        }
+
         public class GameIndex {
             public int game_index;
             public NameAndURL version;

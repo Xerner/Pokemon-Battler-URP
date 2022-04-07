@@ -14,6 +14,7 @@ public class PokemonDrawer : PropertyDrawer {
     public PokemonDrawer() {
         style = new GUIStyle();
         style.normal.textColor = new Color(0.67f, 0.67f, 0.67f);
+        style.wordWrap = true;
         style2 = EditorStyles.foldout;
         style2.fontStyle = FontStyle.Bold;
     }
@@ -35,34 +36,38 @@ public class PokemonDrawer : PropertyDrawer {
         showContent = EditorGUILayout.Foldout(showContent, "Stats & Info", true, style2);
         if (showContent) {
             EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField("HP", pokemon.hp.baseStat.ToString(), style);
-            EditorGUILayout.LabelField("EV", pokemon.hp.effort.ToString(), style);
+            EditorGUILayout.LabelField("HP", pokemon.Hp.baseStat.ToString(), style);
+            EditorGUILayout.LabelField("EV", pokemon.Hp.effort.ToString(), style);
             EditorGUILayout.EndHorizontal();
             
             EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField("Attack", pokemon.attack.baseStat.ToString(), style);
-            EditorGUILayout.LabelField("EV", pokemon.attack.effort.ToString(), style);
+            EditorGUILayout.LabelField("Attack", pokemon.Attack.baseStat.ToString(), style);
+            EditorGUILayout.LabelField("EV", pokemon.Attack.effort.ToString(), style);
             EditorGUILayout.EndHorizontal();
 
             EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField("Defense", pokemon.defense.baseStat.ToString(), style);
-            EditorGUILayout.LabelField("EV", pokemon.defense.effort.ToString(), style);
+            EditorGUILayout.LabelField("Defense", pokemon.Defense.baseStat.ToString(), style);
+            EditorGUILayout.LabelField("EV", pokemon.Defense.effort.ToString(), style);
             EditorGUILayout.EndHorizontal();
 
             EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField("Special Attack", pokemon.specialAttack.baseStat.ToString(), style);
-            EditorGUILayout.LabelField("EV", pokemon.specialAttack.effort.ToString(), style);
+            EditorGUILayout.LabelField("Special Attack", pokemon.SpecialAttack.baseStat.ToString(), style);
+            EditorGUILayout.LabelField("EV", pokemon.SpecialAttack.effort.ToString(), style);
             EditorGUILayout.EndHorizontal();
 
             EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField("Special Defense", pokemon.specialDefense.baseStat.ToString(), style);
-            EditorGUILayout.LabelField("EV", pokemon.specialDefense.effort.ToString(), style);
+            EditorGUILayout.LabelField("Special Defense", pokemon.SpecialDefense.baseStat.ToString(), style);
+            EditorGUILayout.LabelField("EV", pokemon.SpecialDefense.effort.ToString(), style);
             EditorGUILayout.EndHorizontal();
 
             EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField("Speed", pokemon.speed.baseStat.ToString(), style);
-            EditorGUILayout.LabelField("EV", pokemon.speed.effort.ToString(), style);
+            EditorGUILayout.LabelField("Speed", pokemon.Speed.baseStat.ToString(), style);
+            EditorGUILayout.LabelField("EV", pokemon.Speed.effort.ToString(), style);
             EditorGUILayout.EndHorizontal();
+
+            EditorGUILayout.LabelField("Ability", pokemon.Ability.name, style);
+            EditorGUILayout.LabelField(pokemon.Ability.description, style);
+            EditorGUILayout.LabelField(pokemon.Ability.longDescription, style);
         }
 
         #endregion

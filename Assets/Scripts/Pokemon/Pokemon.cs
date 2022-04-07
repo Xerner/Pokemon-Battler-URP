@@ -1,18 +1,20 @@
 using System;
 using UnityEngine;
 using JsonModel;
+using static JsonModel.PokemonJsonModel;
+using Newtonsoft.Json;
 
 [CreateAssetMenu(fileName = "New Pokemon", menuName = "Pokemon/Pokemon")]
 public class Pokemon : ScriptableObject {
     public int id;
     public new string name;
 
-    public PokemonStat hp = new PokemonStat() { baseStat = 50, effort = 0 };
-    public PokemonStat attack = new PokemonStat() { baseStat = 50, effort = 0 };
-    public PokemonStat defense = new PokemonStat() { baseStat = 50, effort = 0 };
-    public PokemonStat specialAttack = new PokemonStat() { baseStat = 50, effort = 0 };
-    public PokemonStat specialDefense = new PokemonStat() { baseStat = 50, effort = 0 };
-    public PokemonStat speed = new PokemonStat() { baseStat = 50, effort = 0 };
+    public PokemonStat Hp = new PokemonStat() { baseStat = 50, effort = 0 };
+    public PokemonStat Attack = new PokemonStat() { baseStat = 50, effort = 0 };
+    public PokemonStat Defense = new PokemonStat() { baseStat = 50, effort = 0 };
+    public PokemonStat SpecialAttack = new PokemonStat() { baseStat = 50, effort = 0 };
+    public PokemonStat SpecialDefense = new PokemonStat() { baseStat = 50, effort = 0 };
+    public PokemonStat Speed = new PokemonStat() { baseStat = 50, effort = 0 };
 
     public PokemonAbility Ability;
     private int BaseExperience; // TODO: make use of it, or get rid of it
@@ -64,28 +66,28 @@ public class Pokemon : ScriptableObject {
         foreach (var pokeStat in pokemonJson.stats) {
             switch (pokeStat.stat.name) {
                 case "hp":
-                    pokemon.hp.baseStat = pokeStat.base_stat;
-                    pokemon.hp.effort = pokeStat.effort;
+                    pokemon.Hp.baseStat = pokeStat.base_stat;
+                    pokemon.Hp.effort = pokeStat.effort;
                     break;
                 case "attack":
-                    pokemon.attack.baseStat = pokeStat.base_stat;
-                    pokemon.attack.effort = pokeStat.effort;
+                    pokemon.Attack.baseStat = pokeStat.base_stat;
+                    pokemon.Attack.effort = pokeStat.effort;
                     break;
                 case "defense":
-                    pokemon.defense.baseStat = pokeStat.base_stat;
-                    pokemon.defense.effort = pokeStat.effort;
+                    pokemon.Defense.baseStat = pokeStat.base_stat;
+                    pokemon.Defense.effort = pokeStat.effort;
                     break;
                 case "special-attack":
-                    pokemon.specialAttack.baseStat = pokeStat.base_stat;
-                    pokemon.specialAttack.effort = pokeStat.effort;
+                    pokemon.SpecialAttack.baseStat = pokeStat.base_stat;
+                    pokemon.SpecialAttack.effort = pokeStat.effort;
                     break;
                 case "special-defense":
-                    pokemon.specialDefense.baseStat = pokeStat.base_stat;
-                    pokemon.specialDefense.effort = pokeStat.effort;
+                    pokemon.SpecialDefense.baseStat = pokeStat.base_stat;
+                    pokemon.SpecialDefense.effort = pokeStat.effort;
                     break;
                 case "speed":
-                    pokemon.speed.baseStat = pokeStat.base_stat;
-                    pokemon.speed.effort = pokeStat.effort;
+                    pokemon.Speed.baseStat = pokeStat.base_stat;
+                    pokemon.Speed.effort = pokeStat.effort;
                     break;
                 default:
                     throw new System.Exception("Invalid Pokemon stat name: " + pokeStat.stat.name);
@@ -94,42 +96,56 @@ public class Pokemon : ScriptableObject {
         #endregion
 
         #region Ability
-        PokemonJsonModel.PokemonJsonAbility hiddenAbility;
+
+        PokemonJsonAbility ability;
         if (hasHiddenAbility) {
-            hiddenAbility = pokemonJson.abilities.Find((ability) => ability.is_hidden == true);
+            ability = pokemonJson.abilities.Find((ability) => ability.is_hidden == true);
         } else {
             // Remove the hidden ability from the list
             pokemonJson.abilities = pokemonJson.abilities.FindAll((ability) => ability.is_hidden == false);
-            hiddenAbility = pokemonJson.abilities[new System.Random().Next(pokemonJson.abilities.Count)];
+            ability = pokemonJson.abilities[new System.Random().Next(pokemonJson.abilities.Count)];
         }
         pokemon.Ability = new PokemonAbility() { 
-            name = hiddenAbility.ability.name, 
-            isHidden = hiddenAbility.is_hidden, 
-            slot = hiddenAbility.slot, 
-            url = hiddenAbility.ability.url
+            name = ability.ability.name.ToProper().Replace("-", " "),
+            isHidden = ability.is_hidden, 
+            slot = ability.slot, 
+            url = ability.ability.url
         };
-        #endregion
 
-        #region Types
-        pokemon.types[0] = PokemonUtil.StringToType(pokemonJson.types.Find((type) => type.slot == 1).type.name);
-        if (pokemonJson.types.Count > 1) pokemon.types[1] = PokemonUtil.StringToType(pokemonJson.types.Find((type) => type.slot == 2).type.name);
-        #endregion
-
-        // evolution
-        // base evolution
-        // evolution stage
-        // tier
-        // sprite
-        // shop sprite?
-        #region Sprites
-        WebRequests.Get<Texture2D>(
-            pokemonJson.sprites.versions["generation-v"]["black-white"].front_default,
+        WebRequests.Get<string>(
+            ability.ability.url,
             (error) => Debug.LogError(error),
-            (texture) => {
-                pokemon.sprite = Sprite.Create(texture, new Rect(0.0f, 0.0f, texture.width, texture.height), new Vector2(0.5f, 0.5f), 1f);
+            (json) => {
+                PokemonJsonAbilityWithDescription jsonAbility = JsonConvert.DeserializeObject<PokemonJsonAbilityWithDescription>(json);
+                PokemonJsonAbilityEffect effect = jsonAbility.effect_entries.Find((effect) => effect.language.name == "en");
+                pokemon.Ability.description = effect.short_effect;
+                pokemon.Ability.longDescription = effect.effect;
                 onSuccess.Invoke(pokemon);
+
+                #region Types
+                pokemon.types[0] = PokemonUtil.StringToType(pokemonJson.types.Find((type) => type.slot == 1).type.name);
+                if (pokemonJson.types.Count > 1) pokemon.types[1] = PokemonUtil.StringToType(pokemonJson.types.Find((type) => type.slot == 2).type.name);
+                #endregion
+
+                // evolution
+                // base evolution
+                // evolution stage
+                // tier
+                // sprite
+                // shop sprite?
+                #region Sprites
+                WebRequests.Get<Texture2D>(
+                    pokemonJson.sprites.versions["generation-v"]["black-white"].front_default,
+                    (error) => Debug.LogError(error),
+                    (texture) => {
+                        pokemon.sprite = Sprite.Create(texture, new Rect(0.0f, 0.0f, texture.width, texture.height), new Vector2(0.5f, 0.5f), 1f);
+                        onSuccess.Invoke(pokemon);
+                    }
+                );
+                #endregion
             }
         );
+
         #endregion
 
         return pokemon;
@@ -142,6 +158,8 @@ public class Pokemon : ScriptableObject {
 
     public class PokemonAbility {
         public string name;
+        public string description;
+        public string longDescription;
         public string url;
         public bool isHidden;
         public int slot;

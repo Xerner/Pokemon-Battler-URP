@@ -52,7 +52,7 @@ public class PokemonDrawer : PropertyDrawer {
 
             EditorGUILayout.BeginHorizontal();
             EditorGUILayout.LabelField("Special Attack", pokemon.SpecialAttack.baseStat.ToString(), style);
-            EditorGUILayout.LabelField("EV", pokemon.SpecialAttack.effort.ToString(), style);
+            EditorGUILayout.LabelField("EV", pokemon.SpecialAttack?.effort.ToString(), style);
             EditorGUILayout.EndHorizontal();
 
             EditorGUILayout.BeginHorizontal();
@@ -65,9 +65,9 @@ public class PokemonDrawer : PropertyDrawer {
             EditorGUILayout.LabelField("EV", pokemon.Speed.effort.ToString(), style);
             EditorGUILayout.EndHorizontal();
 
-            EditorGUILayout.LabelField("Ability", pokemon.Ability.name, style);
-            EditorGUILayout.LabelField(pokemon.Ability.description, style);
-            EditorGUILayout.LabelField(pokemon.Ability.longDescription, style);
+            EditorGUILayout.LabelField("Ability", pokemon.Ability?.name, style);
+            EditorGUILayout.LabelField(pokemon.Ability?.description, style);
+            EditorGUILayout.LabelField(pokemon.Ability?.longDescription, style);
         }
 
         #endregion

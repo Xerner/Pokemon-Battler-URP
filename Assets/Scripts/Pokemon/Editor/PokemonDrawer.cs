@@ -5,18 +5,22 @@ using System.Linq;
 [CustomPropertyDrawer(typeof(PokemonAttribute))]
 public class PokemonDrawer : PropertyDrawer {
     bool showContent = false;
+    bool showLongDescription = false;
     static float margin = 4f;
     static float height = 16f;
 
     private GUIStyle style;
-    private GUIStyle style2;
+    private GUIStyle styleBold;
+    private GUIStyle styleFoldout;
 
     public PokemonDrawer() {
         style = new GUIStyle();
         style.normal.textColor = new Color(0.67f, 0.67f, 0.67f);
         style.wordWrap = true;
-        style2 = EditorStyles.foldout;
-        style2.fontStyle = FontStyle.Bold;
+        styleBold = new GUIStyle(style);
+        styleBold.fontStyle = FontStyle.Bold;
+        styleFoldout = EditorStyles.foldout;
+        styleFoldout.fontStyle = FontStyle.Bold;
     }
 
     public override float GetPropertyHeight(SerializedProperty property, GUIContent label) {
@@ -33,8 +37,16 @@ public class PokemonDrawer : PropertyDrawer {
 
         #region Stats
 
-        showContent = EditorGUILayout.Foldout(showContent, "Stats & Info", true, style2);
+        showContent = EditorGUILayout.Foldout(showContent, "Stats & Info", true, styleFoldout);
         if (showContent) {
+            EditorGUILayout.LabelField("Type", pokemon.TypeToString(), style);
+
+            EditorGUILayout.LabelField("Evolutions", pokemon.EvolutionsToString(), style);
+
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField("", style);
+            EditorGUILayout.EndHorizontal();
+
             EditorGUILayout.BeginHorizontal();
             EditorGUILayout.LabelField("HP", pokemon.Hp.baseStat.ToString(), style);
             EditorGUILayout.LabelField("EV", pokemon.Hp.effort.ToString(), style);
@@ -65,9 +77,20 @@ public class PokemonDrawer : PropertyDrawer {
             EditorGUILayout.LabelField("EV", pokemon.Speed.effort.ToString(), style);
             EditorGUILayout.EndHorizontal();
 
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField("", style);
+            EditorGUILayout.EndHorizontal();
+
             EditorGUILayout.LabelField("Ability", pokemon.Ability?.name, style);
-            EditorGUILayout.LabelField(pokemon.Ability?.description, style);
-            EditorGUILayout.LabelField(pokemon.Ability?.longDescription, style);
+            EditorGUILayout.LabelField("Description", pokemon.Ability?.description, style);
+            showLongDescription = EditorGUILayout.Foldout(showLongDescription, "Long description", true);
+            if (showLongDescription) {
+                EditorGUILayout.LabelField(pokemon.Ability?.longDescription, style);
+            }
+
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField("", style);
+            EditorGUILayout.EndHorizontal();
         }
 
         #endregion

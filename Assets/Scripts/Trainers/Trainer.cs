@@ -42,9 +42,10 @@ public class Trainer
 
     public bool IsAboutToEvolve(string pokemonName)
     {
-        return activePokemon.ContainsKey(pokemonName)
-            && ActivePokemon[pokemonName].Count > 1
-            && activePokemon[pokemonName][0].Pokemon.evolution != null;
+        return false; // FIX
+        //return activePokemon.ContainsKey(pokemonName)
+        //    && ActivePokemon[pokemonName].Count > 1
+        //    && activePokemon[pokemonName][0].Pokemon.evolution != null;
     }
 
     private void DeletePokemonList(string pokemonName)

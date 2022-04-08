@@ -1,5 +1,6 @@
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using UnityEngine;
 
 /// <summary>
 /// This class mirrors the data model of https://pokeapi.co/api/v2/pokemon/1/
@@ -19,7 +20,7 @@ namespace JsonModel {
         public string location_area_encounters;
         //moves TODO
         public string name;
-        public int order;
+        public NameAndURL species;
         //past_types TODO
         //species TODO
         public PokemonSpriteWithVersions sprites;
@@ -98,5 +99,77 @@ namespace JsonModel {
         }
 
         #endregion
+    }
+
+    public class JsonPokemonSpecies {
+        public int id;
+        public string name;
+        public JsonPokemonSpeciesEvolutionChain evolution_chain;
+
+        public class JsonPokemonSpeciesEvolutionChain {
+            public string name;
+            public string url;
+        }
+
+        // TODO: test this function
+        public int GetID() => int.Parse(
+            evolution_chain.url.Substring(
+                evolution_chain.url.Length - evolution_chain.url.Substring(
+                    evolution_chain.url.Length - 1
+                ).IndexOf("/")
+            )
+        );
+    }
+
+    public class JsonEvolutionChain {
+        public int id;
+        public JsonEvolutionChainLink chain;
+
+        #region functions
+
+        /// <summary>
+        /// Recursive function that returns a List of names of all Pokemon in the evolution chain
+        /// </summary>
+        public List<string> GetEvolutions() => calcEvolutions(chain);
+
+        /// <summary>
+        /// Internal function for calculating a List of names of all Pokemon in the evolution chain
+        /// </summary>
+        private List<string> calcEvolutions(JsonEvolutionChainLink chainLink, List<string> evolutions = null) {
+            if (evolutions == null) evolutions = new List<string>();
+            evolutions.Add(chainLink.species.name.ToProper());
+            if (chainLink.evolves_to.Count == 0) {
+                return evolutions;
+            } else {
+                return calcEvolutions(chainLink.evolves_to[0], evolutions);
+            }
+        }
+
+        /// <summary>
+        /// Recursive function to calculate the evolution stage of the pokemon
+        /// </summary>
+        /// <returns>The evolution stage of the given pokemon</returns>
+        public int GetEvolutionStage(string pokemonName) => calcEvolutionStage(pokemonName, chain);
+
+        /// <summary>
+        /// Internal method for recursively calculating a Pokemons evolution stage
+        /// </summary>
+        private int calcEvolutionStage(string pokemonName, JsonEvolutionChainLink chainLink, int evolutionStage = 1) {
+            if (chainLink == null || chainLink.species == null) {
+                Debug.LogError("Could not calculate evolution stage. Invalid Pokemon name: " + pokemonName);
+                return -1;
+            } else if (chainLink.evolves_to.Count == 0) { // count == 0 and name was never matched
+                return evolutionStage;
+            } else {
+                return calcEvolutionStage(pokemonName, chainLink.evolves_to[0], evolutionStage + 1);
+            }
+        }
+
+        #endregion
+    }
+
+    public class JsonEvolutionChainLink {
+        public JsonPokemonSpecies species;
+        public List<JsonEvolutionChainLink> evolves_to;
     }
 }

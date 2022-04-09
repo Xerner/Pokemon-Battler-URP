@@ -28,6 +28,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6161083767846019024}
   m_RootOrder: 1
@@ -58,7 +59,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -88,7 +89,7 @@ GameObject:
   - component: {fileID: 8973097824672576403}
   - component: {fileID: 133684952628852202}
   m_Layer: 5
-  m_Name: Text (TMP) (1)
+  m_Name: Cost Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -104,13 +105,14 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5545171041946148973}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 13.005, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &9183776054730081819
@@ -252,6 +254,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1289906774774547831}
   - {fileID: 1252670578668503109}
@@ -331,6 +334,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5545171041946148973}
   m_RootOrder: 0
@@ -405,6 +409,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5686975545342257071}
   - {fileID: 7721448193550712661}
@@ -454,7 +459,7 @@ GameObject:
   - component: {fileID: 6161083767846019029}
   - component: {fileID: 6161083767846019030}
   - component: {fileID: 6161083767846019031}
-  - component: {fileID: 5442192283787036073}
+  - component: {fileID: 1408972291957904343}
   m_Layer: 5
   m_Name: Shop Card
   m_TagString: Untagged
@@ -472,6 +477,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6161083768218386744}
   - {fileID: 3078816975150296457}
@@ -567,7 +573,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 5442192283787036073}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: ShopCard, Assembly-CSharp
         m_MethodName: DebugBuyPokemon
         m_Mode: 1
@@ -579,7 +585,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &5442192283787036073
+--- !u!114 &1408972291957904343
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -588,14 +594,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 6161083767846019025}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c8d5c88e35a81e64c81bd608faa6a625, type: 3}
+  m_Script: {fileID: 11500000, guid: 5b9dcf8754b71d046b250be2ed0b20f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  background: {fileID: 6161083767846019030}
+  pokemonName: {fileID: 6161083768218386751}
   pokemonSprite: {fileID: 2337887906530202568}
+  background: {fileID: 6161083767846019030}
   type1: {fileID: 6476458120015369043}
   type2: {fileID: 8945602692905651113}
-  pokemonName: {fileID: 6161083768218386751}
   costText: {fileID: 8973097824672576403}
   pokeDollar: {fileID: 5362586497811179316}
 --- !u!1 &6161083768218386745
@@ -610,7 +616,7 @@ GameObject:
   - component: {fileID: 6161083768218386750}
   - component: {fileID: 6161083768218386751}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: Pokemon Name Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -626,6 +632,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6161083767846019024}
   m_RootOrder: 0
@@ -741,7 +748,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 404036264076434061, guid: 4dadd0ff6d486884d8a6a3fe6265dc63, type: 3}
       propertyPath: m_Name
-      value: Small Type Box (1)
+      value: Type 2
       objectReference: {fileID: 0}
     - target: {fileID: 3001010661065295642, guid: 4dadd0ff6d486884d8a6a3fe6265dc63, type: 3}
       propertyPath: m_Sprite
@@ -858,7 +865,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 404036264076434061, guid: 4dadd0ff6d486884d8a6a3fe6265dc63, type: 3}
       propertyPath: m_Name
-      value: Small Type Box
+      value: Type 1
       objectReference: {fileID: 0}
     - target: {fileID: 3001010661065295642, guid: 4dadd0ff6d486884d8a6a3fe6265dc63, type: 3}
       propertyPath: m_Sprite

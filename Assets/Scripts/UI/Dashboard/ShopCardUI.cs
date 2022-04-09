@@ -6,33 +6,37 @@ using UnityEngine;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(Button))]
-public class ShopCard : MonoBehaviour
+public class ShopCardUI : MonoBehaviour
 {
-    [SerializeField] private Image background;
+    #region UI stuff
+    [SerializeField] private TextMeshProUGUI pokemonName;
     [SerializeField] private Image pokemonSprite;
+    [SerializeField] private Image background;
     [SerializeField] private Image type1;
     [SerializeField] private Image type2;
-    [SerializeField] private TextMeshProUGUI pokemonName;
     [SerializeField] private TextMeshProUGUI costText;
     [SerializeField] private GameObject pokeDollar;
-    public Action<ShopCard> OnClick;
+    #endregion
+
+    public Action<ShopCardUI> OnClick;
     private int cost;
 
     public int Cost { get => cost; set => cost = value; }
     public string PokemonName { get => pokemonName.text; private set => pokemonName.text = value; }
 
-    public void SetPokemon(PokemonBehaviour pokemon)
+    public void SetPokemon(Pokemon pokemon)
     {
-        background.sprite = AssetManager.Singleton.ShopCardSprites[pokemon.Pokemon.tier -1];
-        pokemonSprite.sprite = AssetManager.PokemonSprites[pokemon.name];
+        background.sprite = AssetManager.Singleton.ShopCardSprites[pokemon.tier -1];
+        pokemonSprite.sprite = pokemon.shopSprite;
+        pokemonSprite.color = new Color(pokemonSprite.color.r, pokemonSprite.color.g, pokemonSprite.color.b, 1f);
         pokemonSprite.SetNativeSize();
-        type1.sprite = AssetManager.PokemonTypesSprites[pokemon.Pokemon.types[0].ToString()].MiniSprite;
-        type2.sprite = AssetManager.PokemonTypesSprites[pokemon.Pokemon.types[0].ToString()].MiniSprite;
+        type1.sprite = AssetManager.PokemonTypeSprites[pokemon.types[0].ToString()].MiniSprite;
         type1.SetNativeSize();
+        type2.sprite = AssetManager.PokemonTypeSprites[pokemon.types[1].ToString()].MiniSprite;
         type2.SetNativeSize();
         PokemonName = pokemon.name;
         pokeDollar.SetActive(true);
-        cost = pokemon.Pokemon.tier;
+        cost = pokemon.tier;
         costText.text = cost.ToString();
     }
 

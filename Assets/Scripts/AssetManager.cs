@@ -10,9 +10,8 @@ public class AssetManager : SingletonBehaviour<AssetManager>
     #region Pokemon stuff
     public static Dictionary<string, GameObject> PokemonPrefabs;
     public static Dictionary<string, PokemonBehaviour> Pokemon;
-    public static string[] PokemonNames;
     public static Dictionary<string, Sprite> PokemonSprites;
-    public static Dictionary<string, PokemonTypeSprites> PokemonTypesSprites = new Dictionary<string, PokemonTypeSprites>();
+    public static Dictionary<string, PokemonTypeSprites> PokemonTypeSprites = new Dictionary<string, PokemonTypeSprites>();
     #endregion
     private static readonly StringBuilder str = new StringBuilder();
 
@@ -31,21 +30,20 @@ public class AssetManager : SingletonBehaviour<AssetManager>
         //PokemonNames = new string[PokemonPrefabs.Count];
         //PokemonPrefabs.Keys.CopyTo(PokemonNames, 0);
         //PokemonSprites = LoadResource<Sprite>("Graphics/Pokemon/Sprites", "*.gif");
-        //Dictionary<string, Sprite> typeSprites = LoadResource<Sprite>("Graphics/Pokemon/Types/Sprites", "*.png");
-        //Dictionary<string, Sprite> typeMiniSprites = LoadResource<Sprite>("Graphics/Pokemon/Types/Mini Sprites", "*.png");
-        //Dictionary<string, Sprite> typeEffectSprites = LoadResource<Sprite>("Graphics/Pokemon/Types/Type Effect Boxes", "*.png");
-        //Dictionary<string, Sprite> typeMoveSprites = LoadResource<Sprite>("Graphics/Pokemon/Types/Type Move Boxes", "*.png");
+        Dictionary<string, Sprite> typeSprites = LoadResource<Sprite>("Graphics/Pokemon/Types/Sprites", "*.png");
+        Dictionary<string, Sprite> typeMiniSprites = LoadResource<Sprite>("Graphics/Pokemon/Types/Mini Sprites", "*.png");
+        Dictionary<string, Sprite> typeEffectSprites = LoadResource<Sprite>("Graphics/Pokemon/Types/Type Effect Boxes", "*.png");
+        Dictionary<string, Sprite> typeMoveSprites = LoadResource<Sprite>("Graphics/Pokemon/Types/Type Move Boxes", "*.png");
 
-        //foreach (string key in typeSprites.Keys)
-        //{
-        //    //Debug.Log(key);
-        //    PokemonTypesSprites.Add(key, new PokemonTypeSprites(
-        //        typeSprites[key],
-        //        typeMiniSprites[key],
-        //        typeEffectSprites[key],
-        //        typeMoveSprites[key]
-        //    ));
-        //}
+        foreach (string key in typeSprites.Keys) {
+            //Debug.Log(key);
+            PokemonTypeSprites.Add(key, new PokemonTypeSprites(
+                typeSprites[key],
+                typeMiniSprites[key],
+                typeEffectSprites[key],
+                typeMoveSprites[key]
+            ));
+        }
     }
 
     private static Dictionary<string, T> LoadResource<T>(string resourceFolderName, string searchPattern) where T : Object

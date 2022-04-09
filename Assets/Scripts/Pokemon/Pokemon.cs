@@ -7,10 +7,13 @@ using System.Collections.Generic;
 
 [CreateAssetMenu(fileName = "New Pokemon", menuName = "Pokemon/Pokemon")]
 public class Pokemon : ScriptableObject {
+
+    public static Dictionary<string, Pokemon> CachedPokemon = new Dictionary<string, Pokemon>();
+
     public int id;
     public new string name;
-
     public int tier;
+    public int cost;
 
     public PokemonStat Hp = new PokemonStat() { baseStat = 50, effort = 0 };
     public PokemonStat Attack = new PokemonStat() { baseStat = 50, effort = 0 };
@@ -44,6 +47,12 @@ public class Pokemon : ScriptableObject {
     }
 
     public static void GetPokemonFromAPI(string idOrName, Action<Pokemon> onSuccess) {
+        // if we already fetched this pokemons data, do not fetch it again
+        if (CachedPokemon.ContainsKey(idOrName)) {
+            onSuccess(CachedPokemon[idOrName]);
+            return;
+        }
+        //
         WebRequests.Get<string>(
             $"https://pokeapi.co/api/v2/pokemon/{idOrName}/", 
             (error) => Debug.LogError(error), 
@@ -56,12 +65,14 @@ public class Pokemon : ScriptableObject {
     /// </summary>
     /// <param name="json">json returned from the Poke API</param>
     public static Pokemon PokemonFromJson(string json, bool hasHiddenAbility, Action<Pokemon> onSuccess) {
+        var pokemonJson = FromJson(json);
+        
         Pokemon pokemon = CreateInstance<Pokemon>();
-        var pokemonJson = PokemonJsonModel.FromJson(json);
         pokemon.id = pokemonJson.id;
         pokemon.name = pokemonJson.name.ToProper();
         pokemon.BaseExperience = pokemonJson.base_experience;
         pokemon.height = pokemonJson.height;
+        pokemon.tier = PokemonConstants.enumToTier[pokemon.id];
 
         #region Stats
         foreach (var pokeStat in pokemonJson.stats) {
@@ -149,6 +160,8 @@ public class Pokemon : ScriptableObject {
                                     (error) => Debug.LogError(error),
                                     (texture) => {
                                         pokemon.sprite = Sprite.Create(texture, new Rect(0.0f, 0.0f, texture.width, texture.height), new Vector2(0.5f, 0.5f), 1f);
+                                        pokemon.shopSprite = Sprite.Create(texture, new Rect(0.0f, 0.0f, texture.width, texture.height), new Vector2(0.5f, 0.5f), 1f);
+                                        CachedPokemon.Add(pokemon.name, pokemon);
                                         onSuccess.Invoke(pokemon);
                                     }
                                 );

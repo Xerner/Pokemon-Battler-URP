@@ -3,26 +3,29 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Serializable class used to load/save account settings
+/// </summary>
 [Serializable]
 public class AccountSettings
 {
     public string Username;
-    public int TrainerSpriteID;
-    public int TrainerBackgroundID;
+    public string TrainerSpriteName;
+    public string TrainerBackgroundName;
     public string GameID;
 
-    public AccountSettings(string Username, int TrainerSpriteID, int TrainerBackgroundID) : this(Username, TrainerSpriteID, TrainerBackgroundID, "") { }
+    public AccountSettings(string username, string trainerSpriteName, string trainerBackgroundName) : this(username, trainerSpriteName, trainerBackgroundName, "") { }
 
-    public AccountSettings(string Username, int TrainerSpriteID, int TrainerBackgroundID, string GameID)
+    public AccountSettings(string username, string trainerSpriteName, string trainerBackgroundName, string GameID)
     {
-        this.Username = Username;
-        this.TrainerSpriteID = TrainerSpriteID;
-        this.TrainerBackgroundID = TrainerBackgroundID;
+        Username = username;
+        TrainerSpriteName = trainerSpriteName;
+        TrainerBackgroundName = trainerBackgroundName;
         this.GameID = GameID;
     }
 
     public override string ToString()
     {
-        return $"{Username}, {TrainerSpriteID}, {TrainerBackgroundID}, {GameID}";
+        return $"{Username}, {TrainerSpriteName}, {TrainerBackgroundName}, {GameID}";
     }
 }

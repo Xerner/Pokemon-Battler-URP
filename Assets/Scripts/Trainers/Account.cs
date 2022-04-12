@@ -23,11 +23,11 @@ public class Account : MonoBehaviour
     /// <param name="trainerSprite"></param>
     /// <param name="trainerBackground"></param>
     /// <param name="gameID"></param>
-    public void SetSettings(string username, int trainerSprite, int trainerBackground, string gameID = null)
+    public void SetSettings(string username, string trainerSprite, string trainerBackground, string gameID = null)
     {
         settings.Username = username;
-        settings.TrainerSpriteID = trainerSprite;
-        settings.TrainerBackgroundID = trainerBackground;
+        settings.TrainerSpriteName = trainerSprite;
+        settings.TrainerBackgroundName = trainerBackground;
         settings.GameID = gameID ?? settings.GameID;
     }
 

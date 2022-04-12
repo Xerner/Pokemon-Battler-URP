@@ -4,8 +4,10 @@ using UnityEngine;
 /// <summary>
 /// Manages a list of GameObjects or its own children who are assumed to represent in-game views
 /// </summary>
-public class ViewManager : SingletonBehaviour<ViewManager>
+public class ViewManager : MonoBehaviour
 {
+    public static ViewManager Instance { get; private set; }
+
     [Description("Assumes this GameObjects children are to be managed instead of the list below")]
     public bool UseChildren;
     public List<GameObject> Views;
@@ -13,8 +15,16 @@ public class ViewManager : SingletonBehaviour<ViewManager>
     public static GameObject activeView;
     private static readonly Stack<GameObject> previousViews = new Stack<GameObject>();
 
-    private void Start() {
-        base.Start();
+    void Awake() {
+        if (Instance != null && Instance != this) {
+            Destroy(this);
+            return;
+        } else {
+            Instance = this;
+        }
+    }
+
+    void Start() {
         if (UseChildren) {
             if (transform.childCount == 0) throw new System.Exception("View Manager is set to use its children, but it has none!");
             addChildrenToViews();

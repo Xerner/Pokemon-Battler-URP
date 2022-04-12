@@ -840,8 +840,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   settings:
     Username: Xerner
-    TrainerSpriteID: 2
-    TrainerBackgroundID: 2
+    TrainerSpriteName: Chile
+    TrainerBackgroundName: Blastoise
     GameID: 
 --- !u!114 &250643689748136486
 MonoBehaviour:

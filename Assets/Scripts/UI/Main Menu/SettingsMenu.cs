@@ -12,9 +12,9 @@ public class SettingsMenu : MonoBehaviour
     {
         Account account = Account.FindAccount();
         username.text = account.settings.Username;
-        trainerSprite.SetSprite(account.settings.TrainerSpriteID);
-        trainerBackground.SetSprite(account.settings.TrainerBackgroundID);
+        trainerSprite.SetSprite(account.settings.TrainerSpriteName);
+        trainerBackground.SetSprite(account.settings.TrainerBackgroundName);
     }
 
-    public void SaveSettings() => MainMenu.Instance.SaveSettings(username.text, trainerSprite.ActiveIndex, trainerBackground.ActiveIndex);
+    public void SaveSettings() => MainMenu.Instance.SaveSettings(username.text, trainerSprite.ActiveSprite, trainerBackground.ActiveSprite);
 }

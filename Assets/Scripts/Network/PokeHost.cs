@@ -6,16 +6,30 @@ using UnityEngine.SceneManagement;
 [RequireComponent(typeof(NetworkManager))]
 [RequireComponent(typeof(UNetTransport))]
 [RequireComponent(typeof(UIPersistentStatus))]
-public class PokeHost : SingletonBehaviour<PokeHost>
+public class PokeHost : MonoBehaviour
 {
+    public static PokeHost Instance { get; private set; }
+
     private NetworkManager netManager;
     private UIPersistentStatus connectionStatus;
     private const int maxConnections = 8;
     private bool arenaIsStartingScene = false;
 
-    private new void Start()
+    void Awake() {
+        if (Instance != null && Instance != this) {
+            Destroy(this);
+            return;
+        } else {
+            Instance = this;
+        }
+    }
+
+    void Start()
     {
-        base.Start();
+        if (Instance != null && Instance != this) {
+            Destroy(this);
+            return;
+        }
         netManager = NetworkManager.Singleton;
         connectionStatus = GetComponent<UIPersistentStatus>();
         SceneManager.sceneLoaded += OnSceneLoaded;
@@ -29,22 +43,23 @@ public class PokeHost : SingletonBehaviour<PokeHost>
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        if (scene.name == "ArenaScene") InitializeArena();
+        if (scene.name == "ArenaScene" && arenaIsStartingScene == false) InitializeArena();
     }
 
     public void InitializeArena()
     {
         // Add the main user to the game
-        if (TryGetComponent<Account>(out var account))
+        if (TryGetComponent<Account>(out var account)) {
+            Pokemon.InitializeAllPokemon();
             AddTrainerToGame(account.settings);
-        else
+        } else {
             Debug.LogError("No Account component found on the NetworkManager object");
+        }
     }
-
 
     private void AddTrainerToGame(AccountSettings settings)
     {
-            TrainerCardManager.Singleton.AddTrainer(settings, netManager.LocalClientId);
+        TrainerCardManager.Instance.AddTrainer(settings, netManager.LocalClientId);
     }
 
     /// <summary>

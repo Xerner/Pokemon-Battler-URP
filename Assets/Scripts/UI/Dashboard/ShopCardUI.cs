@@ -26,14 +26,20 @@ public class ShopCardUI : MonoBehaviour
 
     public void SetPokemon(Pokemon pokemon)
     {
-        background.sprite = AssetManager.Singleton.ShopCardSprites[pokemon.tier -1];
+        background.sprite = StaticAssets.ShopCardSprites[(pokemon.tier).ToString()];
         pokemonSprite.sprite = pokemon.shopSprite;
         pokemonSprite.color = new Color(pokemonSprite.color.r, pokemonSprite.color.g, pokemonSprite.color.b, 1f);
         pokemonSprite.SetNativeSize();
-        type1.sprite = AssetManager.PokemonTypeSprites[pokemon.types[0].ToString()].MiniSprite;
+        type1.sprite = StaticAssets.typeMiniSprites[pokemon.types[0].ToString()];
         type1.SetNativeSize();
-        type2.sprite = AssetManager.PokemonTypeSprites[pokemon.types[1].ToString()].MiniSprite;
-        type2.SetNativeSize();
+        if (pokemon.types[1] == EPokemonType.None) {
+            type2.sprite = null;
+            type2.color = new Color(1f,1f,1f,0f);
+        } else {
+            type2.sprite = StaticAssets.typeMiniSprites[pokemon.types[1].ToString()];
+            type2.SetNativeSize();
+            type2.color = new Color(1f,1f,1f,1f);
+        }
         PokemonName = pokemon.name;
         pokeDollar.SetActive(true);
         cost = pokemon.tier;
@@ -49,6 +55,6 @@ public class ShopCardUI : MonoBehaviour
             container = TrainerManager.ActiveTrainer.ActivePokemon[pokemonName.text][0].CurrentField;
         }
         TrainerManager.ActiveTrainer.Money -= cost;
-        TrainerManager.ActiveTrainer.AddPokemon(AssetManager.PokemonPrefabs[pokemonName.text].GetComponent<PokemonBehaviour>());
+        //TrainerManager.ActiveTrainer.AddPokemon(StaticAssets.PokemonPrefabs[pokemonName.text].GetComponent<PokemonBehaviour>());
     }
 }

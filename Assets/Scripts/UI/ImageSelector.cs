@@ -4,55 +4,55 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Linq;
 
 public class ImageSelector : MonoBehaviour
 {
     [Tooltip("Adjust the pixels per unit for the created sprites by modifying the Reference Pixels per unit in the Canvas Scaler")]
-    [SerializeField] private Texture2D[] images;
-    [SerializeField] private int activeIndex;
-    [SerializeField] private Image image;
-    [SerializeField] private TextMeshProUGUI imageName;
+    [SerializeField] StaticAssets.StaticAssetTypes assetType;
+    List<string> keys;
+    Dictionary<string, Sprite> sprites;
+    [SerializeField] string activeSprite;
+    [SerializeField] Image image;
+    [SerializeField] TextMeshProUGUI imageName;
     public Vector2 Pivot = new Vector2(0.5f, 0.5f);
-    private Sprite[] sprites;
     
-    public int ActiveIndex { get => activeIndex; }
+    public string ActiveSprite { get => activeSprite; }
 
-    private void OnEnable()
+    void OnEnable()
     {
         image.SetNativeSize();
     }
 
-    private void Start()
+    void Start()
     {
-        if (images.Length == 0) throw new Exception("Trainer Texture2D array is empty. It should be filled with all the Trainer images");
-        sprites = new Sprite[images.Length];
-        for (int i = 0; i < images.Length; i++)
-        {
-            Texture2D trainer = images[i];
-            sprites[i] = Sprite.Create(trainer, new Rect(0.0f, 0.0f, trainer.width, trainer.height), Pivot, 1f);
-        }
+        sprites = StaticAssets.EnumToSpriteDict(assetType);
+        keys = sprites.Keys.ToList();
+        if (keys.Count == 0) throw new Exception("No assets for ImageSelector to use!");
         image.SetNativeSize();
-        SetSprite(ActiveIndex);
+        SetSprite(keys[0]);
     }
 
-    public void SetSprite(int index)
+    public void SetSprite(string name)
     {
-        if (index < sprites.Length) image.sprite = sprites[index];
-        else Debug.Log("Index out of bounds");
+        if (keys.IndexOf(name) < keys.Count) 
+            image.sprite = sprites[name];
+        else 
+            Debug.Log("Index out of bounds");
         image.SetNativeSize();
-        activeIndex = index;
-        imageName.text = images[index].name;
+        activeSprite = name;
+        imageName.text = name;
     }
 
     public Sprite GetSprite() => image.sprite;
 
     public void NextSprite()
     {
-        SetSprite(Mathf.Clamp(ActiveIndex + 1, 0, sprites.Length - 1));
+        SetSprite(keys[Mathf.Clamp(keys.IndexOf(activeSprite) + 1, 0, keys.Count - 1)]);
     }
 
     public void PreviousSprite()
     {
-        SetSprite(Mathf.Clamp(ActiveIndex - 1, 0, sprites.Length - 1));
+        SetSprite(keys[Mathf.Clamp(keys.IndexOf(activeSprite) - 1, 0, keys.Count - 1)]);
     }
 }

@@ -3,14 +3,24 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(UIModal))]
-public class UIWindowManager : SingletonBehaviour<UIWindowManager>
+public class UIWindowManager : MonoBehaviour
 {
+    public static UIWindowManager Instance { get; private set; }
+
     [SerializeField]
     private Transform backdrop;
     //private Dictionary<string, UIPopup> popupOptions = new Dictionary<string, UIPopup>();
 
+    void Awake() {
+        if (Instance != null && Instance != this) {
+            Destroy(this);
+            return;
+        } else {
+            Instance = this;
+        }
+    }
+
     void Start() {
-        base.Start();
         backdrop.gameObject.SetActive(false);
     }
 

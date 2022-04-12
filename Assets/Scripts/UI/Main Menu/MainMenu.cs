@@ -3,8 +3,19 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
-public class MainMenu : SingletonBehaviour<MainMenu>
+public class MainMenu : MonoBehaviour
 {
+    public static MainMenu Instance { get; private set; }
+
+    void Awake() {
+        if (Instance != null && Instance != this) {
+            Destroy(this);
+            return;
+        } else {
+            Instance = this;
+        }
+    }
+
     public void CreateGame() => PokeHost.Instance.CreateGame();
 
     public void JoinGame(string ipAddress, string port) {
@@ -40,11 +51,11 @@ public class MainMenu : SingletonBehaviour<MainMenu>
     /// Save username, trainer sprite, and trainer background sprite to the account file
     /// </summary>
     /// <param name="username"></param>
-    /// <param name="trainerSpriteIndex"></param>
-    /// <param name="trainerBackgroundIndex"></param>
-    public void SaveSettings(string username, int trainerSpriteIndex, int trainerBackgroundIndex) {
+    /// <param name="trainerSpriteName"></param>
+    /// <param name="trainerBackgroundName"></param>
+    public void SaveSettings(string username, string trainerSpriteName, string trainerBackgroundName) {
         Account account = Account.FindAccount();
-        account.SetSettings(username, trainerSpriteIndex, trainerBackgroundIndex);
+        account.SetSettings(username, trainerSpriteName, trainerBackgroundName);
         SaveSystem.SaveAccount(account);
     }
 }

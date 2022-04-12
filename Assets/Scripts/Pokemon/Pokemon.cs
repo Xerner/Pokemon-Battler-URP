@@ -5,13 +5,13 @@ using static JsonModel.PokemonJsonModel;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 
-[CreateAssetMenu(fileName = "New Pokemon", menuName = "Pokemon/Pokemon")]
-public class Pokemon : ScriptableObject {
+//[CreateAssetMenu(fileName = "New Pokemon", menuName = "Pokemon/Pokemon")]
+public class Pokemon : UnityEngine.Object {
 
     public static Dictionary<string, Pokemon> CachedPokemon = new Dictionary<string, Pokemon>();
 
     public int id;
-    public new string name;
+    public string name;
     public int tier;
     public int cost;
 
@@ -46,28 +46,58 @@ public class Pokemon : ScriptableObject {
         return "";
     }
 
-    public static void GetPokemonFromAPI(string idOrName, Action<Pokemon> onSuccess) {
+    public static void GetPokemonFromAPI(string idOrName, Action<Pokemon> onSuccess = null, bool debug = false) {
         // if we already fetched this pokemons data, do not fetch it again
-        if (CachedPokemon.ContainsKey(idOrName)) {
-            onSuccess(CachedPokemon[idOrName]);
+        if (CachedPokemon.ContainsKey(idOrName.ToLower())) {
+            if (onSuccess != null) onSuccess.Invoke(CachedPokemon[idOrName]);
             return;
+        } else {
+            string url;
+            if (idOrName.ToLower() == "nidoran") url = $"https://pokeapi.co/api/v2/pokemon/nidoran-m/";
+            else url = $"https://pokeapi.co/api/v2/pokemon/{idOrName}/";
+            WebRequests.Get<string>(
+                url,
+                (error) => Debug.LogError($"Failed to fetch Pokemon ({idOrName})\n"+error),
+                (json) => PokemonFromJson(json, false, (pokemon) => {
+                    Debug.Log("Fetched: " + pokemon.name);
+                    CachedPokemon.Add(pokemon.name.ToLower(), pokemon);
+                    onSuccess.Invoke(pokemon);
+                })
+            );
         }
-        //
-        WebRequests.Get<string>(
-            $"https://pokeapi.co/api/v2/pokemon/{idOrName}/", 
-            (error) => Debug.LogError(error), 
-            (json) => PokemonFromJson(json, false, (pokemon) => onSuccess(pokemon))
-        );
+    }
+
+    public static void InitializeAllPokemon() {
+        Debug.Log("Fetching all Pokemon");
+        InitializeListOfPokemon(Enum.GetNames(typeof(EPokemonName)));
+    }
+
+    /// <summary>Recursive</summary>
+    public static void InitializeListOfPokemon(string[] pokemonNames, int index = 0) {
+        string pokemonName = pokemonNames[index].ToLower();
+        if (index == pokemonNames.Length) {
+            Debug.Log("Done fetching Pokemon");
+            return;
+        } else {
+            GetPokemonFromAPI(
+                pokemonName, 
+                (pokemon) => {
+                    CachedPokemon.Add(pokemonName, pokemon);
+                    InitializeListOfPokemon(pokemonNames, index + 1);
+                }, 
+                true
+            );
+        }
     }
 
     /// <summary>
     /// Builds a Pokemon from json
     /// </summary>
     /// <param name="json">json returned from the Poke API</param>
-    public static Pokemon PokemonFromJson(string json, bool hasHiddenAbility, Action<Pokemon> onSuccess) {
+    public static Pokemon PokemonFromJson(string json, bool hasHiddenAbility, Action<Pokemon> onSuccess, bool debug = false) {
         var pokemonJson = FromJson(json);
         
-        Pokemon pokemon = CreateInstance<Pokemon>();
+        Pokemon pokemon = new Pokemon();
         pokemon.id = pokemonJson.id;
         pokemon.name = pokemonJson.name.ToProper();
         pokemon.BaseExperience = pokemonJson.base_experience;
@@ -137,7 +167,6 @@ public class Pokemon : ScriptableObject {
                 PokemonJsonAbilityEffect effect = ability.effect_entries.Find((effect) => effect.language.name == "en");
                 pokemon.Ability.description = effect.short_effect;
                 pokemon.Ability.longDescription = effect.effect;
-                onSuccess.Invoke(pokemon);
 
                 #region Species
                 WebRequests.Get<string>(
@@ -161,7 +190,7 @@ public class Pokemon : ScriptableObject {
                                     (texture) => {
                                         pokemon.sprite = Sprite.Create(texture, new Rect(0.0f, 0.0f, texture.width, texture.height), new Vector2(0.5f, 0.5f), 1f);
                                         pokemon.shopSprite = Sprite.Create(texture, new Rect(0.0f, 0.0f, texture.width, texture.height), new Vector2(0.5f, 0.5f), 1f);
-                                        CachedPokemon.Add(pokemon.name, pokemon);
+                                        if (debug) Debug.Log("Fetched: " + pokemon.name);
                                         onSuccess.Invoke(pokemon);
                                     }
                                 );

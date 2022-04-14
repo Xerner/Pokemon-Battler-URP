@@ -6,12 +6,13 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 
 //[CreateAssetMenu(fileName = "New Pokemon", menuName = "Pokemon/Pokemon")]
-public class Pokemon : UnityEngine.Object {
+public class Pokemon {
 
     public static Dictionary<string, Pokemon> CachedPokemon = new Dictionary<string, Pokemon>();
 
     public int id;
-    public string name;
+    public new string name;
+    private string correctedName;
     public int tier;
     public int cost;
 
@@ -46,64 +47,80 @@ public class Pokemon : UnityEngine.Object {
         return "";
     }
 
-    public static void GetPokemonFromAPI(string idOrName, Action<Pokemon> onSuccess = null, bool debug = false) {
+    public static void GetPokemonFromAPI(string idOrName, Action<Pokemon> onSuccess = null) {
+        string correctedName = correctPokemonName(idOrName);
         // if we already fetched this pokemons data, do not fetch it again
-        if (CachedPokemon.ContainsKey(idOrName.ToLower())) {
-            if (onSuccess != null) onSuccess.Invoke(CachedPokemon[idOrName]);
+        if (CachedPokemon.ContainsKey(correctedName)) {
+            onSuccess?.Invoke(CachedPokemon[correctedName]);
             return;
         } else {
             string url;
-            if (idOrName.ToLower() == "nidoran") url = $"https://pokeapi.co/api/v2/pokemon/nidoran-m/";
-            else url = $"https://pokeapi.co/api/v2/pokemon/{idOrName}/";
+            if (correctedName == "nidoran") url = $"https://pokeapi.co/api/v2/pokemon/nidoran-m/";
+            else url = $"https://pokeapi.co/api/v2/pokemon/{correctedName}/";
+            Debug2.Log("Fetching pokemon: " + idOrName, LogLevel.Detailed);
             WebRequests.Get<string>(
                 url,
-                (error) => Debug.LogError($"Failed to fetch Pokemon ({idOrName})\n"+error),
+                (error) => Debug.LogError($"Failed to fetch Pokemon ({idOrName})\n" + error),
                 (json) => PokemonFromJson(json, false, (pokemon) => {
                     Debug.Log("Fetched: " + pokemon.name);
-                    CachedPokemon.Add(pokemon.name.ToLower(), pokemon);
-                    onSuccess.Invoke(pokemon);
+                    Debug2.Log($"Adding {pokemon.name} to the cached Pokemon", LogLevel.Detailed);
+                    Pokemon.CachedPokemon.Add(pokemon.correctedName, pokemon);
+                    onSuccess?.Invoke(pokemon);
                 })
             );
         }
     }
 
+    private static string correctPokemonName(string pokemonName) {
+        switch (pokemonName) {
+            case "nidoran-m":
+                return "nidoran";
+            default:
+                return pokemonName.ToLower();
+        }
+    }
+
     public static void InitializeAllPokemon() {
-        Debug.Log("Fetching all Pokemon");
-        InitializeListOfPokemon(Enum.GetNames(typeof(EPokemonName)));
+        Debug2.Log("Initializing all Pokemon");
+        string[] pokemonNames = Enum.GetNames(typeof(EPokemonName));
+        for (int i = 0; i < pokemonNames.Length; i++) pokemonNames[i] = pokemonNames[i].ToLower();
+        List<string> pokemonToInitialize = new List<string>();
+        foreach (var name in pokemonNames) if (!CachedPokemon.ContainsKey(name)) pokemonToInitialize.Add(name);
+        InitializeListOfPokemon(pokemonToInitialize);
     }
 
     /// <summary>Recursive</summary>
-    public static void InitializeListOfPokemon(string[] pokemonNames, int index = 0) {
-        string pokemonName = pokemonNames[index].ToLower();
-        if (index == pokemonNames.Length) {
-            Debug.Log("Done fetching Pokemon");
-            return;
-        } else {
-            GetPokemonFromAPI(
-                pokemonName, 
-                (pokemon) => {
-                    CachedPokemon.Add(pokemonName, pokemon);
-                    InitializeListOfPokemon(pokemonNames, index + 1);
-                }, 
-                true
-            );
+    public static void InitializeListOfPokemon(List<string> pokemonNames) {
+        Debug2.Log($"Initializing {pokemonNames.Count} Pokemon");
+        Debug2.Log(string.Join(",", pokemonNames.ToArray()), LogLevel.Detailed);
+        foreach (var name in pokemonNames) {
+            GetPokemonFromAPI(name);
         }
+        //if (index == pokemonNames.Count) {
+        //    Debug2.Log($"Done fetching {pokemonNames.Count} Pokemon");
+        //    return;
+        //} else {
+        //    GetPokemonFromAPI(
+        //        pokemonName,
+        //        (pokemon) => InitializeListOfPokemon(pokemonNames, index + 1)
+        //    );
+        //}
     }
 
     /// <summary>
     /// Builds a Pokemon from json
     /// </summary>
     /// <param name="json">json returned from the Poke API</param>
-    public static Pokemon PokemonFromJson(string json, bool hasHiddenAbility, Action<Pokemon> onSuccess, bool debug = false) {
+    public static void PokemonFromJson(string json, bool hasHiddenAbility, Action<Pokemon> onSuccess) {
         var pokemonJson = FromJson(json);
-        
+
         Pokemon pokemon = new Pokemon();
         pokemon.id = pokemonJson.id;
-        pokemon.name = pokemonJson.name.ToProper();
+        pokemon.correctedName = correctPokemonName(pokemonJson.name);
+        pokemon.name = pokemon.correctedName.ToProper();
         pokemon.BaseExperience = pokemonJson.base_experience;
         pokemon.height = pokemonJson.height;
         pokemon.tier = PokemonConstants.enumToTier[pokemon.id];
-
         #region Stats
         foreach (var pokeStat in pokemonJson.stats) {
             switch (pokeStat.stat.name) {
@@ -152,13 +169,14 @@ public class Pokemon : UnityEngine.Object {
             pokemonJson.abilities = pokemonJson.abilities.FindAll((ability) => ability.is_hidden == false);
             ability = pokemonJson.abilities[new System.Random().Next(pokemonJson.abilities.Count)];
         }
-        pokemon.Ability = new PokemonAbility() { 
+        pokemon.Ability = new PokemonAbility() {
             name = ability.ability.name.ToProper().Replace("-", " "),
-            isHidden = ability.is_hidden, 
-            slot = ability.slot, 
+            isHidden = ability.is_hidden,
+            slot = ability.slot,
             url = ability.ability.url
         };
 
+        Debug2.Log("Fetching pokemon ability: " + pokemon.name, LogLevel.Detailed);
         WebRequests.Get<string>(
             ability.ability.url,
             (error) => Debug.LogError(error),
@@ -169,29 +187,32 @@ public class Pokemon : UnityEngine.Object {
                 pokemon.Ability.longDescription = effect.effect;
 
                 #region Species
+                Debug2.Log("Fetching pokemon species: " + pokemon.name, LogLevel.Detailed);
                 WebRequests.Get<string>(
                     pokemonJson.species.url,
                     (error) => Debug.LogError(error),
-                    (jsonSpecies) => { 
+                    (jsonSpecies) => {
                         JsonPokemonSpecies species = JsonConvert.DeserializeObject<JsonPokemonSpecies>(jsonSpecies);
                         #region Evolution Chain
+                        Debug2.Log("Fetching pokemon evolution chain: " + pokemon.name, LogLevel.Detailed);
                         WebRequests.Get<string>(
                             species.evolution_chain.url,
                             (error) => Debug.LogError(error),
                             (jsonEvolutionChain) => {
                                 JsonEvolutionChain evolutionChain = JsonConvert.DeserializeObject<JsonEvolutionChain>(jsonEvolutionChain);
                                 pokemon.evolutions = evolutionChain.GetEvolutions();
-                                pokemon.EvolutionStage = evolutionChain.GetEvolutionStage(pokemon.name);
-                                
+                                pokemon.EvolutionStage = evolutionChain.GetEvolutionStage(pokemonJson.name);
+
                                 #region Sprites
+                                Debug2.Log("Fetching pokemon sprites: " + pokemon.name, LogLevel.Detailed);
                                 WebRequests.Get<Texture2D>(
                                     pokemonJson.sprites.versions["generation-v"]["black-white"].front_default,
                                     (error) => Debug.LogError(error),
                                     (texture) => {
                                         pokemon.sprite = Sprite.Create(texture, new Rect(0.0f, 0.0f, texture.width, texture.height), new Vector2(0.5f, 0.5f), 1f);
                                         pokemon.shopSprite = Sprite.Create(texture, new Rect(0.0f, 0.0f, texture.width, texture.height), new Vector2(0.5f, 0.5f), 1f);
-                                        if (debug) Debug.Log("Fetched: " + pokemon.name);
-                                        onSuccess.Invoke(pokemon);
+                                        Debug2.Log("Fetching pokemon sprites: " + pokemon.name, LogLevel.Detailed);
+                                        onSuccess?.Invoke(pokemon);
                                     }
                                 );
                                 #endregion
@@ -205,8 +226,6 @@ public class Pokemon : UnityEngine.Object {
         );
 
         #endregion
-
-        return pokemon;
     }
 
     public string EvolutionsToString() {

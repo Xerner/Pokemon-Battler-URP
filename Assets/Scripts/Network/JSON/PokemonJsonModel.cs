@@ -158,6 +158,8 @@ namespace JsonModel {
             if (chainLink == null || chainLink.species == null) {
                 Debug.LogError("Could not calculate evolution stage. Invalid Pokemon name: " + pokemonName);
                 return -1;
+            } else if (chainLink.species.name == pokemonName) {
+                return evolutionStage;
             } else if (chainLink.evolves_to.Count == 0) { // count == 0 and name was never matched
                 return evolutionStage;
             } else {

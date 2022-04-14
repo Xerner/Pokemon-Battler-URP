@@ -50,7 +50,6 @@ public class PokeHost : MonoBehaviour
     {
         // Add the main user to the game
         if (TryGetComponent<Account>(out var account)) {
-            Pokemon.InitializeAllPokemon();
             AddTrainerToGame(account.settings);
         } else {
             Debug.LogError("No Account component found on the NetworkManager object");

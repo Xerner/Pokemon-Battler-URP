@@ -14,6 +14,16 @@ public class Dashboard : MonoBehaviour {
         //RefreshShop();
     }
 
+    void OnGUI() {
+        //if (!btnTexture) {
+        //    Debug.LogError("Please assign a texture on the inspector");
+        //    return;
+        //}
+
+        if (GUI.Button(new Rect(5, 5, 200, 30), "Fetch All Pokemon"))
+            Pokemon.InitializeAllPokemon();
+    }
+
     public void RefreshShop() {
         System.Random rnd = new System.Random();
         foreach (ShopCardUI card in shopCards) {

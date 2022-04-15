@@ -24,13 +24,15 @@ public class PokemonDrawer : PropertyDrawer {
     }
 
     public override float GetPropertyHeight(SerializedProperty property, GUIContent label) {
-        return (height * 2) + (margin * 2);
+        return (height * 2) + margin;
     }
 
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {
-        Pokemon pokemon = null;
+        PokemonScriptableObject pokemonSO = (PokemonScriptableObject)property.objectReferenceValue;
         Rect nextYPos = new Rect(position.x, position.y, position.width, height);
         EditorGUI.ObjectField(nextYPos, property);
+        if (pokemonSO == null) return;
+        Pokemon pokemon = pokemonSO.Pokemon;
         if (pokemon == null) return;
         nextYPos = new Rect(nextYPos.x, nextYPos.y += height + margin, nextYPos.width, height);
         EditorGUI.LabelField(nextYPos, "Name", pokemon.name, style);

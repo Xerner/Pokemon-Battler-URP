@@ -5,13 +5,13 @@ using static JsonModel.PokemonJsonModel;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 
-//[CreateAssetMenu(fileName = "New Pokemon", menuName = "Pokemon/Pokemon")]
+[Serializable]
 public class Pokemon {
 
     public static Dictionary<string, Pokemon> CachedPokemon = new Dictionary<string, Pokemon>();
 
     public int id;
-    public new string name;
+    public string name;
     private string correctedName;
     public int tier;
     public int cost;
@@ -41,6 +41,7 @@ public class Pokemon {
     /// <param name="name">A possibly valid Pokemon name</param>
     /// <returns>A valid Pokemon name, or an empty string if the given name was invalid</returns>
     public static string GetValidPokemonName(string name) {
+        return name;
         foreach (Enum pokeName in Enum.GetValues(typeof(EPokemonName))) {
             if (name.Trim().ToLower() == pokeName.ToString().ToLower()) return pokeName.ToString();
         }
@@ -51,6 +52,7 @@ public class Pokemon {
         string correctedName = correctPokemonName(idOrName);
         // if we already fetched this pokemons data, do not fetch it again
         if (CachedPokemon.ContainsKey(correctedName)) {
+            Debug.Log("Fetched from cache: " + correctedName);
             onSuccess?.Invoke(CachedPokemon[correctedName]);
             return;
         } else {
@@ -64,6 +66,7 @@ public class Pokemon {
                 (json) => PokemonFromJson(json, false, (pokemon) => {
                     Debug.Log("Fetched: " + pokemon.name);
                     Debug2.Log($"Adding {pokemon.name} to the cached Pokemon", LogLevel.Detailed);
+                    // Do not simplify name. It is needed like this for watching its variable value because asynchronous debugging is a bitch
                     Pokemon.CachedPokemon.Add(pokemon.correctedName, pokemon);
                     onSuccess?.Invoke(pokemon);
                 })
@@ -120,7 +123,7 @@ public class Pokemon {
         pokemon.name = pokemon.correctedName.ToProper();
         pokemon.BaseExperience = pokemonJson.base_experience;
         pokemon.height = pokemonJson.height;
-        pokemon.tier = PokemonConstants.enumToTier[pokemon.id];
+        if (PokemonConstants.enumToTier.ContainsKey(pokemon.id)) pokemon.tier = PokemonConstants.enumToTier[pokemon.id];
         #region Stats
         foreach (var pokeStat in pokemonJson.stats) {
             switch (pokeStat.stat.name) {
@@ -249,11 +252,13 @@ public class Pokemon {
 
     #region Helper Classes
 
+    [Serializable]
     public class PokemonStat {
         public int baseStat;
         public int effort;
     }
 
+    [Serializable]
     public class PokemonAbility {
         public string name;
         public string description;

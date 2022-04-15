@@ -1,0 +1,49 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c0368e1a8641244b8631701b8cd635d, type: 3}
+  m_Name: New Pokemon
+  m_EditorClassIdentifier: 
+  Pokemon:
+    id: 0
+    name: 
+    tier: 0
+    cost: 0
+    Hp:
+      baseStat: 50
+      effort: 0
+    Attack:
+      baseStat: 50
+      effort: 0
+    Defense:
+      baseStat: 50
+      effort: 0
+    SpecialAttack:
+      baseStat: 50
+      effort: 0
+    SpecialDefense:
+      baseStat: 50
+      effort: 0
+    Speed:
+      baseStat: 50
+      effort: 0
+    Ability:
+      name: 
+      description: 
+      longDescription: 
+      url: 
+      isHidden: 0
+      slot: 0
+    types: 0000000000000000
+    evolutions: []
+    EvolutionStage: 0
+    sprite: {fileID: 0}
+    shopSprite: {fileID: 0}

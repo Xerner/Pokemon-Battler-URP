@@ -9,9 +9,12 @@ public class PokemonBehaviour : MonoBehaviour {
     private Animator animator;
 
     // TODO: create an Attribute to print the values of pokemon as uneditable labels
-    [SerializeField][Pokemon]
+    [SerializeField]
+    [Pokemon]
+    private PokemonScriptableObject pokemonSO;
+    [SerializeField]
     private Pokemon pokemon;
-    [SerializeField] 
+    [SerializeField]
     public PokemonCombat Combat;
     //public bool isSelected;
     public PokeContainer CurrentField;
@@ -21,7 +24,7 @@ public class PokemonBehaviour : MonoBehaviour {
 
     [Header("Pokemon API")]
     [SerializeField]
-    private string idOrName;
+    private string pokemonName;
 
     public Pokemon Pokemon { get; private set; }
 
@@ -34,18 +37,20 @@ public class PokemonBehaviour : MonoBehaviour {
         if (animator == null) animator = GetComponent<Animator>();
     }
 
-    public void Initialize() => Initialize(idOrName);
+    public void Initialize() => Initialize(pokemonName);
 
-    public void Initialize(string idOrName) {
-        InitializeComponents();
-        if (idOrName.All(char.IsDigit) || Pokemon.GetValidPokemonName(idOrName) != "") {
-            Pokemon.GetPokemonFromAPI(idOrName, (pokemon) => {
+    public void Initialize(string pokemonName) {
+        if (pokemonName.Trim() != ""  && Pokemon.GetValidPokemonName(pokemonName) != "") {
+            InitializeComponents();
+            Pokemon.GetPokemonFromAPI(pokemonName, (pokemon) => {
                 this.pokemon = pokemon;
+                pokemonSO = ScriptableObject.CreateInstance<PokemonScriptableObject>();
+                pokemonSO.Pokemon = pokemon;
                 sprite.sprite = pokemon.sprite;
                 gameObject.name = pokemon.name;
             });
         } else {
-            Debug.LogError("Invalid pokemon ID or name given: " + idOrName);
+            Debug.LogError("Invalid pokemon ID or name given: " + pokemonName);
         }
     }
 

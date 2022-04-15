@@ -9,6 +9,7 @@ using System.Collections.Generic;
 public class Pokemon {
 
     public static Dictionary<string, Pokemon> CachedPokemon = new Dictionary<string, Pokemon>();
+    public static Dictionary<int, List<Pokemon>> TierToPokemonList = new Dictionary<int, List<Pokemon>>();
 
     public int id;
     public string name;
@@ -42,10 +43,10 @@ public class Pokemon {
     /// <returns>A valid Pokemon name, or an empty string if the given name was invalid</returns>
     public static string GetValidPokemonName(string name) {
         return name;
-        foreach (Enum pokeName in Enum.GetValues(typeof(EPokemonName))) {
-            if (name.Trim().ToLower() == pokeName.ToString().ToLower()) return pokeName.ToString();
-        }
-        return "";
+        //foreach (Enum pokeName in Enum.GetValues(typeof(EPokemonName))) {
+        //    if (name.Trim().ToLower() == pokeName.ToString().ToLower()) return pokeName.ToString();
+        //}
+        //return "";
     }
 
     public static void GetPokemonFromAPI(string idOrName, Action<Pokemon> onSuccess = null) {
@@ -68,6 +69,8 @@ public class Pokemon {
                     Debug2.Log($"Adding {pokemon.name} to the cached Pokemon", LogLevel.Detailed);
                     // Do not simplify name. It is needed like this for watching its variable value because asynchronous debugging is a bitch
                     Pokemon.CachedPokemon.Add(pokemon.correctedName, pokemon);
+                    Pokemon.TierToPokemonList.Add(pokemon.tier, new List<Pokemon>());
+                    Pokemon.TierToPokemonList[pokemon.tier].Add(pokemon);
                     onSuccess?.Invoke(pokemon);
                 })
             );

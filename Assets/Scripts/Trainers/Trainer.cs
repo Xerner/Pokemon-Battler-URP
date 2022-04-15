@@ -10,12 +10,13 @@ public class Trainer
     private bool Ready;
     private int CurrentHealth;
     private int TotalHealth;
-    private int Level;
     private int Experience;
     public int Money;
+    private int level;
+    public int Level { get; private set; }
     private Dictionary<string, List<PokemonBehaviour>> activePokemon;
-
     public Dictionary<string, List<PokemonBehaviour>> ActivePokemon { get; private set; }
+    
 
     public bool AddPokemon(PokemonBehaviour pokemon)
     {

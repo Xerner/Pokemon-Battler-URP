@@ -6,10 +6,10 @@ using UnityEngine.SceneManagement;
 [RequireComponent(typeof(NetworkManager))]
 [RequireComponent(typeof(UNetTransport))]
 [RequireComponent(typeof(UIPersistentStatus))]
-public class PokeHost : MonoBehaviour
-{
+public class PokeHost : MonoBehaviour {
     public static PokeHost Instance { get; private set; }
 
+    public Account HostAccount;
     private NetworkManager netManager;
     private UIPersistentStatus connectionStatus;
     private const int maxConnections = 8;
@@ -24,8 +24,7 @@ public class PokeHost : MonoBehaviour
         }
     }
 
-    void Start()
-    {
+    void Start() {
         if (Instance != null && Instance != this) {
             Destroy(this);
             return;
@@ -33,42 +32,29 @@ public class PokeHost : MonoBehaviour
         netManager = NetworkManager.Singleton;
         connectionStatus = GetComponent<UIPersistentStatus>();
         SceneManager.sceneLoaded += OnSceneLoaded;
-        if (SceneManager.GetActiveScene().name == "ArenaScene")
-        {
+        if (SceneManager.GetActiveScene().name == "ArenaScene") {
+            CreateGame(true);
             arenaIsStartingScene = true;
             InitializeArena();
-            CreateGame();
         }
     }
 
-    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode) {
         if (scene.name == "ArenaScene" && arenaIsStartingScene == false) InitializeArena();
     }
 
-    public void InitializeArena()
-    {
-        // Add the main user to the game
-        if (TryGetComponent<Account>(out var account)) {
-            AddTrainerToGame(account.settings);
-        } else {
-            Debug.LogError("No Account component found on the NetworkManager object");
-        }
+    public void InitializeArena() {
+        // TODO: write code to fetch other users in the game and add them to TrainerManager
     }
 
-    private void AddTrainerToGame(AccountSettings settings)
-    {
-        TrainerCardManager.Instance.AddTrainer(settings, netManager.LocalClientId);
-    }
-
-    /// <summary>
-    /// Starts hosting a game. Automatically adds this player to the game as well.
-    /// </summary>
-    public void CreateGame()
-    {
+    /// <summary>Starts hosting a game. Automatically adds this player to the game as well.</summary>
+    public void CreateGame(bool alreadyInScene = false) {
+        Trainer trainer = new Trainer(HostAccount);
+        TrainerManager.Instance = new TrainerManager(trainer);
+        TrainerManager.Instance.Add(trainer);
         netManager.StartHost();
         connectionStatus.SetStatus("Hosting", UIPersistentStatus.ConnectionState.Good);
-        SceneManager.LoadScene(1); // 1 = arena scene
+        if (!alreadyInScene) SceneManager.LoadScene(1); // 1 = arena scene
     }
 
     /// <summary>
@@ -77,8 +63,7 @@ public class PokeHost : MonoBehaviour
     /// <param name="ipAddress"></param>
     /// <param name="port"></param>
     /// <returns>If the client was successfully connected</returns>
-    public bool ConnectToGame(string ipAddress, int port)
-    {
+    public bool ConnectToGame(string ipAddress, int port) {
         UNetTransport transport = GetComponent<UNetTransport>();
         // NetworkManager uses the transport object settings for connecting
         transport.ConnectAddress = ipAddress;
@@ -91,12 +76,9 @@ public class PokeHost : MonoBehaviour
         netManager.StartClient(); // synchronous
         // I would've thought that StartClient() would return false if the server doesn't exist
         // but it actually still returns true... although IsConnectedClient is false. Don't know why
-        if (netManager.IsConnectedClient)
-        {
+        if (netManager.IsConnectedClient) {
             OnClientConnect(netManager.ServerClientId, ipAddress, port);
-        }
-        else
-        {
+        } else {
             OnClientDisconnect(netManager.ServerClientId, ipAddress, port);
         }
         return (netManager.IsConnectedClient);
@@ -116,8 +98,7 @@ public class PokeHost : MonoBehaviour
     /// <param name="connectionData">binary data passed into StartClient. In our case this is the client's GUID, which is a unique identifier for their install of the game that persists across app restarts. </param>
     /// <param name="clientId">This is the clientId that MLAPI assigned us on login. It does not persist across multiple logins from the same client. </param>
     /// <param name="callback">The delegate we must invoke to signal that the connection was approved or not. </param>
-    private void ApprovalCheck(byte[] connectionData, ulong clientId, NetworkManager.ConnectionApprovedDelegate callback)
-    {
+    private void ApprovalCheck(byte[] connectionData, ulong clientId, NetworkManager.ConnectionApprovedDelegate callback) {
         // Dont approve more than 8 trainers
         bool approve = netManager.ConnectedClientsIds.Count == maxConnections;
         bool createPlayerObject = false; // no player object is needed yet
@@ -130,15 +111,13 @@ public class PokeHost : MonoBehaviour
         callback(createPlayerObject, null, approve, null, null);
     }
 
-    public void OnClientConnect(ulong clientId, string ipAddress, int port)
-    {
+    public void OnClientConnect(ulong clientId, string ipAddress, int port) {
         connectionStatus.SetMessage($"Connected to host {ipAddress}:{port}");
         connectionStatus.SetStatus("Connected", UIPersistentStatus.ConnectionState.Good);
         UIWindowManager.Instance.CreatePopupMessage("Connected to server");
     }
 
-    public void OnClientDisconnect(ulong clientId, string ipAddress, int port)
-    {
+    public void OnClientDisconnect(ulong clientId, string ipAddress, int port) {
         UNetTransport transport = GetComponent<UNetTransport>();
         netManager.Shutdown();
         connectionStatus.SetMessage($"Failed to connect to host {ipAddress}:{port}");
@@ -147,14 +126,12 @@ public class PokeHost : MonoBehaviour
     }
 
     //[ClientRpc]
-    public void HelloWorldClientRPC()
-    {
+    public void HelloWorldClientRPC() {
         Debug.Log("Hello, I am Client");
     }
 
     //[ServerRpc]
-    public void HelloWorldServerRPC()
-    {
+    public void HelloWorldServerRPC() {
         Debug.Log("Hello, I am Server");
     }
 }

@@ -12,11 +12,11 @@ public class Arena : MonoBehaviour
     [HideInInspector] public Trainer EnemyTrainer;
     [HideInInspector] public bool CombatMode;
     private readonly Dictionary<Allegiance, List<PokemonBehaviour>> CombatGroups = new Dictionary<Allegiance, List<PokemonBehaviour>>();
-    public Party Party;
+    public ArenaBench Bench;
     public GameObject CameraAnchor;
-    private ArenaCard[] ArenaCards = new ArenaCard[Rows*Columns];
+    private ArenaContainer[] ArenaCards = new ArenaContainer[Rows*Columns];
 
-    public ArenaCard this[Vector2Int index]
+    public ArenaContainer this[Vector2Int index]
     {
         get { 
             if (InBounds(index))
@@ -47,7 +47,7 @@ public class Arena : MonoBehaviour
         return index.y >= 0 && index.y < Rows && index.x >= 0 && index.x < Columns;
     }
 
-    public ArenaCard RandomOpenAdjacent(Vector2Int origin)
+    public ArenaContainer RandomOpenAdjacent(Vector2Int origin)
     {
         Vector2Int adjacent;
         Direction side = (Direction)new System.Random().Next(4);
@@ -71,7 +71,7 @@ public class Arena : MonoBehaviour
                 default:
                     throw new System.Exception("Invalid arena direction");
             }
-            if (this[adjacent] is ArenaCard card && card.HeldPokemon == null)
+            if (this[adjacent] is ArenaContainer card && card.HeldPokemon == null)
             {
                 return card;
             }

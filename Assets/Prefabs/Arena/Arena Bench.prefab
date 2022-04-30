@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1586542305822150155}
   - component: {fileID: 7550427401185300140}
   m_Layer: 0
-  m_Name: Party
+  m_Name: Arena Bench
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -28,6 +28,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -93.29514}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7535133706068336675}
   - {fileID: 1376750921486249251}
@@ -139,7 +140,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7255544903469641532, guid: c7df432f3868c264fb8df86f24ec184e, type: 3}
       propertyPath: m_Name
-      value: Party Card (8)
+      value: Bench Container
       objectReference: {fileID: 0}
     - target: {fileID: 8859253296831810595, guid: c7df432f3868c264fb8df86f24ec184e, type: 3}
       propertyPath: m_RootOrder
@@ -237,7 +238,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7255544903469641532, guid: c7df432f3868c264fb8df86f24ec184e, type: 3}
       propertyPath: m_Name
-      value: Party Card (4)
+      value: Bench Container
       objectReference: {fileID: 0}
     - target: {fileID: 8859253296831810595, guid: c7df432f3868c264fb8df86f24ec184e, type: 3}
       propertyPath: m_RootOrder
@@ -335,7 +336,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7255544903469641532, guid: c7df432f3868c264fb8df86f24ec184e, type: 3}
       propertyPath: m_Name
-      value: Party Card
+      value: Bench Container
       objectReference: {fileID: 0}
     - target: {fileID: 8859253296831810595, guid: c7df432f3868c264fb8df86f24ec184e, type: 3}
       propertyPath: m_AnchorMax.x
@@ -429,7 +430,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7255544903469641532, guid: c7df432f3868c264fb8df86f24ec184e, type: 3}
       propertyPath: m_Name
-      value: Party Card (3)
+      value: Bench Container
       objectReference: {fileID: 0}
     - target: {fileID: 8859253296831810595, guid: c7df432f3868c264fb8df86f24ec184e, type: 3}
       propertyPath: m_RootOrder
@@ -527,7 +528,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7255544903469641532, guid: c7df432f3868c264fb8df86f24ec184e, type: 3}
       propertyPath: m_Name
-      value: Party Card (7)
+      value: Bench Container
       objectReference: {fileID: 0}
     - target: {fileID: 8859253296831810595, guid: c7df432f3868c264fb8df86f24ec184e, type: 3}
       propertyPath: m_RootOrder
@@ -625,7 +626,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7255544903469641532, guid: c7df432f3868c264fb8df86f24ec184e, type: 3}
       propertyPath: m_Name
-      value: Party Card (6)
+      value: Bench Container
       objectReference: {fileID: 0}
     - target: {fileID: 8859253296831810595, guid: c7df432f3868c264fb8df86f24ec184e, type: 3}
       propertyPath: m_RootOrder
@@ -723,7 +724,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7255544903469641532, guid: c7df432f3868c264fb8df86f24ec184e, type: 3}
       propertyPath: m_Name
-      value: Party Card (5)
+      value: Bench Container
       objectReference: {fileID: 0}
     - target: {fileID: 8859253296831810595, guid: c7df432f3868c264fb8df86f24ec184e, type: 3}
       propertyPath: m_RootOrder
@@ -821,7 +822,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7255544903469641532, guid: c7df432f3868c264fb8df86f24ec184e, type: 3}
       propertyPath: m_Name
-      value: Party Card (1)
+      value: Bench Container
       objectReference: {fileID: 0}
     - target: {fileID: 8859253296831810595, guid: c7df432f3868c264fb8df86f24ec184e, type: 3}
       propertyPath: m_RootOrder
@@ -919,7 +920,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7255544903469641532, guid: c7df432f3868c264fb8df86f24ec184e, type: 3}
       propertyPath: m_Name
-      value: Party Card (2)
+      value: Bench Container
       objectReference: {fileID: 0}
     - target: {fileID: 8859253296831810595, guid: c7df432f3868c264fb8df86f24ec184e, type: 3}
       propertyPath: m_RootOrder

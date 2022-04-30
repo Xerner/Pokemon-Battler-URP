@@ -1,6 +1,34 @@
 {
-    "name": "InputManager",
+    "name": "PlayerControls",
     "maps": [
+        {
+            "name": "Debug",
+            "id": "fe3ff34c-095f-42fd-854d-c66ce4f85b13",
+            "actions": [
+                {
+                    "name": "Toggle Panel Menu",
+                    "type": "Button",
+                    "id": "e20b5c80-5d9b-4659-9c4c-8638503c5033",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "5c70a4dd-fc58-4bfc-ae1a-e6f3fb67580e",
+                    "path": "<Keyboard>/backquote",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Toggle Panel Menu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
         {
             "name": "Camera",
             "id": "655325d7-8650-4438-9b08-43c691fb0d9c",
@@ -11,7 +39,8 @@
                     "id": "58eebcff-a59c-472c-b0a6-dcc4457c2087",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -19,7 +48,7 @@
                     "name": "",
                     "id": "20d97fd7-8438-4a1f-adb5-39c3e8cbd65f",
                     "path": "<Keyboard>/rightArrow",
-                    "interactions": "Press",
+                    "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "Movement",
@@ -30,7 +59,7 @@
                     "name": "",
                     "id": "8c8932a1-4994-4279-8e0e-dc58a8d26c0c",
                     "path": "<Keyboard>/downArrow",
-                    "interactions": "Press",
+                    "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "Movement",
@@ -41,7 +70,7 @@
                     "name": "",
                     "id": "30233df9-64c3-4436-a0ac-dfbc8a94d6fc",
                     "path": "<Keyboard>/leftArrow",
-                    "interactions": "Press",
+                    "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "Movement",
@@ -52,7 +81,7 @@
                     "name": "",
                     "id": "6131d022-e765-403d-9058-e94b6a08ccc2",
                     "path": "<Keyboard>/upArrow",
-                    "interactions": "Press",
+                    "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "Movement",

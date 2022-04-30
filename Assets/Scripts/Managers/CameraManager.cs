@@ -1,40 +1,61 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Controls;
+using static UnityEngine.InputSystem.InputAction;
 
+[RequireComponent(typeof(PlayerInput))]
 public class CameraManager : MonoBehaviour
 {
-    private static readonly int arenaColumns = 3;
-
-    [SerializeField] private Arena activeArena;
-
-    [SerializeField] private Arena[] arenas = new Arena[8];
-    [SerializeField] private InputManager inputs;
-    private Keyboard keyboard;
-    private int activeArenaIndex;
-    private int tweenID;
+    public static CameraManager Instance { get; private set; }
+    
+    static readonly int arenaColumns = 3;
+    [SerializeField] Arena activeArena;
+    [SerializeField] Arena[] arenas = new Arena[8];
+    //private Keyboard keyboard;
+    int activeArenaIndex;
+    int tweenID;
 
     private void Start()
     {
-        keyboard = InputSystem.GetDevice<Keyboard>();
+        if (Instance != null && Instance != this) {
+            Destroy(this);
+            return;
+        } else {
+            Instance = this;
+        }
+        //keyboard = InputSystem.GetDevice<Keyboard>();
         MoveToArena(activeArena);
+        var playerInput = GetComponent<PlayerInput>();
+        if (playerInput.isActiveAndEnabled) {
+            var moveAction = playerInput.actions.FindAction("Movement");
+            moveAction.performed += Move;
+        }
     }
 
-    private void Update()
-    {
-        if (keyboard.upArrowKey.wasPressedThisFrame) Move(Direction.Up);
-        if (keyboard.downArrowKey.wasPressedThisFrame) Move(Direction.Down);
-        if (keyboard.leftArrowKey.wasPressedThisFrame) Move(Direction.Left);
-        if (keyboard.rightArrowKey.wasPressedThisFrame) Move(Direction.Right);
+    //private void Update()
+    //{
+    //    if (keyboard.upArrowKey.wasPressedThisFrame) Move(Direction.Up);
+    //    if (keyboard.downArrowKey.wasPressedThisFrame) Move(Direction.Down);
+    //    if (keyboard.leftArrowKey.wasPressedThisFrame) Move(Direction.Left);
+    //    if (keyboard.rightArrowKey.wasPressedThisFrame) Move(Direction.Right);
+    //}
+
+    public void OnArrowKeyPressed(CallbackContext context) {
+        if (context.started) {
+            var inputControl = (KeyControl)context.control;
+            Move(inputControl.keyCode);
+        }
     }
 
-    public void Move(Direction direction)
+    public void Move(CallbackContext context) => Move(((KeyControl)context.control).keyCode);
+
+    public void Move(Key key)
     {
+        Debug2.Log("Moving camera: " + key, LogLevel.Detailed);
         int newArenaIndex;
-        switch (direction)
+        switch (key)
         {
-            case Direction.Up:
+            case Key.UpArrow:
                 switch (activeArenaIndex)
                 {
                     case 4:
@@ -49,7 +70,7 @@ public class CameraManager : MonoBehaviour
                         break;
                 }
                 break;
-            case Direction.Down:
+            case Key.DownArrow:
                 switch (activeArenaIndex)
                 {
                     case 2:
@@ -64,10 +85,10 @@ public class CameraManager : MonoBehaviour
                         break;
                 }
                 break;
-            case Direction.Left:
+            case Key.LeftArrow:
                 newArenaIndex = activeArenaIndex - 1;
                 break;
-            case Direction.Right:
+            case Key.RightArrow:
                 newArenaIndex = activeArenaIndex + 1;
                 break;
             default:
@@ -93,12 +114,4 @@ public class CameraManager : MonoBehaviour
     {
         return index >= 0 && index < 8;
     }
-}
-
-public enum Direction
-{
-    Up,
-    Down,
-    Left,
-    Right
 }

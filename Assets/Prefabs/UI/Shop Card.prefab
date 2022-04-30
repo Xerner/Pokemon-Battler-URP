@@ -573,9 +573,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: ShopCard, Assembly-CSharp
-        m_MethodName: DebugBuyPokemon
+      - m_Target: {fileID: 1408972291957904343}
+        m_TargetAssemblyTypeName: ShopCardUI, Assembly-CSharp
+        m_MethodName: TryToBuy
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

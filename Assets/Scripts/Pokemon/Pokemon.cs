@@ -9,13 +9,18 @@ using System.Collections.Generic;
 public class Pokemon {
 
     public static Dictionary<string, Pokemon> CachedPokemon = new Dictionary<string, Pokemon>();
-    public static Dictionary<int, List<Pokemon>> TierToPokemonList = new Dictionary<int, List<Pokemon>>();
+    public static Dictionary<int, List<Pokemon>> TierToPokemonList = new Dictionary<int, List<Pokemon>>() {
+        { 1, new List<Pokemon>() },
+        { 2, new List<Pokemon>() },
+        { 3, new List<Pokemon>() },
+        { 4, new List<Pokemon>() },
+        { 5, new List<Pokemon>() }
+    };
 
     public int id;
     public string name;
     private string correctedName;
     public int tier;
-    public int cost;
 
     public PokemonStat Hp = new PokemonStat() { baseStat = 50, effort = 0 };
     public PokemonStat Attack = new PokemonStat() { baseStat = 50, effort = 0 };
@@ -30,24 +35,11 @@ public class Pokemon {
 
     public EPokemonType[] types = new EPokemonType[] { EPokemonType.Normal, EPokemonType.None };
 
-    public List<string> evolutions;
+    public List<string> Evolutions;
     public int EvolutionStage;
 
-    public Sprite sprite;
-    public Sprite shopSprite;
-
-    /// <summary>
-    /// Returns a valid Pokemon name for querying Poke API from the given Pokemon name
-    /// </summary>
-    /// <param name="name">A possibly valid Pokemon name</param>
-    /// <returns>A valid Pokemon name, or an empty string if the given name was invalid</returns>
-    public static string GetValidPokemonName(string name) {
-        return name;
-        //foreach (Enum pokeName in Enum.GetValues(typeof(EPokemonName))) {
-        //    if (name.Trim().ToLower() == pokeName.ToString().ToLower()) return pokeName.ToString();
-        //}
-        //return "";
-    }
+    public Sprite Sprite;
+    public Sprite ShopSprite;
 
     public static void GetPokemonFromAPI(string idOrName, Action<Pokemon> onSuccess = null) {
         string correctedName = correctPokemonName(idOrName);
@@ -69,7 +61,6 @@ public class Pokemon {
                     Debug2.Log($"Adding {pokemon.name} to the cached Pokemon", LogLevel.Detailed);
                     // Do not simplify name. It is needed like this for watching its variable value because asynchronous debugging is a bitch
                     Pokemon.CachedPokemon.Add(pokemon.correctedName, pokemon);
-                    Pokemon.TierToPokemonList.Add(pokemon.tier, new List<Pokemon>());
                     Pokemon.TierToPokemonList[pokemon.tier].Add(pokemon);
                     onSuccess?.Invoke(pokemon);
                 })
@@ -206,7 +197,7 @@ public class Pokemon {
                             (error) => Debug.LogError(error),
                             (jsonEvolutionChain) => {
                                 JsonEvolutionChain evolutionChain = JsonConvert.DeserializeObject<JsonEvolutionChain>(jsonEvolutionChain);
-                                pokemon.evolutions = evolutionChain.GetEvolutions();
+                                pokemon.Evolutions = evolutionChain.GetEvolutions();
                                 pokemon.EvolutionStage = evolutionChain.GetEvolutionStage(pokemonJson.name);
 
                                 #region Sprites
@@ -215,8 +206,8 @@ public class Pokemon {
                                     pokemonJson.sprites.versions["generation-v"]["black-white"].front_default,
                                     (error) => Debug.LogError(error),
                                     (texture) => {
-                                        pokemon.sprite = Sprite.Create(texture, new Rect(0.0f, 0.0f, texture.width, texture.height), new Vector2(0.5f, 0.5f), 1f);
-                                        pokemon.shopSprite = Sprite.Create(texture, new Rect(0.0f, 0.0f, texture.width, texture.height), new Vector2(0.5f, 0.5f), 1f);
+                                        pokemon.Sprite = Sprite.Create(texture, new Rect(0.0f, 0.0f, texture.width, texture.height), new Vector2(0.5f, 0.5f), 1f);
+                                        pokemon.ShopSprite = Sprite.Create(texture, new Rect(0.0f, 0.0f, texture.width, texture.height), new Vector2(0.5f, 0.5f), 1f);
                                         Debug2.Log("Fetching pokemon sprites: " + pokemon.name, LogLevel.Detailed);
                                         onSuccess?.Invoke(pokemon);
                                     }
@@ -236,9 +227,9 @@ public class Pokemon {
 
     public string EvolutionsToString() {
         string str = "";
-        for (int i = 0; i < evolutions.Count; i++) {
-            if (i == evolutions.Count - 1) str += evolutions[i];
-            else str += evolutions[i] + " → ";
+        for (int i = 0; i < Evolutions.Count; i++) {
+            if (i == Evolutions.Count - 1) str += Evolutions[i];
+            else str += Evolutions[i] + " → ";
         }
         return str;
     }

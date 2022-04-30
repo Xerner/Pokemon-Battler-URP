@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 
 public static class WebRequests {
+    // The MonoBehaviour exists solely to allow this class to use Coroutines
     private class WebRequestsMB : MonoBehaviour { }
 
     private static WebRequestsMB webRequestsMB;

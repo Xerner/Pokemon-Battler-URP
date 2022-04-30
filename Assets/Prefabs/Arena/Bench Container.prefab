@@ -10,10 +10,10 @@ GameObject:
   m_Component:
   - component: {fileID: 8859253296831810595}
   - component: {fileID: 570969655035822062}
-  - component: {fileID: 2278117674154032278}
   - component: {fileID: 632156521639829511}
+  - component: {fileID: 2278117674154032278}
   m_Layer: 0
-  m_Name: Party Card
+  m_Name: Bench Container
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -91,19 +91,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &2278117674154032278
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7255544903469641532}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 200b8ebd36d94894bac9900ae635483a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  HeldPokemon: {fileID: 0}
 --- !u!114 &632156521639829511
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -124,3 +111,16 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
+--- !u!114 &2278117674154032278
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7255544903469641532}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 200b8ebd36d94894bac9900ae635483a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HeldPokemon: {fileID: 0}

@@ -8,14 +8,14 @@ public static class SaveSystem
 {
     private static string accountSettingsPath = Application.persistentDataPath + "/";
 
-    public static AccountSettings SaveAccount(Account account)
+    public static AccountSettings SaveAccount(AccountSettings accountsettings)
     {
         BinaryFormatter formatter = new BinaryFormatter();
-        FileStream stream = new FileStream(accountSettingsPath + account.settings.Username.Trim().ToLower(), FileMode.Create);
-        formatter.Serialize(stream, account.settings);
-        Debug.Log($"Wrote settings to file\n{accountSettingsPath}{account.settings.Username.Trim().ToLower()}");
+        FileStream stream = new FileStream(accountSettingsPath + accountsettings.Username.Trim().ToLower(), FileMode.Create);
+        formatter.Serialize(stream, accountsettings);
+        Debug.Log($"Wrote settings to file\n{accountSettingsPath}{accountsettings.Username.Trim().ToLower()}");
         stream.Close();
-        return account.settings;
+        return accountsettings;
     }
 
     public static AccountSettings LoadAccount(string username)

@@ -4,26 +4,17 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
-public class Account : MonoBehaviour
+/// <summary>The Account class is initialized or created before the player joins a game</summary>
+[Serializable]
+public class Account
 {
-    //public string AccountID;
-
     // out of game
     public AccountSettings settings;
-    private Sprite TrainerSprite;
-    private Sprite TrainerBackground;
+    [SerializeField] private Sprite TrainerSprite;
+    [SerializeField] private Sprite TrainerBackground;
 
-    // in game
-    public Trainer trainer;
-
-    /// <summary>
-    /// Sets the players account settings
-    /// </summary>
-    /// <param name="username"></param>
-    /// <param name="trainerSprite"></param>
-    /// <param name="trainerBackground"></param>
-    /// <param name="gameID"></param>
-    public void SetSettings(string username, string trainerSprite, string trainerBackground, string gameID = null)
+    /// <summary>Sets the players account settings</summary>
+    public Account(string username, string trainerSprite, string trainerBackground, string gameID = null)
     {
         settings.Username = username;
         settings.TrainerSpriteName = trainerSprite;
@@ -31,15 +22,8 @@ public class Account : MonoBehaviour
         settings.GameID = gameID ?? settings.GameID;
     }
 
-    /// <summary>
-    /// The account class should be a component of the NetworkManager's GameObject
-    /// </summary>
-    /// <returns>Returns the players Account object</returns>
-    public static Account FindAccount() {
-        return NetworkManager.Singleton.GetComponent<Account>(); ; ;
+    /// <summary>Sets the players account settings</summary>
+    public Account(AccountSettings settings) {
+        this.settings = settings;
     }
-
-    //public AccountSettings SaveSettings() => SaveSystem.SaveAccount(this);
-
-    //public void LoadSettings() => settings = (SaveSystem.LoadAccount());
 }

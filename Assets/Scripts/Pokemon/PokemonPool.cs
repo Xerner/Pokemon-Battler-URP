@@ -3,6 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PokemonPool {
+    private static PokemonPool instance = null;
+    private static readonly object padlock = new object();
+
+    public static PokemonPool Instance {
+        get {
+            lock (padlock) {
+                if (instance == null) instance = new PokemonPool();
+                return instance;
+            }
+        }
+    }
+
     /// <summary>The count of each Pokemon left in a game</summary>
     public Dictionary<int, Dictionary<string, int>> TierToPokemonCounts = new Dictionary<int, Dictionary<string, int>>() {
         { 1, new Dictionary<string, int>() },
@@ -11,7 +23,6 @@ public class PokemonPool {
         { 4, new Dictionary<string, int>() },
         { 5, new Dictionary<string, int>() }
     };
-    
 
     public PokemonPool() {
         Debug2.Log($"Initializing Pokemon pool counts with {Pokemon.CachedPokemon.Count} different Pokemon", LogLevel.Detailed);
@@ -19,19 +30,19 @@ public class PokemonPool {
             Pokemon pokemon = Pokemon.CachedPokemon[pokemonName];
             TierToPokemonCounts[pokemon.tier].Add(pokemon.name, Constants.TierCounts[pokemon.tier]);
         }
+        DebugPanelManager.Spawn("Pokemon Pool", "Test");
         Debug2.Log($"Initialized pool with {Pokemon.CachedPokemon.Count} different Pokemon", LogLevel.Detailed);
     }
 
     /// <summary>
     /// Withdraws 5 Pokemon from the pool randomly with respect to the trainers level
     /// </summary>
-    /// <param name="trainer"></param>
-    /// <returns></returns>
-    public Pokemon[] Withdraw5(Trainer trainer) {
-        Debug2.Log($"Trainer {trainer.Account.settings.Username} is withdrawing pokemon");
+    // TODO: Create method for when other players withdraw pokemon. Figuring out how to make the data secure will be tricky
+    public Pokemon[] Withdraw5() {
+        Debug2.Log($"Trainer {TrainerManager.Instance.ActiveTrainer.Account.settings.Username} is withdrawing pokemon");
         Pokemon[] pokemons = new Pokemon[5];
         for (int i = 0; i < pokemons.Length; i++) {
-            int tierRoll = rollForTier(trainer.Level);
+            int tierRoll = rollForTier(TrainerManager.Instance.ActiveTrainer.Level);
             pokemons[i] = withdraw(tierRoll);
         }
         Debug2.Log($"Pokemon withdrawed: "+pokemons.ToString(), LogLevel.Detailed);
@@ -88,17 +99,17 @@ public class PokemonPool {
     private int rollForTier(int trainerLevel) {
         float roll = Random.Range(1f, 100f);
         if (roll < Constants.TierChances[trainerLevel, 0]) {
-            return 0;
-        } else if (roll < Constants.TierChances[trainerLevel, 1]) {
             return 1;
-        } else if (roll < Constants.TierChances[trainerLevel, 2]) {
+        } else if (roll < Constants.TierChances[trainerLevel, 1]) {
             return 2;
-        } else if (roll < Constants.TierChances[trainerLevel, 3]) {
+        } else if (roll < Constants.TierChances[trainerLevel, 2]) {
             return 3;
-        } else if (roll < Constants.TierChances[trainerLevel, 4]) {
+        } else if (roll < Constants.TierChances[trainerLevel, 3]) {
             return 4;
+        } else if (roll < Constants.TierChances[trainerLevel, 4]) {
+            return 5;
         }
-        return 0;
+        throw new System.Exception("Failed all tier chances when rolling for a Pokemon from the Pokemon Pool!");
     }
 
     /// <summary>PokemonPool Constants</summary>

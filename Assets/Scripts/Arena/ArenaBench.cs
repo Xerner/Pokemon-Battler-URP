@@ -2,11 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Party : MonoBehaviour
+public class ArenaBench : MonoBehaviour
 {
     public List<PokeContainer> cards;
 
-    public PokeContainer NextOpen()
+    public PokeContainer GetAvailableBench()
     {
         foreach (PokeContainer card in cards) if (card.HeldPokemon == null) return card;
         return null;

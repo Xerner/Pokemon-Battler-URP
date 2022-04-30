@@ -6,7 +6,6 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
     [SerializeField] private Arena[] arenas;
-    [SerializeField] TrainerManager trainerManager;
     public static bool DebugMode;
 
     private void Start()

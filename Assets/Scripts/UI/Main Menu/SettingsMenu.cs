@@ -10,7 +10,7 @@ public class SettingsMenu : MonoBehaviour
 
     private void OnEnable()
     {
-        Account account = Account.FindAccount();
+        Account account = PokeHost.Instance.HostAccount;
         username.text = account.settings.Username;
         trainerSprite.SetSprite(account.settings.TrainerSpriteName);
         trainerBackground.SetSprite(account.settings.TrainerBackgroundName);

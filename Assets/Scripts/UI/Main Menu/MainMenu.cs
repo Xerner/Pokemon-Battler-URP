@@ -33,29 +33,25 @@ public class MainMenu : MonoBehaviour
     /// On success: sends the user to the main menu<br/>
     /// On fail: shows a popup message
     /// </summary>
-    /// <param name="username"></param>
-    /// <param name="nextMenu"></param>
     public void LoadSettings(string username, GameObject nextMenu) {
-        Account account = Account.FindAccount();
         AccountSettings settings = SaveSystem.LoadAccount(username.Trim().ToLower());
         if (settings == null) {
             UIWindowManager.Instance.CreatePopupMessage("Trainer not found");
         } else {
             Debug.Log("Loading trainer '" + username.Trim().ToLower() + "' with settings\n" + settings);
             ViewManager.Instance.ChangeViews(nextMenu);
-            account.settings = settings;
+            PokeHost.Instance.HostAccount.settings = settings;
         }
     }
 
-    /// <summary>
-    /// Save username, trainer sprite, and trainer background sprite to the account file
-    /// </summary>
-    /// <param name="username"></param>
-    /// <param name="trainerSpriteName"></param>
-    /// <param name="trainerBackgroundName"></param>
+    /// <summary>Save username, trainer sprite, and trainer background sprite to the account file</summary>
     public void SaveSettings(string username, string trainerSpriteName, string trainerBackgroundName) {
-        Account account = Account.FindAccount();
-        account.SetSettings(username, trainerSpriteName, trainerBackgroundName);
-        SaveSystem.SaveAccount(account);
+        PokeHost.Instance.HostAccount.settings = new AccountSettings(
+            username, 
+            trainerSpriteName, 
+            trainerBackgroundName, 
+            PokeHost.Instance.HostAccount.settings.ClientID, 
+            PokeHost.Instance.HostAccount.settings.GameID);
+        SaveSystem.SaveAccount(PokeHost.Instance.HostAccount.settings);
     }
 }

@@ -5,9 +5,12 @@ using UnityEngine;
 public class Debug2 : Debug {
     public static LogLevel CurrentLogLevel = LogLevel.Detailed;
 
-    public static void Log(object message, LogLevel logLevel = LogLevel.Normal) { if (logLevel <= CurrentLogLevel) Debug.Log(constructMessage(message, logLevel)); }
-    public static void LogError(object message, LogLevel logLevel = LogLevel.Normal) { if (logLevel <= CurrentLogLevel) Debug.LogError(constructMessage(message, logLevel)); }
-    public static void LogWarning(object message, LogLevel logLevel = LogLevel.Normal) { if (logLevel <= CurrentLogLevel) Debug.LogWarning(constructMessage(message, logLevel)); }   
+    public static void Log(object message, LogLevel logLevel = LogLevel.Normal, Object context = null) 
+        { if (logLevel <= CurrentLogLevel) Debug.Log(constructMessage(message, logLevel), context); }
+    public static void LogError(object message, LogLevel logLevel = LogLevel.Normal, Object context = null) 
+        { if (logLevel <= CurrentLogLevel) Debug.LogError(constructMessage(message, logLevel), context); }
+    public static void LogWarning(object message, LogLevel logLevel = LogLevel.Normal, Object context = null)
+        { if (logLevel <= CurrentLogLevel) Debug.LogWarning(constructMessage(message, logLevel), context); }   
 
     private static string constructMessage(object message, LogLevel logLevel) {
         string color = "white";

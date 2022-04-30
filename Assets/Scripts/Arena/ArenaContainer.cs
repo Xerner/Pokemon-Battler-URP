@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ArenaCard : PokeContainer
+public class ArenaContainer : PokeContainer
 {
     public static readonly Vector2Int UnitVector = new Vector2Int(128, 128);
 

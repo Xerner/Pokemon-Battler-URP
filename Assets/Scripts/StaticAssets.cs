@@ -16,6 +16,10 @@ public class StaticAssets
     public static Dictionary<string, Sprite> ShopCardSprites = LoadResource<Sprite>("Graphics/Shop Cards", "*.png");
     #endregion
 
+    #region Prefabs
+    public static Dictionary<string, GameObject> Prefabs = LoadResource<GameObject>("Prefabs", "*.prefab");
+    #endregion
+
     static Dictionary<string, T> LoadResource<T>(string resourceFolderName, string searchPattern) where T : UnityEngine.Object {
         Dictionary<string, T> dict = new Dictionary<string, T>();
         // maybe TODO change to Resources.LoadAll

@@ -1,7 +1,7 @@
 ﻿
 using TMPro;
 
-public class PartyCard : PokeContainer
+public class BenchContainer : PokeContainer
 {
     private TextMeshProUGUI displayedName;
 
@@ -13,5 +13,6 @@ public class PartyCard : PokeContainer
     public override void SetPokemon(PokemonBehaviour pokemon)
     {
         displayedName.text = pokemon.name;
+        
     }
 }

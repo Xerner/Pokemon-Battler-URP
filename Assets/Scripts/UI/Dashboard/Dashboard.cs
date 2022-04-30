@@ -1,5 +1,5 @@
 using UnityEngine;
-using System;
+using System.Collections.Generic;
 
 public class Dashboard : MonoBehaviour {
     public static int[] TierChances = { 100, 0, 0, 0, 0 };
@@ -20,15 +20,15 @@ public class Dashboard : MonoBehaviour {
         //    return;
         //}
 
-        if (GUI.Button(new Rect(5, 5, 200, 30), "Fetch All Pokemon"))
+        if (GUI.Button(new Rect(Screen.width - 205, 5, 200, 30), "Fetch All Pokemon"))
             Pokemon.InitializeAllPokemon();
+        if (GUI.Button(new Rect(Screen.width - 205, 40, 200, 30), "Fetch 5 Pokemon"))
+            Pokemon.InitializeListOfPokemon(new List<string>() { "bulbasaur", "ivysaur", "venusaur", "Rhydon", "pupitar"});
     }
-
+    
     public void RefreshShop() {
-        System.Random rnd = new System.Random();
-        foreach (ShopCardUI card in shopCards) {
-            string pokemonName = rnd.NextEnum<EPokemonName>().ToString().ToLower();
-            Pokemon.GetPokemonFromAPI(pokemonName, (pokemon) => card.SetPokemon(pokemon));
-        }
+        Pokemon[] pokemons = PokemonPool.Instance.Withdraw5();
+        for (int i = 0; i < pokemons.Length; i++)
+            Pokemon.GetPokemonFromAPI(pokemons[i].name, (pokemon) => shopCards[i].SetPokemon(pokemon));
     }
 }

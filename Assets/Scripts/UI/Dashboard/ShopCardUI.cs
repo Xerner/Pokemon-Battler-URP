@@ -6,8 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(Button))]
-public class ShopCardUI : MonoBehaviour
-{
+public class ShopCardUI : MonoBehaviour {
     #region UI stuff
     [SerializeField] private TextMeshProUGUI pokemonName;
     [SerializeField] private Image pokemonSprite;
@@ -18,43 +17,49 @@ public class ShopCardUI : MonoBehaviour
     [SerializeField] private GameObject pokeDollar;
     #endregion
 
+    private Pokemon pokemon;
     public Action<ShopCardUI> OnClick;
-    private int cost;
+    public int Cost { get => pokemon.tier; }
 
-    public int Cost { get => cost; set => cost = value; }
-    public string PokemonName { get => pokemonName.text; private set => pokemonName.text = value; }
-
-    public void SetPokemon(Pokemon pokemon)
-    {
+    public void SetPokemon(Pokemon pokemon) {
         background.sprite = StaticAssets.ShopCardSprites[(pokemon.tier).ToString()];
-        pokemonSprite.sprite = pokemon.shopSprite;
+        pokemonSprite.sprite = pokemon.ShopSprite;
         pokemonSprite.color = new Color(pokemonSprite.color.r, pokemonSprite.color.g, pokemonSprite.color.b, 1f);
         pokemonSprite.SetNativeSize();
         type1.sprite = StaticAssets.typeMiniSprites[pokemon.types[0].ToString()];
         type1.SetNativeSize();
         if (pokemon.types[1] == EPokemonType.None) {
             type2.sprite = null;
-            type2.color = new Color(1f,1f,1f,0f);
+            type2.color = new Color(1f, 1f, 1f, 0f);
         } else {
             type2.sprite = StaticAssets.typeMiniSprites[pokemon.types[1].ToString()];
             type2.SetNativeSize();
-            type2.color = new Color(1f,1f,1f,1f);
+            type2.color = new Color(1f, 1f, 1f, 1f);
         }
-        PokemonName = pokemon.name;
+        this.pokemon = pokemon;
         pokeDollar.SetActive(true);
-        cost = pokemon.tier;
-        costText.text = cost.ToString();
+        costText.text = pokemon.tier.ToString();
     }
 
-    public void DebugBuyPokemon()
-    {
-        if (pokemonName.text == "") return;
-        PokeContainer container = TrainerManager.ActiveTrainer.Arena.Party.NextOpen();
-        if (container == null && TrainerManager.ActiveTrainer.IsAboutToEvolve(pokemonName.text))
-        {
-            container = TrainerManager.ActiveTrainer.ActivePokemon[pokemonName.text][0].CurrentField;
+    
+    public void TryToBuy() {
+        if (pokemon == null) return;
+        if (TrainerManager.Instance.ActiveTrainer.Money < Cost) {
+            Debug2.Log("Not enough money", LogLevel.Detailed);
+            return;
         }
-        TrainerManager.ActiveTrainer.Money -= cost;
-        //TrainerManager.ActiveTrainer.AddPokemon(StaticAssets.PokemonPrefabs[pokemonName.text].GetComponent<PokemonBehaviour>());
+        PokeContainer container = TrainerManager.Instance.ActiveTrainer.Arena.Bench.GetAvailableBench();
+        // Trainer bought a Pokemon, but the bench is full, BUT the purchased Pokemon can be used in an evolution to free up space
+        if (BenchHasValidContainer(container))
+            container = TrainerManager.Instance.ActiveTrainer.ActivePokemon[pokemonName.text][0].CurrentField;
+        else
+            return;
+        TrainerManager.Instance.ActiveTrainer.Money -= Cost;
+        Debug2.Log($"bought a {pokemon.name} for {pokemon.tier}", LogLevel.Detailed);
+        TrainerManager.Instance.ActiveTrainer.AddPokemonToBench(PokemonBehaviour.Spawn(pokemon));
+    }
+
+    private bool BenchHasValidContainer(PokeContainer container) {
+        return container != null || container == null && TrainerManager.Instance.ActiveTrainer.IsAboutToEvolve(pokemon);
     }
 }

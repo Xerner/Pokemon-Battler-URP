@@ -3,15 +3,14 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
-public class TrainerCardManager : MonoBehaviour
-{
+// TODO: Try and refactor this class into a normal class and a MonoBehaviour class
+public class TrainerCardManager : MonoBehaviour {
     public static TrainerCardManager Instance { get; private set; }
 
     [SerializeField] GameObject TrainerCardPrefab; // set in the editor
     [SerializeField] Transform VerticalLayoutGroup; // set in the editor
 
-    public List<TrainerCard> TrainerCards = new List<TrainerCard>();
-    private Dictionary<ulong, int> trainerCardIndexes = new Dictionary<ulong, int>();
+    public TrainerCard[] TrainerCards = new TrainerCard[8];
 
     void Awake() {
         if (Instance != null && Instance != this) {
@@ -22,25 +21,20 @@ public class TrainerCardManager : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Using a players account settings, a new trainer is added to the list of trainer cards
-    /// </summary>
-    /// <param name="clientID">The clientID from the NetworkManager</param>
-    public void AddTrainer(AccountSettings settings, ulong clientID)
-    {
-        TrainerCard trainerCard = Instantiate(TrainerCardPrefab, VerticalLayoutGroup).GetComponent<TrainerCard>();
-        Sprite trainerSprite = StaticAssets.Trainers[settings.TrainerSpriteName];
-        Sprite trainerBackgroundSprite = StaticAssets.TrainerBackgrounds[settings.TrainerBackgroundName];
-        trainerCardIndexes.Add(clientID, transform.childCount);
-        trainerCard.Initialize(settings.Username, trainerSprite, trainerBackgroundSprite);
+    void Start() {
+        for (int i = 0; i < TrainerCards.Length; i++) {
+            TrainerCard trainerCard = Instantiate(TrainerCardPrefab, VerticalLayoutGroup).GetComponent<TrainerCard>();
+            trainerCard.Initialize("", null, null);
+            TrainerCards[i] = trainerCard;
+        }
     }
 
-    /// <summary>
-    /// Removes the player from the list of trainer cards
-    /// </summary>
-    public void RemoveTrainer(ulong clientID)
-    {
-        TrainerCards.RemoveAt(trainerCardIndexes[clientID]);
-        trainerCardIndexes.Remove(clientID);
+    /// <summary>Using a players account settings, a new trainer is added to the list of trainer cards</summary>
+    /// <param name="clientID">The clientID from the NetworkManager</param>
+    public void AddTrainerCard(Trainer trainer, int index) {
+        TrainerCard trainerCard = Instantiate(TrainerCardPrefab, VerticalLayoutGroup).GetComponent<TrainerCard>();
+        Sprite trainerSprite = StaticAssets.Trainers[trainer.Account.settings.TrainerSpriteName];
+        Sprite trainerBackgroundSprite = StaticAssets.TrainerBackgrounds[trainer.Account.settings.TrainerBackgroundName];
+        trainerCard.Initialize(trainer.Account.settings.Username, trainerSprite, trainerBackgroundSprite);
     }
 }

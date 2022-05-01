@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(Menu))]
 public class DebugPanelManager : MonoBehaviour
@@ -16,12 +17,25 @@ public class DebugPanelManager : MonoBehaviour
         StaticDebugPrefab = DebugPrefab;
     }
 
-    public static DebugContent Spawn(string header, string content) {
+    public static DebugContent Spawn(string header, GameObject content) {
         DebugContent instance = Instantiate(StaticDebugPrefab, StaticPanel);
         instance.Header.text = header;
-        instance.Content.text = content;
+        instance.Content = content;
         DebugContents.Add(header, instance);
         return instance;
+    }
+
+    public static DebugContent Spawn(string header) {
+        DebugContent instance = Instantiate(StaticDebugPrefab, StaticPanel);
+        instance.Header.text = header;
+        DebugContents.Add(header, instance);
+        return instance;
+    }
+
+    public static void UpdateSize() {
+        var csf = StaticPanel.gameObject.GetComponent<ContentSizeFitter>();
+        csf.verticalFit = ContentSizeFitter.FitMode.Unconstrained;
+        csf.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
     }
 
     public static void Destroy(string header) => Destroy(DebugContents[header]);

@@ -4374,7 +4374,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 63}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &554989676
 MonoBehaviour:
@@ -4389,7 +4389,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_HorizontalFit: 0
-  m_VerticalFit: 2
+  m_VerticalFit: 0
 --- !u!114 &554989677
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4466,7 +4466,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb40e56e970b50c40b85443495c7bb10, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DebugPrefab: {fileID: 5342641259006720531, guid: 3fdb3ff9e8a38924c829733575cdd1d4, type: 3}
+  DebugPrefab: {fileID: 3716201823800083391, guid: 3fdb3ff9e8a38924c829733575cdd1d4, type: 3}
 --- !u!114 &554989683
 MonoBehaviour:
   m_ObjectHideFlags: 0

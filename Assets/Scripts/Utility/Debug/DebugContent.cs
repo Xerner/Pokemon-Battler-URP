@@ -6,7 +6,7 @@ using UnityEngine;
 public class DebugContent : MonoBehaviour
 {
     public TextMeshProUGUI Header;
-    public TextMeshProUGUI Content;
+    public GameObject Content;
 
-    public void UpdateContent(string content) => Content.text = content;
+    public void UpdateContent(GameObject content) => Content = content;
 }

@@ -9,6 +9,7 @@ public class Dashboard : MonoBehaviour {
     [HideInInspector] public Trainer[] Trainers;
 
     public ShopCardUI[] ShopCards { get; private set; }
+    private Pokemon[] pokemons;
 
     private void Start() {
         //RefreshShop();
@@ -23,12 +24,14 @@ public class Dashboard : MonoBehaviour {
         if (GUI.Button(new Rect(Screen.width - 205, 5, 200, 30), "Fetch All Pokemon"))
             Pokemon.InitializeAllPokemon();
         if (GUI.Button(new Rect(Screen.width - 205, 40, 200, 30), "Fetch 5 Pokemon"))
-            Pokemon.InitializeListOfPokemon(new List<string>() { "bulbasaur", "ivysaur", "venusaur", "Rhydon", "pupitar"});
+            Pokemon.InitializeListOfPokemon(new List<string>() { "bulbasaur", "squirtle", "charmander", "magnemite", "geodude"});
     }
     
     public void RefreshShop() {
+        if (this.pokemons != null) PokemonPool.Instance.Refund(this.pokemons);
         Pokemon[] pokemons = PokemonPool.Instance.Withdraw5();
         for (int i = 0; i < pokemons.Length; i++)
-            Pokemon.GetPokemonFromAPI(pokemons[i].name, (pokemon) => shopCards[i].SetPokemon(pokemon));
+            shopCards[i].SetPokemon(pokemons[i]);
+        this.pokemons = pokemons;
     }
 }

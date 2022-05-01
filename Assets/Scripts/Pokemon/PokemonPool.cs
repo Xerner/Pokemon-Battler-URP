@@ -1,10 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PokemonPool {
     private static PokemonPool instance = null;
     private static readonly object padlock = new object();
+    private static DebugContent staticDebugContent;
+    private static Dictionary<string, GameObject> debugContentPokemonGO = new Dictionary<string, GameObject>();
 
     public static PokemonPool Instance {
         get {
@@ -28,15 +33,14 @@ public class PokemonPool {
         Debug2.Log($"Initializing Pokemon pool counts with {Pokemon.CachedPokemon.Count} different Pokemon", LogLevel.Detailed);
         foreach (string pokemonName in Pokemon.CachedPokemon.Keys) {
             Pokemon pokemon = Pokemon.CachedPokemon[pokemonName];
-            TierToPokemonCounts[pokemon.tier].Add(pokemon.name, Constants.TierCounts[pokemon.tier]);
+            if (pokemon.EvolutionStage == 1) TierToPokemonCounts[pokemon.tier].Add(pokemon.name, Constants.TierCounts[pokemon.tier]);
         }
-        DebugPanelManager.Spawn("Pokemon Pool", "Test");
+        staticDebugContent = DebugPanelManager.Spawn("Pokemon Pool");
+        InitializeDebugContent();
         Debug2.Log($"Initialized pool with {Pokemon.CachedPokemon.Count} different Pokemon", LogLevel.Detailed);
     }
 
-    /// <summary>
-    /// Withdraws 5 Pokemon from the pool randomly with respect to the trainers level
-    /// </summary>
+    /// <summary>Withdraws 5 Pokemon from the pool randomly with respect to the trainers level</summary>
     // TODO: Create method for when other players withdraw pokemon. Figuring out how to make the data secure will be tricky
     public Pokemon[] Withdraw5() {
         Debug2.Log($"Trainer {TrainerManager.Instance.ActiveTrainer.Account.settings.Username} is withdrawing pokemon");
@@ -45,18 +49,18 @@ public class PokemonPool {
             int tierRoll = rollForTier(TrainerManager.Instance.ActiveTrainer.Level);
             pokemons[i] = withdraw(tierRoll);
         }
+        UpdatePokemonDebugContent(pokemons);
         Debug2.Log($"Pokemon withdrawed: "+pokemons.ToString(), LogLevel.Detailed);
         return pokemons;
     }
 
-    /// <summary>
-    /// Attempt to withdraw 1 Pokemon from the pool
-    /// </summary>
+    /// <summary>Attempt to withdraw 1 Pokemon from the pool</summary>
     /// <returns>A random Pokemon from the given tier, or null if there are no Pokemon left to pull</returns>
     private Pokemon withdraw(int tier) {
         // roll for which pokemon to withdraw
-        int roll = getRollForAPokemon(tier, Pokemon.TierToPokemonList[tier]);
-        Pokemon randomPokemon = Pokemon.TierToPokemonList[tier][roll];
+        var possiblePokemon = getPossiblePokemonToWithdrawFromTier(tier, 1);
+        int roll = getRollForAPokemon(tier, possiblePokemon);
+        Pokemon randomPokemon = possiblePokemon[roll];
         // if there are pulls left, then we are good to go
         if (TierToPokemonCounts[tier][randomPokemon.name] > 0) {
             TierToPokemonCounts[tier][randomPokemon.name]--;
@@ -64,7 +68,6 @@ public class PokemonPool {
         }
         // in the case that the randomly pulled pokemon has 0 pulls left, we will need to query again for a different pokemon
         // this list is created to satisfy this case
-        var possiblePokemon = new List<Pokemon>(Pokemon.TierToPokemonList[tier]);
         if (possiblePokemon.Count > 0) {
             do {
                 possiblePokemon.RemoveAt(roll);
@@ -80,10 +83,12 @@ public class PokemonPool {
         return randomPokemon;
     }
 
+    private List<Pokemon> getPossiblePokemonToWithdrawFromTier(int tier, int highestEvolutionStagePossible) {
+        return Pokemon.TierToPokemonList[tier].Where(pokemon => pokemon.EvolutionStage == highestEvolutionStagePossible).ToList();
+    }
+
     public void Refund(Pokemon[] pokemons) {
-        foreach (var pokemon in pokemons) {
-            TierToPokemonCounts[pokemon.tier][pokemon.name]++;
-        }
+        foreach (var pokemon in pokemons) TierToPokemonCounts[pokemon.tier][pokemon.name]++;
     }
 
     /// <summary>Internal helper method</summary>
@@ -128,5 +133,47 @@ public class PokemonPool {
             {15, 40, 75, 95, 100},
             {10, 25, 55, 85, 100}
         };
+    }
+
+    public void InitializeDebugContent() {
+        staticDebugContent.Content.AddComponent<HorizontalLayoutGroup>().childControlHeight = false;
+        foreach (var key in TierToPokemonCounts.Keys) {
+            var tierGO = CreateDebugContent($"Tier {key}", staticDebugContent.Content.transform, false);
+            tierGO.AddComponent<VerticalLayoutGroup>();
+            var tierTextGO = CreateDebugContent($"Tier {key}", tierGO.transform, false);
+            var tmesh = tierTextGO.GetComponent<TextMeshProUGUI>();
+            tmesh.text = $"<b>Tier { key}</b>";
+            tmesh.fontSize = 18f;
+            foreach (var pokemon in TierToPokemonCounts[key]) {
+                var pokemonGO = CreateDebugContent(pokemon.Key, tierGO.transform);
+                SetPokemonDebugContent(pokemonGO, pokemon.Key, pokemon.Value);
+            }
+        }
+        DebugPanelManager.UpdateSize();
+    }
+
+    private GameObject CreateDebugContent(string name, Transform parent, bool addToDict = true) {
+        var debugContent = new GameObject(name);
+        debugContent.transform.SetParent(parent);
+        if (addToDict) debugContentPokemonGO.Add(name, debugContent);
+        debugContent.AddComponent<CanvasRenderer>();
+        var contentSizeFitter = debugContent.AddComponent<ContentSizeFitter>();
+        contentSizeFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+        var tmesh = debugContent.AddComponent<TextMeshProUGUI>();
+        tmesh.richText = true;
+        tmesh.fontSize = 16f;
+        return debugContent;
+    }
+
+    private void UpdatePokemonDebugContent(Pokemon[] pokemons) {
+        foreach (var pokemon in pokemons) UpdatePokemonDebugContent(pokemon);
+    }
+
+    public void UpdatePokemonDebugContent(Pokemon pokemon) {
+        SetPokemonDebugContent(debugContentPokemonGO[pokemon.name], pokemon.name, TierToPokemonCounts[pokemon.tier][pokemon.name]);
+    }
+
+    private void SetPokemonDebugContent(GameObject gameObject, string name, int count) {
+        gameObject.GetComponent<TextMeshProUGUI>().text = $"<b><color=#8888FF>{count}</b> <color=#FFFFFF>{name}";
     }
 }

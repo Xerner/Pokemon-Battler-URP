@@ -6,23 +6,28 @@ using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
 
 [RequireComponent(typeof(RectTransform))]
-public class Menu : PlayerInputConsumer, IPointerEnterHandler, IPointerExitHandler {
+public class Menu : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler {
     [SerializeField] private MenuManager menuManager;
     [SerializeField] private TabGroup tabGroup;
     [Header("Toggle Menu Bindings")]
-    [SerializeField] private InputAction inputActionToggle;
+    public InputAction InputActionToggle;
 
+    public static readonly Vector2 Offscreen = Vector2.zero;
+
+    Vector2 previousPosition;
     public Action<Menu> OnOpen;
     public Action<Menu> OnClose;
     public Action OnEnter;
     public Action OnExit;
 
     protected virtual void Start() {
-        if (menuManager != null)
-            menuManager.Subscribe(this);
-        InitializePlayerInput(inputActionToggle, new Action<InputAction.CallbackContext>[] { Toggle });
+        MenuManager.Instance.Subscribe(this);
     }
-      
+
+    protected virtual void OnDestroy() {
+        MenuManager.Instance.Unsubscribe(this);
+    }
+
     public virtual void Close() {
         OnExit?.Invoke();
         OnClose?.Invoke(this);

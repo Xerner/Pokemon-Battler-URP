@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+[RequireComponent(typeof(Menu))]
 public class DebugPanelManager : MonoBehaviour
 {
     static RectTransform StaticPanel;
@@ -10,7 +11,6 @@ public class DebugPanelManager : MonoBehaviour
     public static DebugContent StaticDebugPrefab;
     public static Dictionary<string, DebugContent> DebugContents = new Dictionary<string, DebugContent>();
 
-    // Start is called before the first frame update
     void Start() {
         StaticPanel = gameObject.GetComponent<RectTransform>();
         StaticDebugPrefab = DebugPrefab;

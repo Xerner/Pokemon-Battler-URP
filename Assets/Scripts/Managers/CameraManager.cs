@@ -1,16 +1,18 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
 using static UnityEngine.InputSystem.InputAction;
 
-[RequireComponent(typeof(PlayerInput))]
-public class CameraManager : MonoBehaviour
+public class CameraManager : PlayerInputConsumer
 {
     public static CameraManager Instance { get; private set; }
     
     static readonly int arenaColumns = 3;
     [SerializeField] Arena activeArena;
     [SerializeField] Arena[] arenas = new Arena[8];
+    [Header("Camera Movement Bindings")]
+    [SerializeField] InputAction inputActionMove;
     //private Keyboard keyboard;
     int activeArenaIndex;
     int tweenID;
@@ -25,11 +27,7 @@ public class CameraManager : MonoBehaviour
         }
         //keyboard = InputSystem.GetDevice<Keyboard>();
         MoveToArena(activeArena);
-        var playerInput = GetComponent<PlayerInput>();
-        if (playerInput.isActiveAndEnabled) {
-            var moveAction = playerInput.actions.FindAction("Movement");
-            moveAction.performed += Move;
-        }
+        SubscribePlayerInput(inputActionMove, new Action<CallbackContext>[] { Move });
     }
 
     //private void Update()

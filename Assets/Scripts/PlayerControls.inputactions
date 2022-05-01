@@ -1,0 +1,54 @@
+{
+    "name": "PlayerControls",
+    "maps": [
+        {
+            "name": "Default",
+            "id": "7cf8be21-2afc-424c-9206-6021d3cc5fe3",
+            "actions": [
+                {
+                    "name": "New action",
+                    "type": "Button",
+                    "id": "64ecaa22-0242-41f8-bd69-2bc596af7942",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "New action1",
+                    "type": "Button",
+                    "id": "179274f2-813f-4d46-8765-94a8ae16fa8d",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "63d90d45-c715-4be6-bb57-240f5758b7c6",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "New action",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0a2ed1a5-d13f-448d-853a-ccb2af982c5c",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "New action1",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}

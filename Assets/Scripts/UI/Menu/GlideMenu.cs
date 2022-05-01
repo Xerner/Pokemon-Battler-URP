@@ -4,12 +4,14 @@ using UnityEngine.InputSystem;
 
 public class GlideMenu : Menu
 {
-    public bool DeactivateOnClose = true;
+    [Space(8)]
+    [Description("If this is true, then access to its variables from another class may result in a null error")]
+    public bool DeactivateOnClose = false;
     [SerializeField]
     private MenuPosition menuPosition = MenuPosition.Bottom;
     [SerializeField]
     private Canvas Canvas;
-    private Rect menuBounds;
+    private RectTransform menuBounds;
     private Vector2 closedPosition;
     private Vector2 openPosition;
     private bool isOpen;
@@ -18,18 +20,17 @@ public class GlideMenu : Menu
     protected new void Start()
     {
         // Assumed to be used in child classes for use in movement calculations
-        menuBounds = gameObject.GetComponent<RectTransform>().rect;
+        menuBounds = gameObject.GetComponent<RectTransform>();
         // 
         openPosition = transform.position;
         closedPosition = CalculateClosedPosition();
         base.Start();
         InstantlyClose();
     }
-
-    /// <summary>If needed, glides the menu into or out of place</summary>
-    private void Update()
-    {
+    
+    private void FixedUpdate() {
         // Turn off when we reach our destination
+        closedPosition = CalculateClosedPosition();
         if (DeactivateOnClose && BasicallyAtClosedPosition()) gameObject.SetActive(false);
     }
 
@@ -63,13 +64,9 @@ public class GlideMenu : Menu
     {
         LeanTween.cancel(gameObject);
         if (IsOpen())
-        {
             Close();
-        }
         else
-        {
             Open();
-        }
     }
 
     /// <summary>Instantly closes the menu</summary>
@@ -86,8 +83,8 @@ public class GlideMenu : Menu
         return menuPosition switch
         {
             MenuPosition.Bottom =>    new Vector2(openPosition.x, 0),
-            MenuPosition.Top => new Vector2(openPosition.x, menuBounds.height + ((RectTransform)Canvas.transform).rect.height),
-            MenuPosition.Left =>   new Vector2(-menuBounds.width, openPosition.y),
+            MenuPosition.Top => new Vector2(openPosition.x, menuBounds.rect.height + ((RectTransform)Canvas.transform).rect.height),
+            MenuPosition.Left =>   new Vector2(-menuBounds.rect.width, openPosition.y),
             MenuPosition.Right =>  new Vector2(((RectTransform)Canvas.transform).rect.width, openPosition.y),
             _ => Vector2.zero,
         };

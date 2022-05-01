@@ -16,6 +16,11 @@ public class Pokemon {
         { 4, new List<Pokemon>() },
         { 5, new List<Pokemon>() }
     };
+    public static int TotalPokemon {
+        get {
+            return Enum.GetNames(typeof(EPokemonName)).Length;
+        }
+    }
 
     public int id;
     public string name;
@@ -52,12 +57,11 @@ public class Pokemon {
             string url;
             if (correctedName == "nidoran") url = $"https://pokeapi.co/api/v2/pokemon/nidoran-m/";
             else url = $"https://pokeapi.co/api/v2/pokemon/{correctedName}/";
-            Debug2.Log("Fetching pokemon: " + idOrName, LogLevel.Detailed);
+            Debug2.Log("Fetching pokemon: " + idOrName, LogLevel.All);
             WebRequests.Get<string>(
                 url,
                 (error) => Debug.LogError($"Failed to fetch Pokemon ({idOrName})\n" + error),
                 (json) => PokemonFromJson(json, false, (pokemon) => {
-                    Debug.Log("Fetched: " + pokemon.name);
                     Debug2.Log($"Adding {pokemon.name} to the cached Pokemon", LogLevel.Detailed);
                     // Do not simplify name. It is needed like this for watching its variable value because asynchronous debugging is a bitch
                     Pokemon.CachedPokemon.Add(pokemon.correctedName, pokemon);
@@ -77,31 +81,22 @@ public class Pokemon {
         }
     }
 
-    public static void InitializeAllPokemon() {
+    public static void InitializeAllPokemon(Action<Pokemon> callback = null) {
         Debug2.Log("Initializing all Pokemon");
         string[] pokemonNames = Enum.GetNames(typeof(EPokemonName));
         for (int i = 0; i < pokemonNames.Length; i++) pokemonNames[i] = pokemonNames[i].ToLower();
         List<string> pokemonToInitialize = new List<string>();
         foreach (var name in pokemonNames) if (!CachedPokemon.ContainsKey(name)) pokemonToInitialize.Add(name);
-        InitializeListOfPokemon(pokemonToInitialize);
+        InitializeListOfPokemon(pokemonToInitialize, callback);
     }
 
     /// <summary>Recursive</summary>
-    public static void InitializeListOfPokemon(List<string> pokemonNames) {
-        Debug2.Log($"Initializing {pokemonNames.Count} Pokemon");
+    public static void InitializeListOfPokemon(List<string> pokemonNames, Action<Pokemon> callback = null) {
+        Debug2.Log($"Fetching {pokemonNames.Count} Pokemon");
         Debug2.Log(string.Join(",", pokemonNames.ToArray()), LogLevel.Detailed);
         foreach (var name in pokemonNames) {
-            GetPokemonFromAPI(name);
+            GetPokemonFromAPI(name, callback);
         }
-        //if (index == pokemonNames.Count) {
-        //    Debug2.Log($"Done fetching {pokemonNames.Count} Pokemon");
-        //    return;
-        //} else {
-        //    GetPokemonFromAPI(
-        //        pokemonName,
-        //        (pokemon) => InitializeListOfPokemon(pokemonNames, index + 1)
-        //    );
-        //}
     }
 
     /// <summary>
@@ -173,7 +168,7 @@ public class Pokemon {
             url = ability.ability.url
         };
 
-        Debug2.Log("Fetching pokemon ability: " + pokemon.name, LogLevel.Detailed);
+        Debug2.Log("Fetching pokemon ability: " + pokemon.name, LogLevel.All);
         WebRequests.Get<string>(
             ability.ability.url,
             (error) => Debug.LogError(error),
@@ -184,14 +179,14 @@ public class Pokemon {
                 pokemon.Ability.longDescription = effect.effect;
 
                 #region Species
-                Debug2.Log("Fetching pokemon species: " + pokemon.name, LogLevel.Detailed);
+                Debug2.Log("Fetching pokemon species: " + pokemon.name, LogLevel.All);
                 WebRequests.Get<string>(
                     pokemonJson.species.url,
                     (error) => Debug.LogError(error),
                     (jsonSpecies) => {
                         JsonPokemonSpecies species = JsonConvert.DeserializeObject<JsonPokemonSpecies>(jsonSpecies);
                         #region Evolution Chain
-                        Debug2.Log("Fetching pokemon evolution chain: " + pokemon.name, LogLevel.Detailed);
+                        Debug2.Log("Fetching pokemon evolution chain: " + pokemon.name, LogLevel.All);
                         WebRequests.Get<string>(
                             species.evolution_chain.url,
                             (error) => Debug.LogError(error),
@@ -201,14 +196,13 @@ public class Pokemon {
                                 pokemon.EvolutionStage = evolutionChain.GetEvolutionStage(pokemonJson.name);
 
                                 #region Sprites
-                                Debug2.Log("Fetching pokemon sprites: " + pokemon.name, LogLevel.Detailed);
+                                Debug2.Log("Fetching pokemon sprites: " + pokemon.name, LogLevel.All);
                                 WebRequests.Get<Texture2D>(
                                     pokemonJson.sprites.versions["generation-v"]["black-white"].front_default,
                                     (error) => Debug.LogError(error),
                                     (texture) => {
                                         pokemon.Sprite = Sprite.Create(texture, new Rect(0.0f, 0.0f, texture.width, texture.height), new Vector2(0.5f, 0.5f), 1f);
                                         pokemon.ShopSprite = Sprite.Create(texture, new Rect(0.0f, 0.0f, texture.width, texture.height), new Vector2(0.5f, 0.5f), 1f);
-                                        Debug2.Log("Fetching pokemon sprites: " + pokemon.name, LogLevel.Detailed);
                                         onSuccess?.Invoke(pokemon);
                                     }
                                 );

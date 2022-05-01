@@ -12,7 +12,9 @@ public class Dashboard : MonoBehaviour {
     private Pokemon[] pokemons;
 
     private void Start() {
-        //RefreshShop();
+        Pokemon.InitializeListOfPokemon(new List<string>() { "bulbasaur", "squirtle", "charmander", "magnemite", "geodude" },
+                (pokemon) => { if (Pokemon.CachedPokemon.Keys.Count == 5) RefreshShop(); }
+            );
     }
 
     void OnGUI() {
@@ -22,9 +24,11 @@ public class Dashboard : MonoBehaviour {
         //}
 
         if (GUI.Button(new Rect(Screen.width - 205, 5, 200, 30), "Fetch All Pokemon"))
-            Pokemon.InitializeAllPokemon();
+            Pokemon.InitializeAllPokemon((pokemon) => { if (Pokemon.CachedPokemon.Keys.Count == Pokemon.TotalPokemon) RefreshShop(); });
         if (GUI.Button(new Rect(Screen.width - 205, 40, 200, 30), "Fetch 5 Pokemon"))
-            Pokemon.InitializeListOfPokemon(new List<string>() { "bulbasaur", "squirtle", "charmander", "magnemite", "geodude"});
+            Pokemon.InitializeListOfPokemon(new List<string>() { "bulbasaur", "squirtle", "charmander", "magnemite", "geodude" },
+                (pokemon) => { if (Pokemon.CachedPokemon.Keys.Count == 5) RefreshShop(); }
+            );
     }
     
     public void RefreshShop() {

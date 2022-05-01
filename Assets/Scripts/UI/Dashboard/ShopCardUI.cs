@@ -27,6 +27,7 @@ public class ShopCardUI : MonoBehaviour {
         pokemonSprite.color = new Color(pokemonSprite.color.r, pokemonSprite.color.g, pokemonSprite.color.b, 1f);
         pokemonSprite.SetNativeSize();
         type1.sprite = StaticAssets.typeMiniSprites[pokemon.types[0].ToString()];
+        type1.color = new Color(1f, 1f, 1f, 1f);
         type1.SetNativeSize();
         if (pokemon.types[1] == EPokemonType.None) {
             type2.sprite = null;
@@ -41,7 +42,6 @@ public class ShopCardUI : MonoBehaviour {
         costText.text = pokemon.tier.ToString();
     }
 
-    
     public void TryToBuy() {
         if (pokemon == null) return;
         if (TrainerManager.Instance.ActiveTrainer.Money < Cost) {

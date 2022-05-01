@@ -28,26 +28,26 @@ public static class WebRequests {
         // switch cases do not work here :(
         if (typeof(T) == typeof(string)) {
             using (UnityWebRequest request = UnityWebRequest.Get(url)) {
-                Debug2.Log("Fetching string data from the web: " + url, LogLevel.Detailed);
+                Debug2.Log("Fetching string data from the web: " + url, LogLevel.All);
                 yield return request.SendWebRequest();
                 if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError) { 
-                    Debug2.LogWarning("Web request failed: " + url, LogLevel.Detailed);
+                    Debug2.LogWarning("Web request failed: " + url, LogLevel.All);
                     onError.Invoke(request.error);
                 } else { 
-                    Debug2.Log("Web request succeeded: " + url, LogLevel.Detailed);
+                    Debug2.Log("Web request succeeded: " + url, LogLevel.All);
                     onSuccess.Invoke((T)Convert.ChangeType(request.downloadHandler.text, typeof(T)));
                 }
             }
         } else if (typeof(T) == typeof(Texture2D)) {
             using (UnityWebRequest request = UnityWebRequestTexture.GetTexture(url)) {
-                Debug2.Log("Fetching texture data from the web: " + url, LogLevel.Detailed);
+                Debug2.Log("Fetching texture data from the web: " + url, LogLevel.All);
                 yield return request.SendWebRequest();
                 if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError) {
-                    Debug2.LogWarning("Web request failed: " + url, LogLevel.Detailed);
+                    Debug2.LogWarning("Web request failed: " + url, LogLevel.All);
                     onError.Invoke(request.error);
                 } else {
                     // TODO: figure out how to download gifs
-                    Debug2.Log("Web request succeeded: " + url, LogLevel.Detailed);
+                    Debug2.Log("Web request succeeded: " + url, LogLevel.All);
                     DownloadHandlerTexture downloadHandler = (DownloadHandlerTexture)request.downloadHandler;
                     onSuccess.Invoke((T)Convert.ChangeType(downloadHandler.texture, typeof(T)));
                 }

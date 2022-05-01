@@ -30,7 +30,7 @@ public class PokemonPool {
     };
 
     public PokemonPool() {
-        Debug2.Log($"Initializing Pokemon pool counts with {Pokemon.CachedPokemon.Count} different Pokemon", LogLevel.Detailed);
+        Debug2.Log($"Initializing Pokemon pool with {Pokemon.CachedPokemon.Count} different Pokemon", LogLevel.Detailed);
         foreach (string pokemonName in Pokemon.CachedPokemon.Keys) {
             Pokemon pokemon = Pokemon.CachedPokemon[pokemonName];
             if (pokemon.EvolutionStage == 1) TierToPokemonCounts[pokemon.tier].Add(pokemon.name, Constants.TierCounts[pokemon.tier]);
@@ -50,7 +50,7 @@ public class PokemonPool {
             pokemons[i] = withdraw(tierRoll);
         }
         UpdatePokemonDebugContent(pokemons);
-        Debug2.Log($"Pokemon withdrawed: "+pokemons.ToString(), LogLevel.Detailed);
+        Debug2.Log($"Pokemon withdrawed: " + string.Join(',', pokemons.Select(pokemon => pokemon.name)), LogLevel.Detailed);
         return pokemons;
     }
 

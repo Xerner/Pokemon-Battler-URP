@@ -13,7 +13,6 @@ public class Arena : MonoBehaviour
     [HideInInspector] public bool CombatMode;
     private readonly Dictionary<Allegiance, List<PokemonBehaviour>> CombatGroups = new Dictionary<Allegiance, List<PokemonBehaviour>>();
     public ArenaBench Bench;
-    public GameObject CameraAnchor;
     private ArenaContainer[] ArenaCards = new ArenaContainer[Rows*Columns];
 
     public ArenaContainer this[Vector2Int index]

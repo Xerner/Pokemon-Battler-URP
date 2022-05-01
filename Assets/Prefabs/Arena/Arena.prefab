@@ -28,6 +28,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2319333890109645248}
   - {fileID: 2319333890014713798}
@@ -106,6 +107,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 506743173098363290}
   - {fileID: 3535384787151772974}
@@ -129,10 +131,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3e1e7d93869f014cbdbaf576c50843e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Trainer: {fileID: 0}
-  EnemyTrainer: {fileID: 0}
   CombatMode: 0
-  Party: {fileID: 0}
+  Bench: {fileID: 5783592737693054837}
   CameraAnchor: {fileID: 0}
 --- !u!1 &2319333890014713797
 GameObject:
@@ -161,6 +161,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 1.4042549}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2272051813279038019}
   - {fileID: 2272051814312408680}
@@ -236,6 +237,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 1.4042549}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5760411834356849736}
   - {fileID: 5760411835667934630}
@@ -3621,7 +3623,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3914915956491888135, guid: f1ac58a5a658a3a499c141192e192e68, type: 3}
       propertyPath: m_Name
-      value: Party
+      value: Arena Bench
       objectReference: {fileID: 0}
     - target: {fileID: 6013186954171674712, guid: f1ac58a5a658a3a499c141192e192e68, type: 3}
       propertyPath: m_AnchorMax.y
@@ -3713,6 +3715,24 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f1ac58a5a658a3a499c141192e192e68, type: 3}
+--- !u!1 &148702484478342549 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3914915956491888135, guid: f1ac58a5a658a3a499c141192e192e68, type: 3}
+  m_PrefabInstance: {fileID: 3766380710944412562}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &5783592737693054837
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 148702484478342549}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9dad65c7a0130b48920fd9bc9aca148, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cards: []
 --- !u!224 &506743173098363290 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3696487131206142472, guid: f1ac58a5a658a3a499c141192e192e68, type: 3}

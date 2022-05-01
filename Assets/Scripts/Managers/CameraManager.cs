@@ -1,13 +1,13 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
 using static UnityEngine.InputSystem.InputAction;
 
-public class CameraManager : PlayerInputConsumer
-{
+public class CameraManager : PlayerInputConsumer {
     public static CameraManager Instance { get; private set; }
-    
+
     static readonly int arenaColumns = 3;
     [SerializeField] Arena activeArena;
     [SerializeField] Arena[] arenas = new Arena[8];
@@ -17,45 +17,31 @@ public class CameraManager : PlayerInputConsumer
     int activeArenaIndex;
     int tweenID;
 
-    private void Start()
-    {
+    private void Start() {
         if (Instance != null && Instance != this) {
             Destroy(this);
             return;
         } else {
             Instance = this;
         }
-        //keyboard = InputSystem.GetDevice<Keyboard>();
-        MoveToArena(activeArena);
+        new WaitForSeconds(3f);
+        StartCoroutine(InitialMove());
         SubscribePlayerInput(inputActionMove, new Action<CallbackContext>[] { Move });
     }
 
-    //private void Update()
-    //{
-    //    if (keyboard.upArrowKey.wasPressedThisFrame) Move(Direction.Up);
-    //    if (keyboard.downArrowKey.wasPressedThisFrame) Move(Direction.Down);
-    //    if (keyboard.leftArrowKey.wasPressedThisFrame) Move(Direction.Left);
-    //    if (keyboard.rightArrowKey.wasPressedThisFrame) Move(Direction.Right);
-    //}
-
-    public void OnArrowKeyPressed(CallbackContext context) {
-        if (context.started) {
-            var inputControl = (KeyControl)context.control;
-            Move(inputControl.keyCode);
-        }
+    IEnumerator InitialMove() {
+        yield return new WaitForSeconds(1f);
+        MoveToArena(activeArena);
     }
 
     public void Move(CallbackContext context) => Move(((KeyControl)context.control).keyCode);
 
-    public void Move(Key key)
-    {
+    public void Move(Key key) {
         Debug2.Log("Moving camera: " + key, LogLevel.Detailed);
         int newArenaIndex;
-        switch (key)
-        {
+        switch (key) {
             case Key.UpArrow:
-                switch (activeArenaIndex)
-                {
+                switch (activeArenaIndex) {
                     case 4:
                     case 5:
                         newArenaIndex = activeArenaIndex - 2;
@@ -69,8 +55,7 @@ public class CameraManager : PlayerInputConsumer
                 }
                 break;
             case Key.DownArrow:
-                switch (activeArenaIndex)
-                {
+                switch (activeArenaIndex) {
                     case 2:
                     case 3:
                         newArenaIndex = activeArenaIndex + 2;
@@ -92,8 +77,7 @@ public class CameraManager : PlayerInputConsumer
             default:
                 throw new System.Exception("Invalid camera direction");
         }
-        if (InBounds(newArenaIndex))
-        {
+        if (InBounds(newArenaIndex)) {
             if (LeanTween.isTweening(gameObject)) LeanTween.cancel(tweenID);
             MoveToArena(arenas[newArenaIndex]);
             activeArenaIndex = newArenaIndex;
@@ -101,15 +85,13 @@ public class CameraManager : PlayerInputConsumer
         }
     }
 
-    private void MoveToArena(Arena arena)
-    {
-        LTDescr lTDescr= LeanTween.move(gameObject, new Vector2(arena.transform.position.x, arena.transform.position.y), 0.5f);
+    private void MoveToArena(Arena arena) {
+        LTDescr lTDescr = LeanTween.move(gameObject, new Vector2(arena.transform.position.x, arena.transform.position.y), 0.5f);
         lTDescr.setEaseOutCubic();
         tweenID = lTDescr.id;
     }
 
-    private bool InBounds(int index)
-    {
+    private bool InBounds(int index) {
         return index >= 0 && index < 8;
     }
 }

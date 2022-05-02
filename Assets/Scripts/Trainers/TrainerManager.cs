@@ -26,6 +26,9 @@ public class TrainerManager {
 
     public TrainerManager(Trainer activeTrainer) {
         ActiveTrainer = activeTrainer;
+        Dashboard.Instance.Level = activeTrainer.Level.ToString();
+        Dashboard.Instance.Experience = activeTrainer.Experience.ToString() + "/" + Trainer.ExpToNextLevel[activeTrainer.Level];
+        Dashboard.Instance.Money = activeTrainer.Money.ToString();
     }
 
     //private void Start()

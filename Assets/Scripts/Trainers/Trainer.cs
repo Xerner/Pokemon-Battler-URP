@@ -2,23 +2,35 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Trainer
-{
+public class Trainer {
     public Account Account;
     public Arena Arena;
     [SerializeField] private TrainerCard TrainerCard;
     private bool Ready = false;
     private int CurrentHealth = 100;
     private int TotalHealth = 100;
-    private int Experience = 0;
-    public int Money = 0;
-    private int level = 0;
-    public int Level { get; private set; }
+    private int experience = 0;
+    public int Money = 10;
+    private int level = 1;
+    public int Level { get => level; }
+    public int Experience { get => experience; }
     private Dictionary<string, List<PokemonBehaviour>> activePokemon;
     public Dictionary<string, List<PokemonBehaviour>> ActivePokemon { get; private set; }
+
+    public static Dictionary<int, int> ExpToNextLevel = new Dictionary<int, int>() {
+        { 1, 0 },
+        { 2, 2 },
+        { 3, 6 },
+        { 4, 10 },
+        { 5, 20 },
+        { 6, 36 },
+        { 7, 56 },
+        { 8, 80 },
+        { 9, 100 }
+    };
     
     public Trainer(Account account) {
-        this.Account = account;
+        Account = account;
     }
 
     public bool AddPokemonToBench(PokemonBehaviour pokemon) {

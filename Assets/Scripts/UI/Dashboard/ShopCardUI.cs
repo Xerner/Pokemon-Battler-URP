@@ -46,7 +46,7 @@ public class ShopCardUI : MonoBehaviour {
         if (pokemon == null) return;
         if (TrainerManager.Instance.ActiveTrainer.Money < Cost) {
             Debug2.Log("Not enough money", LogLevel.Detailed);
-            return;
+            return; 
         }
         PokeContainer container = TrainerManager.Instance.ActiveTrainer.Arena.Bench.GetAvailableBench();
         // Trainer bought a Pokemon, but the bench is full, BUT the purchased Pokemon can be used in an evolution to free up space

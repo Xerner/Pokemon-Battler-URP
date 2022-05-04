@@ -28,44 +28,57 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
             ""id"": ""7cf8be21-2afc-424c-9206-6021d3cc5fe3"",
             ""actions"": [
                 {
-                    ""name"": ""New action"",
-                    ""type"": ""Button"",
-                    ""id"": ""64ecaa22-0242-41f8-bd69-2bc596af7942"",
-                    ""expectedControlType"": ""Button"",
+                    ""name"": ""Input Action Move"",
+                    ""type"": ""Value"",
+                    ""id"": ""546e6f23-3238-4884-a377-29cb89a553b8"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""New action1"",
-                    ""type"": ""Button"",
-                    ""id"": ""179274f2-813f-4d46-8765-94a8ae16fa8d"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
                 {
                     ""name"": """",
-                    ""id"": ""63d90d45-c715-4be6-bb57-240f5758b7c6"",
-                    ""path"": """",
+                    ""id"": ""8c0491cc-1322-473d-bc25-2cdf6e2b85ee"",
+                    ""path"": ""<Keyboard>/upArrow"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""New action"",
+                    ""action"": ""Input Action Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
                 {
                     ""name"": """",
-                    ""id"": ""0a2ed1a5-d13f-448d-853a-ccb2af982c5c"",
-                    ""path"": """",
+                    ""id"": ""49210b26-678c-4a0b-8589-ef5266a07720"",
+                    ""path"": ""<Keyboard>/downArrow"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""New action1"",
+                    ""action"": ""Input Action Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f8dac9c7-7a25-4140-b41b-b34cdae6202f"",
+                    ""path"": ""<Keyboard>/leftArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Input Action Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""bbc2e2ce-4bdb-4acc-9914-e51d5469431e"",
+                    ""path"": ""<Keyboard>/rightArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Input Action Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -76,8 +89,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
 }");
         // Default
         m_Default = asset.FindActionMap("Default", throwIfNotFound: true);
-        m_Default_Newaction = m_Default.FindAction("New action", throwIfNotFound: true);
-        m_Default_Newaction1 = m_Default.FindAction("New action1", throwIfNotFound: true);
+        m_Default_InputActionMove = m_Default.FindAction("Input Action Move", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -137,14 +149,12 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
     // Default
     private readonly InputActionMap m_Default;
     private IDefaultActions m_DefaultActionsCallbackInterface;
-    private readonly InputAction m_Default_Newaction;
-    private readonly InputAction m_Default_Newaction1;
+    private readonly InputAction m_Default_InputActionMove;
     public struct DefaultActions
     {
         private @PlayerControls m_Wrapper;
         public DefaultActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Newaction => m_Wrapper.m_Default_Newaction;
-        public InputAction @Newaction1 => m_Wrapper.m_Default_Newaction1;
+        public InputAction @InputActionMove => m_Wrapper.m_Default_InputActionMove;
         public InputActionMap Get() { return m_Wrapper.m_Default; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -154,29 +164,22 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         {
             if (m_Wrapper.m_DefaultActionsCallbackInterface != null)
             {
-                @Newaction.started -= m_Wrapper.m_DefaultActionsCallbackInterface.OnNewaction;
-                @Newaction.performed -= m_Wrapper.m_DefaultActionsCallbackInterface.OnNewaction;
-                @Newaction.canceled -= m_Wrapper.m_DefaultActionsCallbackInterface.OnNewaction;
-                @Newaction1.started -= m_Wrapper.m_DefaultActionsCallbackInterface.OnNewaction1;
-                @Newaction1.performed -= m_Wrapper.m_DefaultActionsCallbackInterface.OnNewaction1;
-                @Newaction1.canceled -= m_Wrapper.m_DefaultActionsCallbackInterface.OnNewaction1;
+                @InputActionMove.started -= m_Wrapper.m_DefaultActionsCallbackInterface.OnInputActionMove;
+                @InputActionMove.performed -= m_Wrapper.m_DefaultActionsCallbackInterface.OnInputActionMove;
+                @InputActionMove.canceled -= m_Wrapper.m_DefaultActionsCallbackInterface.OnInputActionMove;
             }
             m_Wrapper.m_DefaultActionsCallbackInterface = instance;
             if (instance != null)
             {
-                @Newaction.started += instance.OnNewaction;
-                @Newaction.performed += instance.OnNewaction;
-                @Newaction.canceled += instance.OnNewaction;
-                @Newaction1.started += instance.OnNewaction1;
-                @Newaction1.performed += instance.OnNewaction1;
-                @Newaction1.canceled += instance.OnNewaction1;
+                @InputActionMove.started += instance.OnInputActionMove;
+                @InputActionMove.performed += instance.OnInputActionMove;
+                @InputActionMove.canceled += instance.OnInputActionMove;
             }
         }
     }
     public DefaultActions @Default => new DefaultActions(this);
     public interface IDefaultActions
     {
-        void OnNewaction(InputAction.CallbackContext context);
-        void OnNewaction1(InputAction.CallbackContext context);
+        void OnInputActionMove(InputAction.CallbackContext context);
     }
 }

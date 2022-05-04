@@ -50,8 +50,8 @@ public class PokeHost : MonoBehaviour {
     /// <summary>Starts hosting a game. Automatically adds this player to the game as well.</summary>
     public void CreateGame(bool alreadyInScene = false) {
         Trainer trainer = new Trainer(HostAccount);
-        TrainerManager.Instance = new TrainerManager(trainer);
-        TrainerManager.Instance.Add(trainer);
+        TrainerManager.SetActiveTrainer(trainer);
+        TrainerManager.Add(trainer);
         netManager.StartHost();
         connectionStatus.SetStatus("Hosting", UIPersistentStatus.ConnectionState.Good);
         if (!alreadyInScene) SceneManager.LoadScene(1); // 1 = arena scene

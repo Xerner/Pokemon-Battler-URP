@@ -43,11 +43,10 @@ public class PokemonPool {
     /// <summary>Withdraws 5 Pokemon from the pool randomly with respect to the trainers level</summary>
     // TODO: Create method for when other players withdraw pokemon. Figuring out how to make the data secure will be tricky
     public Pokemon[] Withdraw5() {
-        Debug2.Log($"Trainer {TrainerManager.Instance.ActiveTrainer.Account.settings.Username} is withdrawing pokemon");
+        Debug2.Log($"Trainer {TrainerManager.ActiveTrainer.Account.settings.Username} is withdrawing pokemon");
         Pokemon[] pokemons = new Pokemon[5];
         for (int i = 0; i < pokemons.Length; i++) {
-            int tierRoll = rollForTier(TrainerManager.Instance.ActiveTrainer.Level);
-            pokemons[i] = withdraw(tierRoll);
+            pokemons[i] = withdraw();
         }
         UpdatePokemonDebugContent(pokemons);
         Debug2.Log($"Pokemon withdrawed: " + string.Join(',', pokemons.Select(pokemon => pokemon.name)), LogLevel.Detailed);
@@ -56,8 +55,9 @@ public class PokemonPool {
 
     /// <summary>Attempt to withdraw 1 Pokemon from the pool</summary>
     /// <returns>A random Pokemon from the given tier, or null if there are no Pokemon left to pull</returns>
-    private Pokemon withdraw(int tier) {
+    private Pokemon withdraw() {
         // roll for which pokemon to withdraw
+        int tier = rollForTier(TrainerManager.ActiveTrainer.Level);
         var possiblePokemon = getPossiblePokemonToWithdrawFromTier(tier, 1);
         int roll = getRollForAPokemon(tier, possiblePokemon);
         Pokemon randomPokemon = possiblePokemon[roll];
@@ -89,13 +89,16 @@ public class PokemonPool {
 
     public void Refund(Pokemon[] pokemons) {
         foreach (var pokemon in pokemons) TierToPokemonCounts[pokemon.tier][pokemon.name]++;
+        UpdatePokemonDebugContent(pokemons);
     }
 
     /// <summary>Internal helper method</summary>
     private int getRollForAPokemon(int tier, List<Pokemon> pokemonCounts, bool remove = false) {
         int roll = Random.Range(0, pokemonCounts.Count);
         Pokemon randomPokemon = pokemonCounts[roll];
+        // we have rolled this Pokemon once, we do not want to roll for it again
         if (remove) pokemonCounts.RemoveAt(roll);
+        //
         if (TierToPokemonCounts[tier][randomPokemon.name] <= 0)
             Debug2.Log($"Cannot withdraw a {randomPokemon.name}! 0 left", LogLevel.All);
         return roll;
@@ -120,7 +123,7 @@ public class PokemonPool {
     /// <summary>PokemonPool Constants</summary>
     public class Constants {
         /// <summary>How many Pokemon are allowed in each respective tier</summary>
-        public static readonly int[] TierCounts = new int[5] { 39, 26, 21, 13, 10 };
+        public static readonly int[] TierCounts = new int[6] { 0, 39, 26, 21, 13, 10 }; // 0 for tier 0, because technically there is no tier 0
         /// <summary>Chance to roll a 1 tier, 2 tier, 3 tier, 4 tier, 5 tier respective to Trainer level</summary>
         public static readonly int[,] TierChances = new int[9, 5] {
             {100, 0, 0, 0, 0},

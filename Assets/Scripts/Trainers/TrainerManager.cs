@@ -3,28 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class TrainerManager {
-    private static TrainerManager instance = null;
-    private static readonly object padlock = new object();
+    private static Trainer[] Trainers = new Trainer[8];
+    private static Dictionary<ulong, int> trainerIndexes = new Dictionary<ulong, int>(); // ulong represents Client IDs
+    public static Trainer ActiveTrainer { get; private set; }
 
-    public static TrainerManager Instance {
-        get {
-            lock (padlock) {
-                // Instance is supposed to be created upon game creation in, maybe, PokeHost
-                //if (instance == null) instance = new TrainerManager(); 
-                return instance;
-            }
-        }
-        set {
-            instance = value;
-        }
-    }
-
-
-    private Trainer[] Trainers = new Trainer[8];
-    private Dictionary<ulong, int> trainerIndexes = new Dictionary<ulong, int>(); // ulong represents Client IDs
-    public Trainer ActiveTrainer { get; private set; }
-
-    public TrainerManager(Trainer activeTrainer) {
+    public static void SetActiveTrainer(Trainer activeTrainer) {
         ActiveTrainer = activeTrainer;
         Dashboard.Instance.Level = activeTrainer.Level.ToString();
         Dashboard.Instance.Experience = activeTrainer.Experience.ToString() + "/" + Trainer.ExpToNextLevel[activeTrainer.Level];
@@ -49,7 +32,7 @@ public class TrainerManager {
     //    //TrainersInGame = new HashSet<string>();
     //}
 
-    public Trainer Add(Trainer trainer)
+    public static Trainer Add(Trainer trainer)
     {
         if (trainerIndexes.ContainsKey(trainer.Account.settings.ClientID)) {
             // TODO: if trainer was already in-game and is reconnecting

@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,12 +10,21 @@ public class Trainer {
     private int TotalHealth = 100;
     private int experience = 0;
     public int Money = 10;
-    private int level = 1;
+    private int level = 2;
     public int Level { get => level; }
     public int Experience { get => experience; }
     private Dictionary<string, List<PokemonBehaviour>> activePokemon;
     public Dictionary<string, List<PokemonBehaviour>> ActivePokemon { get; private set; }
 
+    public static readonly int baseIncome = 5;
+    public static readonly int pvpWinIncome = 1;
+    public static Dictionary<int, int> winStreakIncome = new Dictionary<int, int>() {
+        { 1, 0 },
+        { 2, 1 },
+        { 3, 1 },
+        { 4, 2 },
+        { 5, 3 }
+    };
     public static Dictionary<int, int> ExpToNextLevel = new Dictionary<int, int>() {
         { 1, 0 },
         { 2, 2 },
@@ -28,10 +36,12 @@ public class Trainer {
         { 8, 80 },
         { 9, 100 }
     };
-    
+
     public Trainer(Account account) {
         Account = account;
     }
+
+    public int CalculateInterest() => Mathf.FloorToInt(Money / 10);
 
     public bool AddPokemonToBench(PokemonBehaviour pokemon) {
         PokeContainer container = Arena.Bench.GetAvailableBench();

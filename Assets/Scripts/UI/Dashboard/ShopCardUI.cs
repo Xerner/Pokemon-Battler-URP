@@ -44,22 +44,22 @@ public class ShopCardUI : MonoBehaviour {
 
     public void TryToBuy() {
         if (pokemon == null) return;
-        if (TrainerManager.Instance.ActiveTrainer.Money < Cost) {
+        if (TrainerManager.ActiveTrainer.Money < Cost) {
             Debug2.Log("Not enough money", LogLevel.Detailed);
             return; 
         }
-        PokeContainer container = TrainerManager.Instance.ActiveTrainer.Arena.Bench.GetAvailableBench();
+        PokeContainer container = TrainerManager.ActiveTrainer.Arena.Bench.GetAvailableBench();
         // Trainer bought a Pokemon, but the bench is full, BUT the purchased Pokemon can be used in an evolution to free up space
         if (BenchHasValidContainer(container))
-            container = TrainerManager.Instance.ActiveTrainer.ActivePokemon[pokemonName.text][0].CurrentField;
+            container = TrainerManager.ActiveTrainer.ActivePokemon[pokemonName.text][0].CurrentField;
         else
             return;
-        TrainerManager.Instance.ActiveTrainer.Money -= Cost;
+        TrainerManager.ActiveTrainer.Money -= Cost;
         Debug2.Log($"bought a {pokemon.name} for {pokemon.tier}", LogLevel.Detailed);
-        TrainerManager.Instance.ActiveTrainer.AddPokemonToBench(PokemonBehaviour.Spawn(pokemon));
+        TrainerManager.ActiveTrainer.AddPokemonToBench(PokemonBehaviour.Spawn(pokemon));
     }
 
     private bool BenchHasValidContainer(PokeContainer container) {
-        return container != null || container == null && TrainerManager.Instance.ActiveTrainer.IsAboutToEvolve(pokemon);
+        return container != null || container == null && TrainerManager.ActiveTrainer.IsAboutToEvolve(pokemon);
     }
 }

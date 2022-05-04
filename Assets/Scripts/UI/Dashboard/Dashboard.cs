@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 
 public class Dashboard : MonoBehaviour {
+    // Needs to be a Singleton because its a MonoBehaviour
     public static Dashboard Instance { get; private set; }
 
     [SerializeField] TextMeshProUGUI trainerLevel;
@@ -10,9 +11,12 @@ public class Dashboard : MonoBehaviour {
     [SerializeField] TextMeshProUGUI money;
     [SerializeField] private ShopCardUI[] shopCards;
     [HideInInspector] public Trainer[] Trainers;
-
+    [SerializeField] bool freeShop = false;
+    [SerializeField] bool freeExperience = false;
     public ShopCardUI[] ShopCards { get; private set; }
     private Pokemon[] pokemons;
+    const int shopCost = 2;
+    const int experienceCost = 4;
 
     void Awake() {
         if (Instance != null && Instance != this) {
@@ -29,8 +33,8 @@ public class Dashboard : MonoBehaviour {
 
     private void Start() {
         Pokemon.InitializeListOfPokemon(
-            new List<string>() { "bulbasaur", "squirtle", "charmander", "magnemite", "geodude" },
-            (pokemon) => { if (Pokemon.CachedPokemon.Keys.Count == 5) RefreshShop(); }
+            new List<string>() { "bulbasaur", "squirtle", "charmander", "magnemite", "abra" },
+            (pokemon) => { if (Pokemon.CachedPokemon.Keys.Count == 5) RefreshShop(false); }
         );
     }
 
@@ -40,11 +44,30 @@ public class Dashboard : MonoBehaviour {
         if (GUI.Button(new Rect(Screen.width - 205, 40, 200, 30), "Fetch 5 Pokemon"))
             Pokemon.InitializeListOfPokemon(
                 new List<string>() { "bulbasaur", "squirtle", "charmander", "magnemite", "geodude" },
-                (pokemon) => { if (Pokemon.CachedPokemon.Keys.Count == 5) RefreshShop(); }
+                (pokemon) => { if (Pokemon.CachedPokemon.Keys.Count == 5) RefreshShop(false); }
             );
     }
 
-    public void RefreshShop() {
+    public void BuyExperience() {
+        if (!freeExperience) {
+            if (TrainerManager.ActiveTrainer.Money < experienceCost) {
+                Debug2.Log("Not enough money to refresh the shop!");
+                return;
+            }
+            if (freeExperience) TrainerManager.ActiveTrainer.Money -= experienceCost;
+            money.text = TrainerManager.ActiveTrainer.Money.ToString();
+        }
+    }
+
+    public void RefreshShop(bool subtractMoney = true) {
+        if (!freeShop) {
+            if (TrainerManager.ActiveTrainer.Money < shopCost) {
+                Debug2.Log("Not enough money to refresh the shop!");
+                return;
+            }
+            if (subtractMoney) TrainerManager.ActiveTrainer.Money -= shopCost;
+            money.text = TrainerManager.ActiveTrainer.Money.ToString();
+        }
         if (this.pokemons != null) PokemonPool.Instance.Refund(this.pokemons);
         Pokemon[] pokemons = PokemonPool.Instance.Withdraw5();
         for (int i = 0; i < pokemons.Length; i++)

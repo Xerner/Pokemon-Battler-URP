@@ -9,9 +9,7 @@ public class TrainerManager {
 
     public static void SetActiveTrainer(Trainer activeTrainer) {
         ActiveTrainer = activeTrainer;
-        Dashboard.Instance.Level = activeTrainer.Level.ToString();
-        Dashboard.Instance.Experience = activeTrainer.Experience.ToString() + "/" + Trainer.ExpToNextLevel[activeTrainer.Level];
-        Dashboard.Instance.Money = activeTrainer.Money.ToString();
+        Dashboard.Instance.SetTrainer(activeTrainer);
     }
 
     //private void Start()

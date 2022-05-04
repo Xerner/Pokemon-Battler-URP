@@ -4,16 +4,17 @@ using UnityEngine;
 public class Trainer {
     public Account Account;
     public Arena Arena;
-    [SerializeField] private TrainerCard TrainerCard;
-    private bool Ready = false;
-    private int CurrentHealth = 100;
-    private int TotalHealth = 100;
-    private int experience = 0;
+    [SerializeField] TrainerCard TrainerCard;
+    bool Ready = false;
+    int CurrentHealth = 100;
+    int TotalHealth = 100;
+    int experience = 0;
     public int Money = 10;
-    private int level = 2;
+    int level = 2;
     public int Level { get => level; }
     public int Experience { get => experience; }
-    private Dictionary<string, List<PokemonBehaviour>> activePokemon;
+    public string ExperienceStr { get => experience + "/" + LevelToExpNeededToLevelUp[level]; }
+    Dictionary<string, List<PokemonBehaviour>> activePokemon;
     public Dictionary<string, List<PokemonBehaviour>> ActivePokemon { get; private set; }
 
     public static readonly int baseIncome = 5;
@@ -25,7 +26,7 @@ public class Trainer {
         { 4, 2 },
         { 5, 3 }
     };
-    public static Dictionary<int, int> ExpToNextLevel = new Dictionary<int, int>() {
+    public static Dictionary<int, int> LevelToExpNeededToLevelUp = new Dictionary<int, int>() {
         { 1, 0 },
         { 2, 2 },
         { 3, 6 },
@@ -42,6 +43,27 @@ public class Trainer {
     }
 
     public int CalculateInterest() => Mathf.FloorToInt(Money / 10);
+
+    /// <summary>Add experience to the Trainer. Rolls over exp if they level up.</summary>
+    /// <returns>True if the player levels up</returns>
+    public bool AddExperience(int expToAdd) {
+        int expNeeded = LevelToExpNeededToLevelUp[level];
+        int newExp = experience + expToAdd;
+        int difference = expNeeded - newExp;
+        if (difference <= 0) { // leveled up
+            // edge case: player is already max level
+            if (!LevelToExpNeededToLevelUp.ContainsKey(level+1)) {
+                experience = LevelToExpNeededToLevelUp[level];
+                difference = 1;
+            } else {
+                level++;
+                experience = Mathf.Abs(difference);
+            }
+        } else {
+            experience = newExp;
+        }
+        return difference <= 0;
+    }
 
     public bool AddPokemonToBench(PokemonBehaviour pokemon) {
         PokeContainer container = Arena.Bench.GetAvailableBench();
@@ -71,7 +93,7 @@ public class Trainer {
     }
 
     /// <summary>Assimilate the other Pokemon involved in an evolution. AKA Delete them from existence</summary>
-    private void AssimilatePokemon(string pokemonName)
+    void AssimilatePokemon(string pokemonName)
     {
         foreach (PokemonBehaviour pokemon in ActivePokemon[pokemonName])
             Object.Destroy(pokemon);

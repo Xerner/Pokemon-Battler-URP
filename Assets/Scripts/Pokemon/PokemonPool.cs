@@ -104,18 +104,23 @@ public class PokemonPool {
         return roll;
     }
 
+    /// <summary>Roll for what tier of Pokemon the trainer will pull from the pool</summary>
+    /// <returns>The tier of unit to pull from the Pokemon pool</returns>
     private int rollForTier(int trainerLevel) {
         float roll = Random.Range(1f, 100f);
-        if (roll < Constants.TierChances[trainerLevel, 0]) {
-            return 1;
-        } else if (roll < Constants.TierChances[trainerLevel, 1]) {
-            return 2;
-        } else if (roll < Constants.TierChances[trainerLevel, 2]) {
-            return 3;
-        } else if (roll < Constants.TierChances[trainerLevel, 3]) {
-            return 4;
-        } else if (roll < Constants.TierChances[trainerLevel, 4]) {
-            return 5;
+        int chanceSum = 0;
+        // Example: 
+        // rolls 90, trainer level 3
+        // {75, 25, 0, 0, 0}
+        // 90 < 75 for a tier 1? no
+        // 25 + 75 = 95
+        // 90 < 95 for a tier 2? yes
+        // rolls a tier 2 unit
+        for (int i = 0; i < 5; i++) {
+            chanceSum += Constants.TierChances[trainerLevel, i];
+            if (roll < chanceSum) {
+                return i+1;
+            }
         }
         throw new System.Exception("Failed all tier chances when rolling for a Pokemon from the Pokemon Pool!");
     }
@@ -128,13 +133,13 @@ public class PokemonPool {
         public static readonly int[,] TierChances = new int[9, 5] {
             {100, 0, 0, 0, 0},
             {100, 0, 0, 0, 0},
-            {75, 100, 0, 0, 0},
-            {55, 85, 100, 0, 0},
-            {45, 78, 98, 100, 0},
-            {35, 70, 95, 100, 0},
-            {22, 57, 87, 99, 100},
-            {15, 40, 75, 95, 100},
-            {10, 25, 55, 85, 100}
+            {75, 25, 0, 0, 0},
+            {55, 30, 15, 0, 0},
+            {45, 33, 20, 2, 0},
+            {25, 40, 30, 5, 0},
+            {19, 30, 35, 15, 1},
+            {16, 20, 35, 25, 4},
+            {9, 15, 30, 30, 16}
         };
     }
 

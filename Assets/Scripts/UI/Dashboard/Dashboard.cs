@@ -9,12 +9,14 @@ public class Dashboard : MonoBehaviour {
     [SerializeField] TextMeshProUGUI trainerLevel;
     [SerializeField] TextMeshProUGUI experience;
     [SerializeField] TextMeshProUGUI money;
-    [SerializeField] private ShopCardUI[] shopCards;
+    [SerializeField] ShopCardUI[] shopCards;
+    [SerializeField] TextMeshProUGUI[] tierChances;
     [HideInInspector] public Trainer[] Trainers;
     [SerializeField] bool freeShop = false;
     [SerializeField] bool freeExperience = false;
+    [SerializeField] bool freePokemon = false;
     public ShopCardUI[] ShopCards { get; private set; }
-    private Pokemon[] pokemons;
+    Pokemon[] pokemons;
     const int shopCost = 2;
     const int experienceCost = 4;
 
@@ -31,7 +33,7 @@ public class Dashboard : MonoBehaviour {
     public string Experience { get { return experience.text; } set { experience.text = value; } }
     public string Money { get { return money.text; } set { money.text = value; } }
 
-    private void Start() {
+    void Start() {
         Pokemon.InitializeListOfPokemon(
             new List<string>() { "bulbasaur", "squirtle", "charmander", "magnemite", "abra" },
             (pokemon) => { if (Pokemon.CachedPokemon.Keys.Count == 5) RefreshShop(false); }
@@ -47,18 +49,39 @@ public class Dashboard : MonoBehaviour {
                 (pokemon) => { if (Pokemon.CachedPokemon.Keys.Count == 5) RefreshShop(false); }
             );
     }
+    
+    /// <summary>Sets the level, experience, and money elements in the Dashboard based on the provided trainer</summary>
+    public void SetTrainer(Trainer trainer) {
+        Level = trainer.Level.ToString();
+        Experience = trainer.ExperienceStr;
+        Money = trainer.Money.ToString();
+        SetTierChances(trainer.Level);
+    }
 
-    public void BuyExperience() {
-        if (!freeExperience) {
-            if (TrainerManager.ActiveTrainer.Money < experienceCost) {
-                Debug2.Log("Not enough money to refresh the shop!");
-                return;
-            }
-            if (freeExperience) TrainerManager.ActiveTrainer.Money -= experienceCost;
-            money.text = TrainerManager.ActiveTrainer.Money.ToString();
+    private void SetTierChances(int level) {
+        for (int i = 0; i < 5; i++) {
+            tierChances[i].text = PokemonPool.Constants.TierChances[level, i].ToString();
         }
     }
 
+    /// <summary>ActiveTrainer attempts to buy experience. Updates UI and trainer variables accordingly</summary>
+    public void BuyExperience() {
+        if (!freeExperience) {
+            if (TrainerManager.ActiveTrainer.Money < experienceCost) {
+                Debug2.Log("Not enough money to buy experience!");
+                return;
+            }
+            TrainerManager.ActiveTrainer.Money -= experienceCost;
+            money.text = TrainerManager.ActiveTrainer.Money.ToString();
+        }
+        if (TrainerManager.ActiveTrainer.AddExperience(experienceCost)) {
+            trainerLevel.text = TrainerManager.ActiveTrainer.Level.ToString();
+            SetTierChances(TrainerManager.ActiveTrainer.Level);
+        }
+        experience.text = TrainerManager.ActiveTrainer.ExperienceStr;
+    }
+
+    /// <summary>ActiveTrainer attempts to refresh the entire shop. Updates UI and trainer variables accordingly</summary>
     public void RefreshShop(bool subtractMoney = true) {
         if (!freeShop) {
             if (TrainerManager.ActiveTrainer.Money < shopCost) {

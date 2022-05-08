@@ -32,6 +32,7 @@ public class Pokemon {
     public PokemonStat Defense = new PokemonStat() { baseStat = 50, effort = 0 };
     public PokemonStat SpecialAttack = new PokemonStat() { baseStat = 50, effort = 0 };
     public PokemonStat SpecialDefense = new PokemonStat() { baseStat = 50, effort = 0 };
+    public int Range;
     public PokemonStat Speed = new PokemonStat() { baseStat = 50, effort = 0 };
 
     public PokemonAbility Ability;
@@ -45,6 +46,7 @@ public class Pokemon {
 
     public Sprite Sprite;
     public Sprite ShopSprite;
+    public Vector2 TrueSpriteSize;
 
     public static void GetPokemonFromAPI(string idOrName, Action<Pokemon> onSuccess = null) {
         string correctedName = correctPokemonName(idOrName);
@@ -203,6 +205,7 @@ public class Pokemon {
                                     (texture) => {
                                         pokemon.Sprite = Sprite.Create(texture, new Rect(0.0f, 0.0f, texture.width, texture.height), new Vector2(0.5f, 0.5f), 1f);
                                         pokemon.ShopSprite = Sprite.Create(texture, new Rect(0.0f, 0.0f, texture.width, texture.height), new Vector2(0.5f, 0.5f), 1f);
+                                        pokemon.TrueSpriteSize = TextureUtil.GetTrueSizeInPixels(pokemon.Sprite.texture, 0f);
                                         onSuccess?.Invoke(pokemon);
                                     }
                                 );

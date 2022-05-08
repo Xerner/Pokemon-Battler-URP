@@ -6,10 +6,10 @@ public class StaticAssets
 {
     #region Sprite dictionaries
     // Pokemon
-    public static Dictionary<string, Sprite> typeSprites = LoadResource<Sprite>("Graphics/Pokemon/Types/Sprites", "*.png");
-    public static Dictionary<string, Sprite> typeMiniSprites = LoadResource<Sprite>("Graphics/Pokemon/Types/Mini Sprites", "*.png");
-    public static Dictionary<string, Sprite> typeEffectSprites = LoadResource<Sprite>("Graphics/Pokemon/Types/Type Effect Boxes", "*.png");
-    public static Dictionary<string, Sprite> typeMoveSprites = LoadResource<Sprite>("Graphics/Pokemon/Types/Type Move Boxes", "*.png");
+    public static Dictionary<string, Sprite> typeSprites = LoadResource<Sprite>("Graphics/Types/Sprites", "*.png");
+    public static Dictionary<string, Sprite> typeMiniSprites = LoadResource<Sprite>("Graphics/Types/Mini Sprites", "*.png");
+    public static Dictionary<string, Sprite> typeEffectSprites = LoadResource<Sprite>("Graphics/Types/Type Effect Boxes", "*.png");
+    public static Dictionary<string, Sprite> typeMoveSprites = LoadResource<Sprite>("Graphics/Types/Type Move Boxes", "*.png");
     // Trainer
     public static Dictionary<string, Sprite> Trainers = LoadResource<Sprite>("Graphics/Trainers/Sprites", "*.png");
     public static Dictionary<string, Sprite> TrainerBackgrounds = LoadResource<Sprite>("Graphics/Trainers/Backgrounds", "*.png");

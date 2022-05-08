@@ -8,27 +8,26 @@ using UnityEngine.UI;
 public class TrainerCard : MonoBehaviour
 {
     public RectTransform HealthBar;
-    [HideInInspector] private HealthBar health;
+    [HideInInspector] ResourceBar health;
 
-    [SerializeField] private Image readyOrNot;
-    [SerializeField] private TextMeshProUGUI level;
+    [SerializeField] Image readyOrNot;
+    [SerializeField] TextMeshProUGUI level;
 
     [Header("Trainer Setting Specific")]
-    [SerializeField] private TextMeshProUGUI username;
-    [SerializeField] private Image trainerBackground;
-    [SerializeField] private Image trainerSprite;
+    [SerializeField] TextMeshProUGUI username;
+    [SerializeField] Image trainerBackground;
+    [SerializeField] Image trainerSprite;
 
 
     [Header("Graphics")]
-    [SerializeField] private Sprite ready;
-    [SerializeField] private Sprite notReady;
+    [SerializeField] Sprite ready;
+    [SerializeField] Sprite notReady;
 
-    public HealthBar Health { get; private set; }
+    public ResourceBar Health { get; private set; }
 
-    private void Start()
+    void Start()
     {
         level.text = "1";
-        health = new HealthBar(HealthBar);
     }
 
     /// <summary>

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 
 public class Dashboard : MonoBehaviour {
-    // Needs to be a Singleton because its a MonoBehaviour
+    // Needs to be a Singleton and not a static class because its a MonoBehaviour
     public static Dashboard Instance { get; private set; }
 
     [SerializeField] TextMeshProUGUI trainerLevel;

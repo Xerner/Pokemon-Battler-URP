@@ -4,7 +4,7 @@ using UnityEngine;
 [Serializable]
 public class PokemonCombat {
     public bool combatMode;
-    public ArenaContainer combatField;
+    public ArenaPosition combatField;
     public Allegiance Allegiance;
     [SerializeField] private PokemonBehaviour targetEnemy;
     //private Pathing Path;

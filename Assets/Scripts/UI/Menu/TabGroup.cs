@@ -6,7 +6,7 @@ public class TabGroup : MonoBehaviour
 {
     [HideInInspector]
     public List<Button> TabButtons;
-    public List<GameObject> Pages;
+    public List<UnityEngine.GameObject> Pages;
     public List<TabPageControls> PageControls = new List<TabPageControls>();
     private TabPageControls activeControls;
     public Sprite tabIdle;

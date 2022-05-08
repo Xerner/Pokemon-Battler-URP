@@ -17,7 +17,7 @@ public class StaticAssets
     #endregion
 
     #region Prefabs
-    public static Dictionary<string, GameObject> Prefabs = LoadResource<GameObject>("Prefabs", "*.prefab");
+    public static Dictionary<string, UnityEngine.GameObject> Prefabs = LoadResource<UnityEngine.GameObject>("Prefabs", "*.prefab");
     #endregion
 
     static Dictionary<string, T> LoadResource<T>(string resourceFolderName, string searchPattern) where T : UnityEngine.Object {

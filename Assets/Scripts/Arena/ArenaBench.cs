@@ -4,11 +4,16 @@ using UnityEngine;
 
 public class ArenaBench : MonoBehaviour
 {
-    public List<PokeContainer> cards;
+    [HideInInspector] public List<Bench> Benches;
 
-    public PokeContainer GetAvailableBench()
+    void Start() {
+        for (int i = 0; i < transform.childCount; i++)
+            Benches.Add(transform.GetChild(i).GetComponent<Bench>()); ;
+    }
+
+    public Bench GetAvailableBench()
     {
-        foreach (PokeContainer card in cards) if (card.HeldPokemon == null) return card;
+        foreach (Bench bench in Benches) if (bench.Pokemon == null) return bench;
         return null;
     }
 }

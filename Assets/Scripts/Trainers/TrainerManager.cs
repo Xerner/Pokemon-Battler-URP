@@ -32,18 +32,20 @@ public class TrainerManager {
 
     public static Trainer Add(Trainer trainer)
     {
+        // if trainer was already in-game and is reconnecting
         if (trainerIndexes.ContainsKey(trainer.Account.settings.ClientID)) {
-            // TODO: if trainer was already in-game and is reconnecting
+            // TODO
             return null;
         }
         // Find next available slot
         int index = Array.FindIndex(Trainers, trainer => trainer == null);
-        if (index > 0) {
+        if (index > -1) {
             Trainers[index] = trainer;
+            trainer.Arena = UnityEngine.GameObject.Find("Arenas").transform.GetChild(index).GetComponent<Arena>();
             TrainerCardManager.Instance.AddTrainerCard(trainer, index);
             return trainer;
-        } else {
-            // TODO: Game slots are full
+        } else { // Game slots are full
+            // TODO
         }
         return null;
     }

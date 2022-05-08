@@ -9,7 +9,7 @@ public class PokemonPool {
     private static PokemonPool instance = null;
     private static readonly object padlock = new object();
     private static DebugContent staticDebugContent;
-    private static Dictionary<string, GameObject> debugContentPokemonGO = new Dictionary<string, GameObject>();
+    private static Dictionary<string, UnityEngine.GameObject> debugContentPokemonGO = new Dictionary<string, UnityEngine.GameObject>();
 
     public static PokemonPool Instance {
         get {
@@ -160,8 +160,8 @@ public class PokemonPool {
         DebugPanelManager.UpdateSize();
     }
 
-    private GameObject CreateDebugContent(string name, Transform parent, bool addToDict = true) {
-        var debugContent = new GameObject(name);
+    private UnityEngine.GameObject CreateDebugContent(string name, Transform parent, bool addToDict = true) {
+        var debugContent = new UnityEngine.GameObject(name);
         debugContent.transform.SetParent(parent);
         if (addToDict) debugContentPokemonGO.Add(name, debugContent);
         debugContent.AddComponent<CanvasRenderer>();
@@ -181,7 +181,7 @@ public class PokemonPool {
         SetPokemonDebugContent(debugContentPokemonGO[pokemon.name], pokemon.name, TierToPokemonCounts[pokemon.tier][pokemon.name]);
     }
 
-    private void SetPokemonDebugContent(GameObject gameObject, string name, int count) {
+    private void SetPokemonDebugContent(UnityEngine.GameObject gameObject, string name, int count) {
         gameObject.GetComponent<TextMeshProUGUI>().text = $"<b><color=#8888FF>{count}</b> <color=#FFFFFF>{name}";
     }
 }

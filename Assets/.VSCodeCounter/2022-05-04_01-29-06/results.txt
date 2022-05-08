@@ -1,0 +1,118 @@
+Date : 2022-05-04 01:29:06
+Directory : c:\Users\kenne\Desktop\Projects\Pokemon Battler URP\Assets\Scripts
+Total : 74 files,  9171 codes, 372 comments, 477 blanks, all 10020 lines
+
+Languages
++----------+------------+------------+------------+------------+------------+
+| language | files      | code       | comment    | blank      | total      |
++----------+------------+------------+------------+------------+------------+
+| JSON     |          5 |      6,159 |          0 |          5 |      6,164 |
+| C#       |         69 |      3,012 |        372 |        472 |      3,856 |
++----------+------------+------------+------------+------------+------------+
+
+Directories
++----------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                                                 | files      | code       | comment    | blank      | total      |
++----------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                                                    |         74 |      9,171 |        372 |        477 |     10,020 |
+| Arena                                                                                                                |          4 |        134 |          1 |         22 |        157 |
+| Editor                                                                                                               |          1 |         27 |          0 |          6 |         33 |
+| Managers                                                                                                             |          2 |        102 |          1 |         13 |        116 |
+| Network                                                                                                              |          8 |      6,421 |         64 |         55 |      6,540 |
+| Network\JSON                                                                                                         |          6 |      6,288 |         21 |         33 |      6,342 |
+| Player Input                                                                                                         |          1 |         28 |          6 |          3 |         37 |
+| Pokemon                                                                                                              |         16 |        939 |         68 |        111 |      1,118 |
+| Pokemon\Editor                                                                                                       |          3 |        107 |          0 |         25 |        132 |
+| Save System                                                                                                          |          1 |         35 |          0 |          4 |         39 |
+| Trainers                                                                                                             |          7 |        228 |         40 |         44 |        312 |
+| UI                                                                                                                   |         19 |        846 |        133 |        154 |      1,133 |
+| UI\Dashboard                                                                                                         |          2 |        159 |          5 |         19 |        183 |
+| UI\Main Menu                                                                                                         |          4 |         80 |          7 |         17 |        104 |
+| UI\Menu                                                                                                              |          6 |        375 |         77 |         66 |        518 |
+| UI\Popups                                                                                                            |          3 |         60 |         26 |         14 |        100 |
+| Utility                                                                                                              |         13 |        195 |         41 |         45 |        281 |
+| Utility\Attributes                                                                                                   |          1 |          8 |          0 |          3 |         11 |
+| Utility\Debug                                                                                                        |          2 |         46 |          0 |         10 |         56 |
+| Utility\Extensions                                                                                                   |          6 |         51 |         28 |         16 |         95 |
++----------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++----------------------------------------------------------------------------------------------------------------------+----------+------------+------------+------------+------------+
+| filename                                                                                                             | language | code       | comment    | blank      | total      |
++----------------------------------------------------------------------------------------------------------------------+----------+------------+------------+------------+------------+
+| c:\Users\kenne\Desktop\Projects\Pokemon Battler URP\Assets\Scripts\Arena\Arena.cs                                    | C#       |         92 |          1 |          8 |        101 |
+| c:\Users\kenne\Desktop\Projects\Pokemon Battler URP\Assets\Scripts\Arena\ArenaBench.cs                               | C#       |         12 |          0 |          3 |         15 |
+| c:\Users\kenne\Desktop\Projects\Pokemon Battler URP\Assets\Scripts\Arena\ArenaContainer.cs                           | C#       |         17 |          0 |          6 |         23 |
+| c:\Users\kenne\Desktop\Projects\Pokemon Battler URP\Assets\Scripts\Arena\BenchContainer.cs                           | C#       |         13 |          0 |          5 |         18 |
+| c:\Users\kenne\Desktop\Projects\Pokemon Battler URP\Assets\Scripts\Editor\DescriptionAttributeDrawer.cs              | C#       |         27 |          0 |          6 |         33 |
+| c:\Users\kenne\Desktop\Projects\Pokemon Battler URP\Assets\Scripts\Managers\CameraManager.cs                         | C#       |         88 |          1 |          9 |         98 |
+| c:\Users\kenne\Desktop\Projects\Pokemon Battler URP\Assets\Scripts\Managers\GameManager.cs                           | C#       |         14 |          0 |          4 |         18 |
+| c:\Users\kenne\Desktop\Projects\Pokemon Battler URP\Assets\Scripts\Network\JSON\PokemonJsonModel.cs                  | C#       |        129 |         21 |         28 |        178 |
+| c:\Users\kenne\Desktop\Projects\Pokemon Battler URP\Assets\Scripts\Network\JSON\pokemon_ability_example.json         | JSON     |        383 |          0 |          1 |        384 |
+| c:\Users\kenne\Desktop\Projects\Pokemon Battler URP\Assets\Scripts\Network\JSON\pokemon_evolution_chain_example.json | JSON     |         66 |          0 |          1 |         67 |
+| c:\Users\kenne\Desktop\Projects\Pokemon Battler URP\Assets\Scripts\Network\JSON\pokemon_example.json                 | JSON     |      4,685 |          0 |          1 |      4,686 |
+| c:\Users\kenne\Desktop\Projects\Pokemon Battler URP\Assets\Scripts\Network\JSON\pokemon_species_example.json         | JSON     |        764 |          0 |          1 |        765 |
+| c:\Users\kenne\Desktop\Projects\Pokemon Battler URP\Assets\Scripts\Network\JSON\pokemon_type_example.json            | JSON     |        261 |          0 |          1 |        262 |
+| c:\Users\kenne\Desktop\Projects\Pokemon Battler URP\Assets\Scripts\Network\PokeHost.cs                               | C#       |         86 |         36 |         16 |        138 |
+| c:\Users\kenne\Desktop\Projects\Pokemon Battler URP\Assets\Scripts\Network\WebRequests.cs                            | C#       |         47 |          7 |          6 |         60 |
+| c:\Users\kenne\Desktop\Projects\Pokemon Battler URP\Assets\Scripts\Player Input\PlayerInputConsumer.cs               | C#       |         28 |          6 |          3 |         37 |
+| c:\Users\kenne\Desktop\Projects\Pokemon Battler URP\Assets\Scripts\PlayerControls.cs                                 | C#       |        160 |         12 |         14 |        186 |
+| c:\Users\kenne\Desktop\Projects\Pokemon Battler URP\Assets\Scripts\Pokemon\Editor\FetchPokemonButton.cs              | C#       |         12 |          0 |          3 |         15 |
+| c:\Users\kenne\Desktop\Projects\Pokemon Battler URP\Assets\Scripts\Pokemon\Editor\PokemonDrawer.cs                   | C#       |         81 |          0 |         20 |        101 |
+| c:\Users\kenne\Desktop\Projects\Pokemon Battler URP\Assets\Scripts\Pokemon\Editor\PokemonTypeIconDrawer.cs           | C#       |         14 |          0 |          2 |         16 |
+| c:\Users\kenne\Desktop\Projects\Pokemon Battler URP\Assets\Scripts\Pokemon\Enums.cs                                  | C#       |        156 |          0 |          3 |        159 |
+| c:\Users\kenne\Desktop\Projects\Pokemon Battler URP\Assets\Scripts\Pokemon\PokeContainer.cs                          | C#       |          9 |          0 |          3 |         12 |
+| c:\Users\kenne\Desktop\Projects\Pokemon Battler URP\Assets\Scripts\Pokemon\Pokemon.cs                                | C#       |        225 |          8 |         28 |        261 |
+| c:\Users\kenne\Desktop\Projects\Pokemon Battler URP\Assets\Scripts\Pokemon\PokemonAssetManager.cs                    | C#       |         41 |          5 |          5 |         51 |
+| c:\Users\kenne\Desktop\Projects\Pokemon Battler URP\Assets\Scripts\Pokemon\PokemonAttribute.cs                       | C#       |          7 |          3 |          2 |         12 |
+| c:\Users\kenne\Desktop\Projects\Pokemon Battler URP\Assets\Scripts\Pokemon\PokemonBehaviour.cs                       | C#       |         62 |         19 |         15 |         96 |
+| c:\Users\kenne\Desktop\Projects\Pokemon Battler URP\Assets\Scripts\Pokemon\PokemonCombat.cs                          | C#       |         10 |          1 |          2 |         13 |
+| c:\Users\kenne\Desktop\Projects\Pokemon Battler URP\Assets\Scripts\Pokemon\PokemonConstants.cs                       | C#       |        137 |          4 |          3 |        144 |
+| c:\Users\kenne\Desktop\Projects\Pokemon Battler URP\Assets\Scripts\Pokemon\PokemonManager.cs                         | C#       |          8 |          0 |          1 |          9 |
+| c:\Users\kenne\Desktop\Projects\Pokemon Battler URP\Assets\Scripts\Pokemon\PokemonPool.cs                            | C#       |        146 |         25 |         17 |        188 |
+| c:\Users\kenne\Desktop\Projects\Pokemon Battler URP\Assets\Scripts\Pokemon\PokemonScriptableObject.cs                | C#       |          8 |          0 |          2 |         10 |
+| c:\Users\kenne\Desktop\Projects\Pokemon Battler URP\Assets\Scripts\Pokemon\PokemonTypeIconAttribute.cs               | C#       |          6 |          3 |          2 |         11 |
+| c:\Users\kenne\Desktop\Projects\Pokemon Battler URP\Assets\Scripts\Pokemon\PokemonTypeSprites.cs                     | C#       |         17 |          0 |          3 |         20 |
+| c:\Users\kenne\Desktop\Projects\Pokemon Battler URP\Assets\Scripts\Save System\SaveSystem.cs                         | C#       |         35 |          0 |          4 |         39 |
+| c:\Users\kenne\Desktop\Projects\Pokemon Battler URP\Assets\Scripts\StaticAssets.cs                                   | C#       |         56 |          6 |          6 |         68 |
+| c:\Users\kenne\Desktop\Projects\Pokemon Battler URP\Assets\Scripts\Trainers\Account.cs                               | C#       |         22 |          4 |          4 |         30 |
+| c:\Users\kenne\Desktop\Projects\Pokemon Battler URP\Assets\Scripts\Trainers\AccountSettings.cs                       | C#       |         23 |          2 |          4 |         29 |
+| c:\Users\kenne\Desktop\Projects\Pokemon Battler URP\Assets\Scripts\Trainers\HealthBar.cs                             | C#       |         23 |          0 |          5 |         28 |
+| c:\Users\kenne\Desktop\Projects\Pokemon Battler URP\Assets\Scripts\Trainers\Trainer.cs                               | C#       |         87 |          7 |          9 |        103 |
+| c:\Users\kenne\Desktop\Projects\Pokemon Battler URP\Assets\Scripts\Trainers\TrainerCard.cs                           | C#       |         35 |          5 |         12 |         52 |
+| c:\Users\kenne\Desktop\Projects\Pokemon Battler URP\Assets\Scripts\Trainers\TrainerManager.cs                        | C#       |         26 |         20 |          5 |         51 |
+| c:\Users\kenne\Desktop\Projects\Pokemon Battler URP\Assets\Scripts\Trainers\TrainerNetwork.cs                        | C#       |         12 |          2 |          5 |         19 |
+| c:\Users\kenne\Desktop\Projects\Pokemon Battler URP\Assets\Scripts\UI\Dashboard\Dashboard.cs                         | C#       |         86 |          4 |         11 |        101 |
+| c:\Users\kenne\Desktop\Projects\Pokemon Battler URP\Assets\Scripts\UI\Dashboard\ShopCardUI.cs                        | C#       |         73 |          1 |          8 |         82 |
+| c:\Users\kenne\Desktop\Projects\Pokemon Battler URP\Assets\Scripts\UI\ImageSelector.cs                               | C#       |         50 |          0 |          9 |         59 |
+| c:\Users\kenne\Desktop\Projects\Pokemon Battler URP\Assets\Scripts\UI\Main Menu\JoinGameMenu.cs                      | C#       |         10 |          0 |          3 |         13 |
+| c:\Users\kenne\Desktop\Projects\Pokemon Battler URP\Assets\Scripts\UI\Main Menu\LoginMenu.cs                         | C#       |          9 |          0 |          3 |         12 |
+| c:\Users\kenne\Desktop\Projects\Pokemon Battler URP\Assets\Scripts\UI\Main Menu\MainMenu.cs                          | C#       |         44 |          7 |          7 |         58 |
+| c:\Users\kenne\Desktop\Projects\Pokemon Battler URP\Assets\Scripts\UI\Main Menu\SettingsMenu.cs                      | C#       |         17 |          0 |          4 |         21 |
+| c:\Users\kenne\Desktop\Projects\Pokemon Battler URP\Assets\Scripts\UI\Menu\GlideMenu.cs                              | C#       |         79 |          8 |         12 |         99 |
+| c:\Users\kenne\Desktop\Projects\Pokemon Battler URP\Assets\Scripts\UI\Menu\Menu.cs                                   | C#       |         72 |          0 |         15 |         87 |
+| c:\Users\kenne\Desktop\Projects\Pokemon Battler URP\Assets\Scripts\UI\Menu\MenuManager.cs                            | C#       |         97 |         39 |         24 |        160 |
+| c:\Users\kenne\Desktop\Projects\Pokemon Battler URP\Assets\Scripts\UI\Menu\MenuPosition.cs                           | C#       |          7 |          0 |          1 |          8 |
+| c:\Users\kenne\Desktop\Projects\Pokemon Battler URP\Assets\Scripts\UI\Menu\TabGroup.cs                               | C#       |        113 |         30 |         12 |        155 |
+| c:\Users\kenne\Desktop\Projects\Pokemon Battler URP\Assets\Scripts\UI\Menu\TabPageControls.cs                        | C#       |          7 |          0 |          2 |          9 |
+| c:\Users\kenne\Desktop\Projects\Pokemon Battler URP\Assets\Scripts\UI\Popups\UIModal.cs                              | C#       |         17 |         10 |          5 |         32 |
+| c:\Users\kenne\Desktop\Projects\Pokemon Battler URP\Assets\Scripts\UI\Popups\UIWindow.cs                             | C#       |          7 |          7 |          2 |         16 |
+| c:\Users\kenne\Desktop\Projects\Pokemon Battler URP\Assets\Scripts\UI\Popups\UIWindowManager.cs                      | C#       |         36 |          9 |          7 |         52 |
+| c:\Users\kenne\Desktop\Projects\Pokemon Battler URP\Assets\Scripts\UI\TrainerCardManager.cs                          | C#       |         31 |          3 |          7 |         41 |
+| c:\Users\kenne\Desktop\Projects\Pokemon Battler URP\Assets\Scripts\UI\UIPersistentStatus.cs                          | C#       |         34 |         10 |          8 |         52 |
+| c:\Users\kenne\Desktop\Projects\Pokemon Battler URP\Assets\Scripts\UI\ViewManager.cs                                 | C#       |         57 |          5 |         14 |         76 |
+| c:\Users\kenne\Desktop\Projects\Pokemon Battler URP\Assets\Scripts\Utility\Attributes\DescriptionAttribute.cs        | C#       |          8 |          0 |          3 |         11 |
+| c:\Users\kenne\Desktop\Projects\Pokemon Battler URP\Assets\Scripts\Utility\Debug2.cs                                 | C#       |         34 |          0 |          5 |         39 |
+| c:\Users\kenne\Desktop\Projects\Pokemon Battler URP\Assets\Scripts\Utility\Debug\DebugContent.cs                     | C#       |         10 |          0 |          3 |         13 |
+| c:\Users\kenne\Desktop\Projects\Pokemon Battler URP\Assets\Scripts\Utility\Debug\DebugPanelManager.cs                | C#       |         36 |          0 |          7 |         43 |
+| c:\Users\kenne\Desktop\Projects\Pokemon Battler URP\Assets\Scripts\Utility\DontDestroy.cs                            | C#       |          8 |          1 |          2 |         11 |
+| c:\Users\kenne\Desktop\Projects\Pokemon Battler URP\Assets\Scripts\Utility\Extensions\FloatExtensions.cs             | C#       |         12 |         12 |          4 |         28 |
+| c:\Users\kenne\Desktop\Projects\Pokemon Battler URP\Assets\Scripts\Utility\Extensions\GameObjectExtensions.cs        | C#       |         12 |          2 |          5 |         19 |
+| c:\Users\kenne\Desktop\Projects\Pokemon Battler URP\Assets\Scripts\Utility\Extensions\RandomExtensions.cs            | C#       |          7 |          0 |          1 |          8 |
+| c:\Users\kenne\Desktop\Projects\Pokemon Battler URP\Assets\Scripts\Utility\Extensions\StringExtensions.cs            | C#       |         10 |          4 |          2 |         16 |
+| c:\Users\kenne\Desktop\Projects\Pokemon Battler URP\Assets\Scripts\Utility\Extensions\TransformExtensions.cs         | C#       |          6 |         10 |          3 |         19 |
+| c:\Users\kenne\Desktop\Projects\Pokemon Battler URP\Assets\Scripts\Utility\Extensions\Vector3Extensions.cs           | C#       |          4 |          0 |          1 |          5 |
+| c:\Users\kenne\Desktop\Projects\Pokemon Battler URP\Assets\Scripts\Utility\PokemonUtil.cs                            | C#       |         26 |          0 |          3 |         29 |
+| c:\Users\kenne\Desktop\Projects\Pokemon Battler URP\Assets\Scripts\Utility\PrefabFactory.cs                          | C#       |         22 |         12 |          6 |         40 |
+| Total                                                                                                                |          |      9,171 |        372 |        477 |     10,020 |
++----------------------------------------------------------------------------------------------------------------------+----------+------------+------------+------------+------------+

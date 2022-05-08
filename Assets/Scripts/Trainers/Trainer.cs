@@ -14,8 +14,7 @@ public class Trainer {
     public int Level { get => level; }
     public int Experience { get => experience; }
     public string ExperienceStr { get => experience + "/" + LevelToExpNeededToLevelUp[level]; }
-    Dictionary<string, List<PokemonBehaviour>> activePokemon;
-    public Dictionary<string, List<PokemonBehaviour>> ActivePokemon { get; private set; }
+    Dictionary<string, List<PokemonBehaviour>> activePokemon = new Dictionary<string, List<PokemonBehaviour>>();
 
     public static readonly int baseIncome = 5;
     public static readonly int pvpWinIncome = 1;
@@ -66,21 +65,21 @@ public class Trainer {
     }
 
     public bool AddPokemonToBench(PokemonBehaviour pokemon) {
-        PokeContainer container = Arena.Bench.GetAvailableBench();
+        
+        Bench bench = Arena.Bench.GetAvailableBench();
         // Evolve?
         bool evolving = IsAboutToEvolve(pokemon.Pokemon);
-        if (container == null && !evolving) return false; // no fucking room
+        if (bench == null && !evolving) return false; // no fucking room
         // evolve and/or set the PokemonBehaviour inside the container
         if (evolving) {
             pokemon = pokemon.Evolve();
             AssimilatePokemon(pokemon.name);
-        } else {
-            container.SetPokemon(pokemon);
         }
+        bench.SetPokemon(pokemon);
         // Add it to the Trainers ActivePokemon dictionary
-        if (!ActivePokemon.ContainsKey(pokemon.name)) ActivePokemon.Add(pokemon.name, new List<PokemonBehaviour>()); 
-        ActivePokemon[pokemon.name].Add(pokemon);
-        pokemon.OnDestroyed += (PokemonBehaviour pokemon) => ActivePokemon[pokemon.name].Remove(pokemon);
+        if (!activePokemon.ContainsKey(pokemon.name)) activePokemon.Add(pokemon.name, new List<PokemonBehaviour>());
+        activePokemon[pokemon.name].Add(pokemon);
+        pokemon.OnDestroyed += (PokemonBehaviour pokemon) => activePokemon[pokemon.name].Remove(pokemon);
         return true;
     }
 
@@ -88,15 +87,15 @@ public class Trainer {
     {
         return activePokemon.ContainsKey(pokemon.name)
             && pokemon.EvolutionStage < pokemon.Evolutions.Count - 1
-            && ActivePokemon[pokemon.name].Count > 1
+            && activePokemon[pokemon.name].Count > 1
             && activePokemon[pokemon.name][0].Pokemon.Evolutions[pokemon.EvolutionStage+1] != null;
     }
 
     /// <summary>Assimilate the other Pokemon involved in an evolution. AKA Delete them from existence</summary>
     void AssimilatePokemon(string pokemonName)
     {
-        foreach (PokemonBehaviour pokemon in ActivePokemon[pokemonName])
+        foreach (PokemonBehaviour pokemon in activePokemon[pokemonName])
             Object.Destroy(pokemon);
-        ActivePokemon.Remove(pokemonName);
+        activePokemon.Remove(pokemonName);
     }
 }

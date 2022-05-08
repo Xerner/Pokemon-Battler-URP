@@ -10,10 +10,10 @@ public class ViewManager : MonoBehaviour
 
     [Description("Assumes this GameObjects children are to be managed instead of the list below")]
     public bool UseChildren;
-    public List<GameObject> Views;
+    public List<UnityEngine.GameObject> Views;
     //[Header("The 0 index of the Views list, or the 1st child of this GameObject")]
-    public static GameObject activeView;
-    private static readonly Stack<GameObject> previousViews = new Stack<GameObject>();
+    public static UnityEngine.GameObject activeView;
+    private static readonly Stack<UnityEngine.GameObject> previousViews = new Stack<UnityEngine.GameObject>();
 
     void Awake() {
         if (Instance != null && Instance != this) {
@@ -55,7 +55,7 @@ public class ViewManager : MonoBehaviour
 
     #region public methods
 
-    public void ChangeViews(GameObject view) {
+    public void ChangeViews(UnityEngine.GameObject view) {
 
         // TODO:  add case for when  view is not in view list
         if (!Views.Contains(view)) throw new System.Exception($"{view.name} is not part of the {gameObject.name} View Manager's view list");

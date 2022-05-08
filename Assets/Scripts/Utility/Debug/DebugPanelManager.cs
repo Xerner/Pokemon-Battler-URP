@@ -17,7 +17,7 @@ public class DebugPanelManager : MonoBehaviour
         StaticDebugPrefab = DebugPrefab;
     }
 
-    public static DebugContent Spawn(string header, GameObject content) {
+    public static DebugContent Spawn(string header, UnityEngine.GameObject content) {
         DebugContent instance = Instantiate(StaticDebugPrefab, StaticPanel);
         instance.Header.text = header;
         instance.Content = content;

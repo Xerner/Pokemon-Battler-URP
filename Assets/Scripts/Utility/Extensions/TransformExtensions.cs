@@ -14,5 +14,5 @@ public static class TransformExtensions
     /// </summary>
     /// <param name="transform"></param>
     /// <returns></returns>
-    public static RectTransform RectTransform(this GameObject gameObject) => (RectTransform)gameObject.transform;
+    public static RectTransform RectTransform(this UnityEngine.GameObject gameObject) => (RectTransform)gameObject.transform;
 }

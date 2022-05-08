@@ -7,7 +7,7 @@ using UnityEngine;
 public class TrainerCardManager : MonoBehaviour {
     public static TrainerCardManager Instance { get; private set; }
 
-    [SerializeField] GameObject TrainerCardPrefab; // set in the editor
+    [SerializeField] UnityEngine.GameObject TrainerCardPrefab; // set in the editor
     [SerializeField] Transform VerticalLayoutGroup; // set in the editor
 
     public TrainerCard[] TrainerCards = new TrainerCard[8];

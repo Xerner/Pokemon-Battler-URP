@@ -11,7 +11,7 @@ public static class WebRequests {
 
     private static void init() {
         if (webRequestsMB == null) {
-            webRequestsMB = new GameObject("WebRequests").AddComponent<WebRequestsMB>();
+            webRequestsMB = new UnityEngine.GameObject("WebRequests").AddComponent<WebRequestsMB>();
         }
     }
 

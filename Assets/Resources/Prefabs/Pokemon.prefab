@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7741851509344071445}
-  - component: {fileID: 7741851509344071451}
   - component: {fileID: 7741851509344071450}
   - component: {fileID: 4322659992947128400}
   - component: {fileID: 776073486359868073}
@@ -27,7 +26,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7741851509344071454}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -38,16 +37,8 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
+  m_SizeDelta: {x: 42, y: 42}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!222 &7741851509344071451
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7741851509344071454}
-  m_CullTransparentMesh: 1
 --- !u!212 &7741851509344071450
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -86,18 +77,18 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -1939599687
+  m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_Sprite: {fileID: 0}
+  m_SortingOrder: 4
+  m_Sprite: {fileID: 21300000, guid: 94ffd0265dbfe7345b40989a795bf824, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.89, y: 0.91}
+  m_Size: {x: 42, y: 42}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 0
+  m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!95 &4322659992947128400
@@ -132,11 +123,46 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d5fa1a3359fc8740a81d01dd07dc7e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pokemon: {fileID: 0}
-  id: 0
-  name: bulbasaur
+  pokemonSO: {fileID: 0}
+  pokemon:
+    id: 0
+    name: 
+    tier: 0
+    Hp:
+      baseStat: 50
+      effort: 0
+    Attack:
+      baseStat: 50
+      effort: 0
+    Defense:
+      baseStat: 50
+      effort: 0
+    SpecialAttack:
+      baseStat: 50
+      effort: 0
+    SpecialDefense:
+      baseStat: 50
+      effort: 0
+    Speed:
+      baseStat: 50
+      effort: 0
+    Ability:
+      name: 
+      description: 
+      longDescription: 
+      url: 
+      isHidden: 0
+      slot: 0
+    types: 0e00000000000000
+    Evolutions: []
+    EvolutionStage: 0
+    Sprite: {fileID: 0}
+    ShopSprite: {fileID: 0}
+  Combat:
+    combatMode: 0
+    combatField: {fileID: 0}
+    Allegiance: 0
+    targetEnemy: {fileID: 0}
+    invulnerable: 0
   CurrentField: {fileID: 0}
-  combatMode: 0
-  combatField: {fileID: 0}
-  Allegiance: 0
-  invulnerable: 0
+  pokemonName: 

@@ -7,10 +7,10 @@ public class MenuManager : PlayerInputConsumer {
     private static MenuManager instance = null;
     public static MenuManager Instance {
         get {
-            if (instance == null) instance = new GameObject("Menu Manager").AddComponent<MenuManager>();
+            if (instance == null) instance = new UnityEngine.GameObject("Menu Manager").AddComponent<MenuManager>();
             else return instance;
             var playerInput = instance.GetComponent<PlayerInput>();
-            playerInput.actions = GameObject.Find("PlayerControls").GetComponent<PlayerInput>().actions;
+            playerInput.actions = UnityEngine.GameObject.Find("PlayerControls").GetComponent<PlayerInput>().actions;
             playerInput.notificationBehavior = PlayerNotifications.InvokeCSharpEvents;
             playerInput.currentActionMap = playerInput.actions.FindActionMap("Default");
             return instance;

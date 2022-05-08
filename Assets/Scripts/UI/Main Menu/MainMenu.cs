@@ -33,7 +33,7 @@ public class MainMenu : MonoBehaviour
     /// On success: sends the user to the main menu<br/>
     /// On fail: shows a popup message
     /// </summary>
-    public void LoadSettings(string username, GameObject nextMenu) {
+    public void LoadSettings(string username, UnityEngine.GameObject nextMenu) {
         AccountSettings settings = SaveSystem.LoadAccount(username.Trim().ToLower());
         if (settings == null) {
             UIWindowManager.Instance.CreatePopupMessage("Trainer not found");

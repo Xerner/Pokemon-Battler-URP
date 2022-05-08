@@ -17,7 +17,7 @@ public class PokemonBehaviour : MonoBehaviour {
     [SerializeField]
     public PokemonCombat Combat;
     //public bool isSelected;
-    public PokeContainer CurrentField;
+    public SnapTo CurrentField;
     public Trainer trainer;
 
     public Action<PokemonBehaviour> OnDestroyed;
@@ -26,7 +26,7 @@ public class PokemonBehaviour : MonoBehaviour {
     [SerializeField]
     private string pokemonName;
 
-    public Pokemon Pokemon { get; private set; }
+    public Pokemon Pokemon { get { return pokemon; } }
 
     private void Start() {
         InitializeComponents();

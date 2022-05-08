@@ -33,7 +33,7 @@ public class PrefabFactory<T> : MonoBehaviour where T : MonoBehaviour {
     /// Destroy this instance
     /// </summary>
     public void Destroy() {
-        GameObject.Destroy(gameObject);
+        UnityEngine.GameObject.Destroy(gameObject);
         OnDestroy?.Invoke(prefab);
     }
 }

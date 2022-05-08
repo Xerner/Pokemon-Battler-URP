@@ -12,9 +12,7 @@ public class Dashboard : MonoBehaviour {
     [SerializeField] ShopCard[] shopCards;
     [SerializeField] TextMeshProUGUI[] tierChances;
     [HideInInspector] public Trainer[] Trainers;
-    [SerializeField] bool freeRefreshShop = false;
-    [SerializeField] bool freeExperience = false;
-    [SerializeField] bool freePokemon = false;
+    
     public ShopCard[] ShopCards { get; private set; }
     Pokemon[] pokemons;
     const int shopCost = 2;
@@ -66,7 +64,7 @@ public class Dashboard : MonoBehaviour {
 
     /// <summary>ActiveTrainer attempts to buy experience. Updates UI and trainer variables accordingly</summary>
     public void BuyExperience() {
-        if (!freeExperience) {
+        if (!GameManager.Instance.FreeExperience) {
             if (TrainerManager.ActiveTrainer.Money < experienceCost) {
                 Debug2.Log("Not enough money to buy experience!");
                 return;
@@ -83,7 +81,7 @@ public class Dashboard : MonoBehaviour {
 
     /// <summary>ActiveTrainer attempts to refresh the entire shop. Updates UI and trainer variables accordingly</summary>
     public void RefreshShop(bool subtractMoney = true) {
-        if (!freeRefreshShop) {
+        if (!GameManager.Instance.FreeRefreshShop) {
             if (TrainerManager.ActiveTrainer.Money < shopCost) {
                 Debug2.Log("Not enough money to refresh the shop!");
                 return;

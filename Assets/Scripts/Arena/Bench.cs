@@ -8,24 +8,16 @@ using UnityEngine.InputSystem;
 public class Bench : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler {
     [SerializeField] TextMeshPro displayedName;
     [SerializeField] SnapTo snapTo;
+    [SerializeField] SpriteRenderer type1;
+    [SerializeField] SpriteRenderer type2;
 
-    private Vector3 closedPosition;
-    private Vector3 openPosition { get { return new Vector3(closedPosition.x, closedPosition.y + hoverHeight, closedPosition.z); } }
+    Vector3 normalPosition;
+    Vector3 hoveredPosition { get { return new Vector3(normalPosition.x, normalPosition.y + hoverHeight, normalPosition.z); } }
     static float hoverHeight = 20f;
     static float glideTime = 0.5f;
 
     void Start() {
-        closedPosition = transform.position;
-    }
-
-    Ray ray;
-    RaycastHit hit;
-
-    void Update() {
-        ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
-        if (Physics.Raycast(ray, out hit)) {
-            print(hit.collider.name);
-        }
+        normalPosition = transform.RectTransform().anchoredPosition;
     }
 
     public PokemonBehaviour Pokemon { 
@@ -41,21 +33,26 @@ public class Bench : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler {
     {
         if (snapTo != null) snapTo.SetPokemon(pokemon.gameObject);
         if (displayedName != null) displayedName.text = pokemon == null ? "" : pokemon.name;
+        type1.sprite = StaticAssets.typeMiniSprites[pokemon.Pokemon.types[0].ToString()];
+        type1.color = new Color(1f, 1f, 1f, 1f);
+        if (pokemon.Pokemon.types[1] == EPokemonType.None) {
+            type2.sprite = null;
+            type2.color = new Color(1f, 1f, 1f, 0f);
+        } else {
+            type2.sprite = StaticAssets.typeMiniSprites[pokemon.Pokemon.types[1].ToString()];
+            type2.color = new Color(1f, 1f, 1f, 1f);
+        }
     }
 
     public void OnPointerEnter(PointerEventData eventData) {
-        Debug2.Log("Cursor entered bench"); // , LogLevel.All);
-        if (LeanTween.isTweening(gameObject)) {
-            LeanTween.cancel(gameObject);
-            LeanTween.move(gameObject, openPosition, glideTime).setEaseOutCubic();
-        }
+        Debug2.Log("Cursor entered bench", LogLevel.All);
+        if (LeanTween.isTweening(gameObject)) LeanTween.cancel(gameObject);
+        LeanTween.move((RectTransform)gameObject.transform, hoveredPosition, glideTime).setEaseOutCubic();
     }
 
     public void OnPointerExit(PointerEventData eventData) {
-        Debug2.Log("Cursor exited bench"); // , LogLevel.All);
-        if (LeanTween.isTweening(gameObject)) {
-            LeanTween.cancel(gameObject);
-            LeanTween.move(gameObject, closedPosition, glideTime).setEaseOutCubic();
-        }
+        Debug2.Log("Cursor exited bench", LogLevel.All);
+        if (LeanTween.isTweening(gameObject)) LeanTween.cancel(gameObject);
+        LeanTween.move((RectTransform)gameObject.transform, normalPosition, glideTime).setEaseOutCubic();
     }
 }

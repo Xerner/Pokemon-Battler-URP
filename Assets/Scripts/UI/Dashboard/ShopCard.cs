@@ -64,7 +64,7 @@ public class ShopCard : MonoBehaviour {
 
     public void TryToBuy() {
         if (pokemon == null) return;
-        if (TrainerManager.ActiveTrainer.Money < Cost) {
+        if (TrainerManager.ActiveTrainer.Money < Cost && !GameManager.Instance.FreePokemon) {
             Debug2.Log("Not enough money", LogLevel.Detailed);
             return;
         }

@@ -5,13 +5,12 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
-    [SerializeField] private Arena[] arenas;
-    public static bool DebugMode;
+    public bool FreeRefreshShop = false;
+    public bool FreeExperience = false;
+    public bool FreePokemon = false;
 
     private void Start()
     {
         Instance = this;
-        DebugMode = true;
     }
-
 }

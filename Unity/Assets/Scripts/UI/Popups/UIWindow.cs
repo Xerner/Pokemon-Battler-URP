@@ -8,7 +8,7 @@ using UnityEngine;
 public interface UIWindow
 {
     /// <summary>
-    /// Whether or not the Popup should have a backdrop Panel behind it. The actual backdrop panel is implemented through the PopupManager.
+    /// Whether or not the Popup should have a backdrop panel behind it. The actual backdrop panel is implemented through the PopupManager.
     /// False by default.
     /// </summary>
     public bool HasBackdrop { get; }

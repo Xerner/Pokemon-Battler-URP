@@ -1,5 +1,5 @@
+using Poke.Core;
 using System;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -15,7 +15,7 @@ public class PokemonBehaviour : MonoBehaviour, IPointerEnterHandler, IPointerExi
 
     public PokemonStats Stats;
 
-    [SerializeField][Pokemon] PokemonScriptableObject pokemonSO;
+    [SerializeField][Pokemon] PokemonSO pokemonSO;
     [SerializeField] Pokemon pokemon;
     [SerializeField] public PokemonCombat Combat;
     //public bool isSelected;
@@ -63,9 +63,15 @@ public class PokemonBehaviour : MonoBehaviour, IPointerEnterHandler, IPointerExi
     /// <summary>Initializes the Pokemons class, name, sprite, and ScriptableObject. Called by FetchPokemonButton</summary>
     public void Initialize(string pokemonName) {
         if (pokemonName.Trim() != "")
-            Pokemon.GetPokemonFromAPI(pokemonName, (pokemon) => Initialize(pokemon));
+        {
+            var task = Pokemon.GetPokemonFromAPI(pokemonName);
+            task.Wait();
+            Initialize(task.Result);
+        }
         else
+        {
             Debug.LogError("Invalid pokemon ID or name given: " + pokemonName);
+        }
     }
 
     /// <summary>Initializes the Pokemons class, name, sprite, and ScriptableObject</summary>
@@ -73,7 +79,7 @@ public class PokemonBehaviour : MonoBehaviour, IPointerEnterHandler, IPointerExi
         if (pokemon != null) {
             InitializeComponents();
             this.pokemon = pokemon;
-            pokemonSO = ScriptableObject.CreateInstance<PokemonScriptableObject>();
+            pokemonSO = ScriptableObject.CreateInstance<PokemonSO>();
             pokemonSO.Pokemon = pokemon;
             sprite.sprite = pokemon.Sprite;
             transform.RectTransform().sizeDelta = pokemon.TrueSpriteSize;

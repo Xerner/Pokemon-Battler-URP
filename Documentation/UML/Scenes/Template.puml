@@ -1,0 +1,34 @@
+@startuml "Scene"
+skinparam BackgroundColor white
+skinparam ClassFontColor black
+skinparam ArrowColor black
+skinparam ArrowFontColor black
+hide empty members
+hide circle
+
+!include <material/common>
+!include <material/cloud>
+!include <material/file>
+!include <material/run>
+
+title "Scene"
+
+package Models {
+	class Accounts as "Account Info" {
+    <$ma_file>
+  }
+	class Games as "Game Data" {
+    <$ma_run>
+  }
+	class PokeAPI {
+    <$ma_cloud>
+  }
+}
+
+package Views {
+  ' hide LoadOrCreateTrainer
+  class View as "View"
+  
+}
+
+@enduml

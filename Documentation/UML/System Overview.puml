@@ -1,0 +1,49 @@
+@startuml System Overview
+skinparam BackgroundColor white
+skinparam ClassFontColor black
+skinparam ArrowColor black
+skinparam ArrowFontColor black
+' hide empty members
+' hide circle
+
+title System Overview
+
+package Models {
+	file Accounts as "Account Info"
+	queue Games as "Game Data"
+	cloud PokeAPI
+  
+  ' for horizontal alignment
+  ' Accounts -[hidden]-> Games
+}
+
+package Views {
+  card LoadOrCreateTrainer as "Load or Create Trainer" {
+
+  }
+  
+  card LoadTrainer as "Load Trainer" {
+
+  }
+  
+  card TrainerCreation as "Trainer Creation" {
+
+  }
+
+  card MainMenu as "Main Menu" {
+
+  }
+
+  LoadOrCreateTrainer --> LoadTrainer : Clicks load
+  LoadOrCreateTrainer --> TrainerCreation : Click create
+  LoadTrainer --> MainMenu : Clicks next
+  TrainerCreation --> MainMenu : Clicks next
+}
+
+Accounts <-[dotted]- LoadTrainer : Searches for file\nwith matching name
+Accounts -[dotted]-> LoadTrainer : Loads trainer info\nfrom file
+
+Accounts <-[dotted]- TrainerCreation : Creates trainer file with\ninputted data
+Accounts -[dotted]-> TrainerCreation : Loads trainer info\nfrom file
+
+@enduml

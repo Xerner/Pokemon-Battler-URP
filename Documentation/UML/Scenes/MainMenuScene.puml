@@ -1,0 +1,77 @@
+@startuml "Main Menu Scene"
+skinparam BackgroundColor white
+skinparam ClassFontColor black
+skinparam ArrowColor black
+skinparam ArrowFontColor black
+hide empty members
+hide circle
+
+!include <material/common>
+!include <material/cloud>
+!include <material/file>
+!include <material/run>
+
+title "Main Menu Scene"
+
+package Models {
+	class Accounts as "Account Info" {
+    <$ma_file>
+  }
+	class Games as "Game Data" {
+    <$ma_run>
+  } 
+	class PokeAPI {
+    <$ma_cloud>
+  }
+}
+
+package Views {
+  ' hide LoadOrCreateTrainer
+  class LoadOrCreateTrainer as "Load or Create Trainer" #LightBlue
+  
+  ' hide LoadTrainer
+  class LoadTrainer as "Load Trainer" {
+    User types in
+    - string trainer name
+  }
+  
+  ' hide TrainerSettings
+  class TrainerSettings as "Trainer Settings" {
+    User types in
+    - string name
+    - sprite avatar
+    - sprite background 
+  }
+
+  ' hide MainMenu
+  class MainMenu as "Main Menu"
+
+  ' hide JoinGame
+  class JoinGame as "Join a Game" {
+    User types in
+    - string ip address
+    - int port
+  }
+
+  ' hide NextScene
+  class NextScene as "Next Scene" #LightBlue
+
+  LoadOrCreateTrainer --> LoadTrainer : Clicks Load
+  LoadOrCreateTrainer --> TrainerSettings : Click Create
+  LoadTrainer --> MainMenu : Clicks Go
+  TrainerSettings --> MainMenu : Clicks Go
+  TrainerSettings <-- MainMenu : Clicks Settings
+  LoadOrCreateTrainer <-- MainMenu : Clicks Change Trainer
+  JoinGame --> MainMenu : Clicks Join Game
+  JoinGame <-- MainMenu : Clicks Back
+  MainMenu --> NextScene : Clicks Create Game
+  MainMenu --> NextScene : Clicks Create Game
+}
+
+Accounts <-[dotted]- LoadTrainer : Searches for file\nwith matching name
+Accounts -[dotted]-> LoadTrainer : Loads trainer info\nfrom file
+
+Accounts <-[dotted]- TrainerSettings : Creates trainer file with\ninputted data
+Accounts -[dotted]-> TrainerSettings : Loads trainer info\nfrom file
+
+@enduml

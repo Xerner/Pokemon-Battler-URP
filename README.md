@@ -1,14 +1,12 @@
 # Pokemon Battler
 
-Uses 
-- Unity 2022.1.0a13
-- Unity URP (Universal Render Pipeline)
+*Unity 2022.3.12f1 URP (Universal Render Pipeline)*
 
 ## Tips
 
 Alt+Click a GameObject to edit its icon and color
 
-### Unity Packages
+## Unity Packages
 
 Unity Netcode and Multiplayer Tools are in pre-release, and may break the program upon update
 - 2D Animation

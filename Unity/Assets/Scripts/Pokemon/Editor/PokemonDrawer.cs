@@ -1,6 +1,6 @@
 using UnityEditor;
 using UnityEngine;
-using System.Linq;
+using Poke.Core;
 
 [CustomPropertyDrawer(typeof(PokemonAttribute))]
 public class PokemonDrawer : PropertyDrawer {
@@ -28,7 +28,7 @@ public class PokemonDrawer : PropertyDrawer {
     }
 
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {
-        PokemonScriptableObject pokemonSO = (PokemonScriptableObject)property.objectReferenceValue;
+        PokemonSO pokemonSO = (PokemonSO)property.objectReferenceValue;
         Rect nextYPos = new Rect(position.x, position.y, position.width, height);
         EditorGUI.ObjectField(nextYPos, property);
         if (pokemonSO == null) return;

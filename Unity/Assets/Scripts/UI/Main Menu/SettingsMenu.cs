@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using Poke.Core;
 using UnityEngine;
 
 public class SettingsMenu : MonoBehaviour
@@ -10,10 +9,10 @@ public class SettingsMenu : MonoBehaviour
 
     private void OnEnable()
     {
-        Account account = PokeHost.Instance.HostAccount;
-        username.text = account.settings.Username;
-        trainerSprite.SetSprite(account.settings.TrainerSpriteName);
-        trainerBackground.SetSprite(account.settings.TrainerBackgroundName);
+        Account account = HostBehaviour.Instance.HostAccount;
+        username.text = account.Settings.Username;
+        trainerSprite.SetSprite(account.Settings.TrainerSpriteId);
+        trainerBackground.SetSprite(account.Settings.TrainerBackgroundId);
     }
 
     public void SaveSettings() => MainMenu.Instance.SaveSettings(username.text, trainerSprite.ActiveSprite, trainerBackground.ActiveSprite);

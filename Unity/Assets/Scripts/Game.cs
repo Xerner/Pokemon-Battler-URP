@@ -8,7 +8,7 @@ namespace Poke.Core
         public Trainer ClientsTrainer;
         public PokemonPool PokemonPool;
 
-        public Action OnPokemonDataLoaded;
+        public Action<PokemonPool> OnPokemonDataLoaded;
 
         public Trainer CreateTrainer(Account hostAccount)
         {

@@ -1,10 +1,11 @@
 using Poke.Core;
+using Poke.Unity;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Trainer {
     public Account Account;
-    public Arena Arena;
+    public ArenaBehaviour Arena;
     [SerializeField] TrainerCard TrainerCard;
     bool Ready = false;
     int CurrentHealth = 100;
@@ -67,16 +68,18 @@ public class Trainer {
 
     public bool AddPokemonToBench(PokemonBehaviour pokemon) {
         
-        Bench bench = Arena.Bench.GetAvailableBench();
+        BenchBehaviour bench = Arena.Bench.GetAvailableBench();
         // Evolve?
         bool evolving = IsAboutToEvolve(pokemon.Pokemon);
         if (bench == null && !evolving) return false; // no fucking room
         // evolve and/or set the PokemonBehaviour inside the container
         if (evolving) {
             pokemon = pokemon.Evolve();
-            AssimilatePokemon(pokemon.name);
+            AssimilatePokemon(pokemon.Pokemon.name);
         }
+        pokemon.MoveTo.ShouldLerpToPosition = false;
         bench.SetPokemon(pokemon);
+        pokemon.MoveTo.ShouldLerpToPosition = true;
         // Add it to the Trainers ActivePokemon dictionary
         if (!activePokemon.ContainsKey(pokemon.name)) activePokemon.Add(pokemon.name, new List<PokemonBehaviour>());
         activePokemon[pokemon.name].Add(pokemon);

@@ -1,39 +1,48 @@
-using Poke.Core;
-using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Poke.Core;
 
 namespace Poke.Unity
 {
     [RequireComponent(typeof(Menu))]
     public class DebugPanelManager : MonoBehaviour
     {
-        RectTransform panel;
-        public DebugContent DebugPrefab;
-        public Dictionary<string, DebugContent> DebugContents = new Dictionary<string, DebugContent>();
+        RectTransform rectTransform;
+        public DebugContentBehaviour DebugPrefab;
+        public Dictionary<string, DebugContentBehaviour> DebugContents = new Dictionary<string, DebugContentBehaviour>();
         private Dictionary<string, GameObject> debugContentPokemonGO = new Dictionary<string, GameObject>();
 
         void Start()
         {
-            panel = gameObject.GetComponent<RectTransform>();
-            Spawn("Pokemon PokemonPool");
-            InitializePokemonPoolDebugContent(HostBehaviour.Instance.Host.Game.PokemonPool);
+            rectTransform = GetComponent<RectTransform>();
+            HostBehaviour.Instance.Host.OnGameCreated += HandleGameCreated;
         }
 
-        public DebugContent Spawn(string header, GameObject content)
+        public void HandleGameCreated(Game game)
         {
-            DebugContent instance = Instantiate(DebugPrefab, panel);
+            game.OnPokemonDataLoaded += HandlePokemonDataLoaded;
+        }
+
+        public void HandlePokemonDataLoaded(PokemonPool pool) 
+        {
+            var defugPrefab = Spawn("Pokemon PokemonPool");
+            InitializePokemonPoolDebugContent(pool, defugPrefab);
+        }
+
+        public DebugContentBehaviour Spawn(string header, GameObject content)
+        {
+            DebugContentBehaviour instance = Instantiate(DebugPrefab, rectTransform);
             instance.Header.text = header;
             instance.Content = content;
             DebugContents.Add(header, instance);
             return instance;
         }
 
-        public DebugContent Spawn(string header)
+        public DebugContentBehaviour Spawn(string header)
         {
-            DebugContent instance = Instantiate(DebugPrefab, panel);
+            DebugContentBehaviour instance = Instantiate(DebugPrefab, rectTransform);
             instance.Header.text = header;
             DebugContents.Add(header, instance);
             return instance;
@@ -41,20 +50,24 @@ namespace Poke.Unity
 
         public void UpdateSize()
         {
-            var csf = panel.gameObject.GetComponent<ContentSizeFitter>();
+            var csf = rectTransform.gameObject.GetComponent<ContentSizeFitter>();
+            if (csf == null)
+            {
+                return;
+            }
             csf.verticalFit = ContentSizeFitter.FitMode.Unconstrained;
             csf.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
         }
 
         public void Destroy(string header) => Destroy(DebugContents[header]);
 
-        public void InitializePokemonPoolDebugContent(PokemonPool pokemonPool)
+        public void InitializePokemonPoolDebugContent(PokemonPool pokemonPool, DebugContentBehaviour debugPrefab)
         {
-            DebugPrefab.Content.AddComponent<HorizontalLayoutGroup>().childControlHeight = false;
+            //var horizLayout = DebugPrefab.Content.AddComponent<HorizontalLayoutGroup>();
+            //horizLayout.childControlHeight = false;
             foreach (var key in pokemonPool.TierToPokemonCounts.Keys)
             {
-                var tierGO = CreateDebugContent($"Tier {key}", DebugPrefab.Content.transform, false);
-                tierGO.AddComponent<VerticalLayoutGroup>();
+                var tierGO = CreateDebugContent($"Tier {key}", debugPrefab.Content.transform, false);
                 var tierTextGO = CreateDebugContent($"Tier {key}", tierGO.transform, false);
                 var tmesh = tierTextGO.GetComponent<TextMeshProUGUI>();
                 tmesh.text = $"<b>Tier {key}</b>";
@@ -70,12 +83,11 @@ namespace Poke.Unity
 
         private GameObject CreateDebugContent(string name, Transform parent, bool addToDict = true)
         {
-            var debugContent = new GameObject(name);
+            var debugContent = Instantiate(DebugPrefab.Content, parent);
             debugContent.transform.SetParent(parent);
-            if (addToDict) debugContentPokemonGO.Add(name, debugContent);
-            debugContent.AddComponent<CanvasRenderer>();
-            var contentSizeFitter = debugContent.AddComponent<ContentSizeFitter>();
-            contentSizeFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+            if (addToDict) 
+                debugContentPokemonGO.Add(name, debugContent);
+
             var tmesh = debugContent.AddComponent<TextMeshProUGUI>();
             tmesh.richText = true;
             tmesh.fontSize = 16f;
@@ -92,7 +104,7 @@ namespace Poke.Unity
             SetPokemonDebugContent(debugContentPokemonGO[pokemon.name], pokemon.name, pokemonPool.TierToPokemonCounts[pokemon.tier][pokemon.name]);
         }
 
-        private void SetPokemonDebugContent(UnityEngine.GameObject gameObject, string name, int count)
+        private void SetPokemonDebugContent(GameObject gameObject, string name, int count)
         {
             gameObject.GetComponent<TextMeshProUGUI>().text = $"<b><color=#8888FF>{count}</b> <color=#FFFFFF>{name}";
         }

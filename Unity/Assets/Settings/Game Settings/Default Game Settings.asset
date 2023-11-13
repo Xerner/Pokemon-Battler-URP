@@ -15,3 +15,4 @@ MonoBehaviour:
   FreeRefreshShop: 0
   FreeExperience: 0
   FreePokemon: 0
+  DebugLogLevel: 1

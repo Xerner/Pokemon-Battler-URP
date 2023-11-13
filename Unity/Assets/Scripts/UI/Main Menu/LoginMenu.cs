@@ -1,11 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class LoginMenu : MonoBehaviour
+namespace Poke.Unity
 {
-    [SerializeField] private UnityEngine.GameObject nextMenu;
-    [SerializeField] private TMPro.TMP_InputField username;
+    public class LoginMenu : MonoBehaviour
+    {
+        [SerializeField] private UnityEngine.GameObject nextMenu;
+        [SerializeField] private TMPro.TMP_InputField username;
 
-    public void LoadSettings() => MainMenu.Instance.LoadSettings(username.text, nextMenu);
+        public void LoadSettings() => MainMenu.Instance.LoadSettings(username.text, nextMenu);
+    }
 }

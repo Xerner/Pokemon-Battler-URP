@@ -1,38 +1,45 @@
-using System.Collections;
-using System.Collections.Generic;
+using Poke.Core;
 using UnityEngine;
-using UnityEngine.UI;
 
-[RequireComponent(typeof(RectTransform))]
-public class ResourceBar : MonoBehaviour {
-    public float TotalResource = 100;
-    float currentResource;
-    float originalWidth;
+namespace Poke.Unity
+{
+    [RequireComponent(typeof(RectTransform))]
+    public class ResourceBar : MonoBehaviour
+    {
+        public float TotalResource = 100;
+        float currentResource;
+        float originalWidth;
 
-    public float Percentage { get { return currentResource / TotalResource; } }
-    public float Total { get { return TotalResource; } }
-    public float Current { get { return currentResource; } }
+        public float Percentage { get { return currentResource / TotalResource; } }
+        public float Total { get { return TotalResource; } }
+        public float Current { get { return currentResource; } }
 
-    private void Start() {
-        originalWidth = transform.RectTransform().rect.width;
-    }
+        private void Start()
+        {
+            originalWidth = transform.RectTransform().rect.width;
+        }
 
-    public void Set(float newCurrent) {
-        currentResource = newCurrent;
-        Resize();
-    }
+        public void Set(float newCurrent)
+        {
+            currentResource = newCurrent;
+            Resize();
+        }
 
-    public void Reduce(float reduction) {
-        currentResource -= reduction;
-        Resize();
-    }
+        public void Reduce(float reduction)
+        {
+            currentResource -= reduction;
+            Resize();
+        }
 
-    public void Restore(float restore) {
-        currentResource += restore;
-        Resize();
-    }
+        public void Restore(float restore)
+        {
+            currentResource += restore;
+            Resize();
+        }
 
-    void Resize() {
-        transform.RectTransform().sizeDelta = new Vector2(originalWidth * Percentage, transform.RectTransform().rect.height);
+        void Resize()
+        {
+            transform.RectTransform().sizeDelta = new Vector2(originalWidth * Percentage, transform.RectTransform().rect.height);
+        }
     }
 }

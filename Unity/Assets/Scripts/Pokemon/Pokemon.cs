@@ -6,13 +6,14 @@ using Poke.Model;
 using Poke.Network;
 using UnityEditor.PackageManager;
 using System.Threading.Tasks;
+using Poke.Unity;
 
 namespace Poke.Core
 {
     [Serializable]
     public class Pokemon
     {
-
+        public static Vector2Int PokemonSpriteDims = new Vector2Int(96, 96);
         public static Dictionary<string, Pokemon> CachedPokemon = new Dictionary<string, Pokemon>();
         public static Dictionary<int, List<Pokemon>> TierToPokemonList = new Dictionary<int, List<Pokemon>>() {
             { 1, new List<Pokemon>() },
@@ -42,8 +43,8 @@ namespace Poke.Core
         public PokemonStat Speed = new PokemonStat() { baseStat = 50, effort = 0 };
 
         public PokemonAbility Ability;
-        public PokemonMove Move;
-        public PokemonMove PPMove;
+        public PokemonMoveSO Move;
+        public PokemonMoveSO PPMove;
         private int BaseExperience; // TODO: make use of it, or get rid of it
         private int height; // TODO: make use of it, or get rid of it
 
@@ -119,9 +120,15 @@ namespace Poke.Core
             Debug2.Log($"Fetching {pokemonNames.Count} Pokemon");
             Debug2.Log(string.Join(",", pokemonNames.ToArray()), LogLevel.Detailed);
             var pokemon = new List<Pokemon>();
+            var tasks = new List<Task<Pokemon>>();
             foreach (var name in pokemonNames)
             {
-                pokemon.Add(await GetPokemonFromAPI(name));
+                tasks.Add(GetPokemonFromAPI(name));
+            }
+            await Task.WhenAll(tasks);
+            foreach (var task in tasks)
+            {
+                pokemon.Add(task.Result);
             }
             if (callback != null)
                 callback(pokemon);
@@ -221,7 +228,7 @@ namespace Poke.Core
 
             // Textures
             Debug2.Log("Fetching pokemon sprites: " + pokemon.name, LogLevel.All);
-            Texture2D texture = await Http.GetTexture2DAsync(pokemonJson.sprites.versions["generation-v"]["black-white"].front_default);
+            Texture2D texture = await Http.GetTexture2DAsync(PokemonSpriteDims.x, PokemonSpriteDims.y, pokemonJson.sprites.versions["generation-v"]["black-white"].front_default);
             pokemon.Sprite = Sprite.Create(texture, new Rect(0.0f, 0.0f, texture.width, texture.height), new Vector2(0.5f, 0.5f), 1f);
             pokemon.ShopSprite = Sprite.Create(texture, new Rect(0.0f, 0.0f, texture.width, texture.height), new Vector2(0.5f, 0.5f), 1f);
             pokemon.TrueSpriteSize = TextureUtil.GetTrueSizeInPixels(pokemon.Sprite.texture, 0f);

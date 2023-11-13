@@ -50,7 +50,7 @@ namespace Poke.Network
             {
                 response.EnsureSuccessStatusCode();
             }
-            catch (HttpRequestException e)
+            catch (HttpRequestException)
             {
                 Debug2.Log("HTTP request failed: " + response.RequestMessage.RequestUri, LogLevel.All);
                 onError?.Invoke(response);
@@ -66,13 +66,13 @@ namespace Poke.Network
             return obj;
         }
 
-        private static async Task<Texture2D> ProcessTexture2DResponseAsync(HttpResponseMessage response, Action<HttpResponseMessage> onError = null)
+        private static async Task<Texture2D> ProcessTexture2DResponseAsync(int width, int height, HttpResponseMessage response, Action<HttpResponseMessage> onError = null)
         {
             try
             {
                 response.EnsureSuccessStatusCode();
             }
-            catch (HttpRequestException e)
+            catch (HttpRequestException)
             {
                 Debug2.Log("HTTP request failed: " + response.RequestMessage.RequestUri, LogLevel.All);
                 onError?.Invoke(response);
@@ -80,29 +80,29 @@ namespace Poke.Network
             }
             var bytes = await response.Content.ReadAsByteArrayAsync();
             Debug2.Log("HTTP request succeeded: " + response.RequestMessage.RequestUri, LogLevel.All);
-            var texture = new Texture2D(1, 1);
-            texture.LoadRawTextureData(bytes);
+            var texture = new Texture2D(2, 2);
+            texture.LoadImage(bytes);
             return texture;
         }
 
-        public static Texture2D GetTexture2D(string url, Action<HttpResponseMessage> onError, Action<Texture2D> onSuccess)
+        public static Texture2D GetTexture2D(int width, int height, string url, Action<HttpResponseMessage> onError, Action<Texture2D> onSuccess)
         {
             Debug2.Log("Fetching string data from the web: " + url, LogLevel.All);
             Task task = pokeApi.GetAsync(url);
             task.Wait();
             var response = pokeApi.GetAsync(url).Result;
-            var processResponse = ProcessTexture2DResponseAsync(response, onError);
+            var processResponse = ProcessTexture2DResponseAsync(width, height, response, onError);
             processResponse.Wait();
             var result = processResponse.Result;
             onSuccess(result);
             return result;
         }
 
-        public static async Task<Texture2D> GetTexture2DAsync(string url)
+        public static async Task<Texture2D> GetTexture2DAsync(int width, int height, string url)
         {
             Debug2.Log("Fetching string data from the web: " + url, LogLevel.All);
             var response = await pokeApi.GetAsync(url);
-            var result = await ProcessTexture2DResponseAsync(response);
+            var result = await ProcessTexture2DResponseAsync(width, height, response);
             return result;
         }
     }

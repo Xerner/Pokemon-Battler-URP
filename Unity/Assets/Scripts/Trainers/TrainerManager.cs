@@ -1,3 +1,4 @@
+using Poke.Unity;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -39,7 +40,7 @@ namespace Poke.Core {
             if (index > -1)
             {
                 Trainers[index] = trainer;
-                trainer.Arena = GameObject.Find("Arenas").transform.GetChild(index).GetComponent<Arena>();
+                trainer.Arena = GameObject.Find("Arenas").transform.GetChild(index).GetComponent<ArenaBehaviour>();
                 TrainerCardManager.Instance.AddTrainerCard(trainer);
                 return trainer;
             }

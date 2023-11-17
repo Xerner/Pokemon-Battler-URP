@@ -28,32 +28,37 @@ namespace Poke.Unity
 
         public override bool SetPokemon(PokemonBehaviour pokemon)
         {
-            Pokemon = pokemon;
-            
+            base.SetPokemon(pokemon);
+
+            if (Pokemon == null)
+            {
+                displayedName.text = "";
+                type1.sprite = null;
+                type1.color = new Color(1f, 1f, 1f, 0f);
+                type2.sprite = null;
+                type2.color = new Color(1f, 1f, 1f, 0f);
+                return false;
+            }
+
             // Set type sprite
-            if (displayedName != null) 
-                displayedName.text = pokemon == null ? "" : pokemon.name;
-            type1.sprite = StaticAssets.typeMiniSprites[pokemon.Pokemon.types[0].ToString()];
+            displayedName.text = Pokemon.name;
+            type1.sprite = StaticAssets.typeMiniSprites[Pokemon.Pokemon.types[0].ToString()];
             type1.color = new Color(1f, 1f, 1f, 1f);
 
             // Set second type sprite
-            if (pokemon.Pokemon.types[1] == EPokemonType.None)
+            if (Pokemon.Pokemon.types[1] == EPokemonType.None)
             {
                 type2.sprite = null;
                 type2.color = new Color(1f, 1f, 1f, 0f);
             }
             else
             {
-                type2.sprite = StaticAssets.typeMiniSprites[pokemon.Pokemon.types[1].ToString()];
+                type2.sprite = StaticAssets.typeMiniSprites[Pokemon.Pokemon.types[1].ToString()];
                 type2.color = new Color(1f, 1f, 1f, 1f);
             }
 
             // Move pokemon
-            if (pokemon != null)
-            {
-                pokemon.MoveTo.MoveTo(MoveToSpot, true);
-                return false;
-            }
+            Pokemon.MoveTo.MoveTo(MoveToSpot, true);
             return true;
         }
 

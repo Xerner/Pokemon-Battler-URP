@@ -1,11 +1,12 @@
+using Poke.Core;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Poke.Unity
 {
+    [AddComponentMenu("Poke Battler/Arena")]
     public class ArenaBehaviour : MonoBehaviour
     {
-        // TODO: add class equivalent to GameMakers mp_grid
         public static readonly int Rows = 6;
         public static readonly int Columns = 5;
 

@@ -350,9 +350,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Connection
-
-'
+  m_text: Connection
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 72f9f396178cb154ca0e1d081e560049, type: 2}
   m_sharedMaterial: {fileID: 3749821565283001465, guid: 72f9f396178cb154ca0e1d081e560049, type: 2}

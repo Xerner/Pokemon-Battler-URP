@@ -3,6 +3,7 @@ using UnityEngine;
 namespace Poke.Unity
 {
     [AddComponentMenu("Poke Battler/Arena Spot")]
+    [RequireComponent(typeof(Collider))]
     public class ArenaSpotBehaviour : PokeContainerBehaviour
     {
         public static readonly Vector2Int UnitVector = new Vector2Int(128, 128);
@@ -13,15 +14,12 @@ namespace Poke.Unity
 
         public override bool SetPokemon(PokemonBehaviour pokemon)
         {
-            Pokemon = pokemon;
-
-            // Move pokemon
-            if (pokemon != null)
-            {
-                pokemon.MoveTo.MoveTo(transform, true);
+            base.SetPokemon(pokemon);
+            if (pokemon == null)
                 return false;
-            }
-            return true;
+
+            pokemon.MoveTo.MoveTo(transform, true);
+            return false;
         }
     }
 }

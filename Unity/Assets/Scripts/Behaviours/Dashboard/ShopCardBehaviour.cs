@@ -69,7 +69,7 @@ namespace Poke.Unity {
             costText.text = "";
         }
 
-        public void TryToBuy()
+        public async void TryToBuy()
         {
             if (pokemon == null) return;
             if (HostBehaviour.Instance.Host.Trainer.Money < Cost && !HostBehaviour.Instance.GameSettings.FreePokemon)
@@ -86,13 +86,16 @@ namespace Poke.Unity {
             HostBehaviour.Instance.Host.Trainer.Money -= Cost;
             DashboardBehaviour.Instance.Money = HostBehaviour.Instance.Host.Trainer.Money.ToString();
             Debug2.Log($"bought a {pokemon.name} for {pokemon.tier}", LogLevel.Detailed);
-            HostBehaviour.Instance.Host.Trainer.AddPokemonToBench(PokemonBehaviour.Spawn(pokemon));
-            Reset();
+            var pokemonBehaviour = await HostBehaviour.Instance.Host.Trainer.AddPokemonToBench(pokemon);
+            if (pokemonBehaviour != null)
+            {
+                Reset();
+            }
         }
 
         private bool BenchHasValidContainer(BenchBehaviour bench)
         {
-            return bench != null || (bench == null && HostBehaviour.Instance.Host.Trainer.IsAboutToEvolve(pokemon));
+            return bench != null || (bench == null && HostBehaviour.Instance.Host.Trainer.ActivePokemon.IsAboutToEvolve(pokemon));
         }
     }
 }

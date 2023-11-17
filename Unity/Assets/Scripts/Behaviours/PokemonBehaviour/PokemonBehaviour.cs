@@ -40,14 +40,18 @@ namespace Poke.Unity {
         void Start()
         {
             InitializeComponents();
-            Initialize(pokemonSO.Pokemon);
+        }
+
+        void Update()
+        {
+            AutoAdjustMoveToOffset();
         }
 
         /// <summary>Invokes the PokemonBehaviours OnDestroyed Action and Resets its current PokeContainer</summary>
         void OnDestroy()
         {
             //if (MoveTo == null) throw new System.Exception($"{id}\t{name} : MoveTo == null!");
-            MoveTo.MoveToOrigin(true);
+            //MoveTo.MoveToOrigin();
             OnDestroyed?.Invoke(this);
         }
 
@@ -60,7 +64,8 @@ namespace Poke.Unity {
         {
             if (sprite == null) sprite = GetComponent<SpriteRenderer>();
             if (animator == null) animator = GetComponent<Animator>();
-            if (GetComponent<Collider>() == null) collider = GetComponent<BoxCollider2D>();
+            if (collider == null) collider = GetComponent<BoxCollider2D>();
+            if (MoveTo == null) MoveTo = GetComponent<MoveToBehaviour>();
         }
 
         /// <summary>Initializes the Pokemons class, name, sprite, and ScriptableObject</summary>
@@ -91,11 +96,10 @@ namespace Poke.Unity {
 
             InitializeComponents();
             this.pokemon = pokemon;
-            pokemonSO = ScriptableObject.CreateInstance<PokemonSO>();
-            
+            if (pokemonSO == null) pokemonSO = ScriptableObject.CreateInstance<PokemonSO>();
+
             if (pokemon != null)
             {
-                // GameObject settings
                 pokemonSO.Pokemon = pokemon;
                 sprite.sprite = pokemon.Sprite;
                 collider.size = pokemon.TrueSpriteSize;
@@ -110,16 +114,9 @@ namespace Poke.Unity {
 
         /// <summary>If possible, evolves the Pokemon to the next stage</summary>
         /// <returns>The next stage of evolution for the current Pokemon</returns>
-        public PokemonBehaviour Evolve()
+        public async Task Evolve()
         {
-            // TODO: FIX
-            ////PokemonBehaviour evolution = Instantiate(pokemon.evolution, transform).GetComponent<PokemonBehaviour>();
-            //evolution.id = id;
-            ////Network.IDtoPokemon[id] = evolution;
-            //Destroy(this);
-            //MoveTo.SetPokemon(evolution);
-            //return evolution;
-            return null;
+            await Initialize(pokemon.Evolutions[pokemon.EvolutionStage]);
         }
 
         #region Pointer Events
@@ -139,19 +136,21 @@ namespace Poke.Unity {
 
         #endregion
 
-        public void SetPokeContainer()
+        public void SetPokeContainer(PokeContainerBehaviour container)
         {
-            // Check for IPokeContainer and set the Pokemon to it, if found
-            var hits = Camera.main.CursorRaycastHits();
-            var pokeContainer = hits.FirstOrDefault(h => h.collider.gameObject.TryGetComponent(out IPokeContainer container));
-            if (pokeContainer.collider == null) return;
-            var container = pokeContainer.collider.gameObject.GetComponent<IPokeContainer>();
-            if (container != null)
+            if (container != null && container.Pokemon == null)
             {
                 container.SetPokemon(this);
                 MoveTo.ReleaseCursor();
             }
-            return;
+        }
+
+        public void AutoAdjustMoveToOffset()
+        {
+            // Assuming the sprite is rotated on the Z axis, we want to lift it
+            // half the height its "top" is lifted away from the Z plane
+            var opposite = Mathf.Sin(transform.localRotation.eulerAngles.x * Mathf.Deg2Rad) * pokemon.TrueSpriteSize.y;
+            MoveTo.Offset = new Vector3(0f, 0f, opposite / 2);
         }
     }
 }

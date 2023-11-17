@@ -1,11 +1,12 @@
 using Poke.Core;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 namespace Poke.Unity
 {
     [AddComponentMenu("Poke Battler/Poke Container")]
-    public abstract class PokeContainerBehaviour : MonoBehaviour, IPokeContainer
+    public class PokeContainerBehaviour : MonoBehaviour, IPokeContainer
     {
         PokemonBehaviour pokemon = null;
 
@@ -24,13 +25,22 @@ namespace Poke.Unity
             }
             if (MoveToBehaviour.InstanceOnCursor.TryGetComponent(out PokemonBehaviour pokemon))
             {
-                pokemon.SetPokeContainer();
+                pokemon.SetPokeContainer(this);
             }
         }
 
-        public abstract bool SetPokemon(PokemonBehaviour pokemon);
+        public virtual bool SetPokemon(PokemonBehaviour pokemon)
+        {
+            if (pokemon != null)
+            {
+                pokemon.OnDestroyed += Reset;
+            }
+            Pokemon = pokemon;
+            return true;
+        }
 
         public void Reset() => SetPokemon(null);
+        public void Reset(PokemonBehaviour _) => Reset();
     }
 
 }

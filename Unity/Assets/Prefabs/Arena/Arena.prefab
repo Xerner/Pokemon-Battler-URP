@@ -925,13 +925,9 @@ PrefabInstance:
       propertyPath: m_Name
       value: Ally Arena Card
       objectReference: {fileID: 0}
-    - target: {fileID: 2023671509611527160, guid: 63b4a437974f7e148bc3d7a11d7efbad, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2023671509611527160, guid: 63b4a437974f7e148bc3d7a11d7efbad, type: 3}
-      propertyPath: m_SortingOrder
-      value: 2
+    - target: {fileID: 2144331522012757802, guid: 63b4a437974f7e148bc3d7a11d7efbad, type: 3}
+      propertyPath: Allegiance
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4586950254194564207, guid: 63b4a437974f7e148bc3d7a11d7efbad, type: 3}
       propertyPath: m_Pivot.x
@@ -940,10 +936,6 @@ PrefabInstance:
     - target: {fileID: 4586950254194564207, guid: 63b4a437974f7e148bc3d7a11d7efbad, type: 3}
       propertyPath: m_Pivot.y
       value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 4586950254194564207, guid: 63b4a437974f7e148bc3d7a11d7efbad, type: 3}
-      propertyPath: m_RootOrder
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4586950254194564207, guid: 63b4a437974f7e148bc3d7a11d7efbad, type: 3}
       propertyPath: m_AnchorMax.x

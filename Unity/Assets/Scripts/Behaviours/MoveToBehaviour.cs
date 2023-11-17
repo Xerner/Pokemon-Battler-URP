@@ -9,14 +9,17 @@ namespace Poke.Unity
     {
         static GameObject instanceOnCursor = null;
 
+        #region Properties
+
         public static GameObject InstanceOnCursor { get => instanceOnCursor; }
 
         private Transform _originalParent;
         [SerializeField]
+        private bool enableOnStart = true;
+        [SerializeField]
         [Description("How far away from the ground the object should be, relative to the camera, when it's snapped to the cursor")]
         private float distanceTowardsCamera = 1f;
-        [SerializeField]
-        private bool enableOnStart = true;
+        public Vector3 Offset = Vector3.zero;
         [SerializeField]
         private bool useRectTransformPositioning = false;
         public bool ShouldLerpToPosition = false;
@@ -28,7 +31,8 @@ namespace Poke.Unity
         public Transform Target { get; private set; }
         public bool IsSnappingToTarget => Target != _originalParent && mode == Mode.Target;
 
-        // Start is called before the first frame update
+        #endregion
+
         void Start()
         {
             _originalParent = transform.parent;
@@ -51,7 +55,7 @@ namespace Poke.Unity
             }
         }
 
-        public void MoveTo(Transform newTarget, bool setParent = false)
+        public void MoveTo(Transform newTarget, bool useOffset = true)
         {
             mode = Mode.Target;
             Target = newTarget;
@@ -63,20 +67,20 @@ namespace Poke.Unity
                 Debug.Log("Can't snap to self", gameObject);
                 throw new Exception("Can't snap to self");
             }
-            if (setParent || useRectTransformPositioning)
+            if (useRectTransformPositioning)
             {
                 transform.SetParent(Target);
-                SetPosition(Vector3.zero);
+                SetPosition(Vector3.zero, useOffset);
                 return;
             }
-            SetPosition(Target.transform.position);
+            SetPosition(Target.transform.position, useOffset);
         }
 
-        void SetPosition() => SetPosition(TargetPosition);
+        void SetPosition(bool useOffset = true) => SetPosition(TargetPosition, useOffset);
    
-        void SetPosition(Vector3 newPosition)
+        void SetPosition(Vector3 newPosition, bool useOffset = true)
         {
-            TargetPosition = newPosition;
+            TargetPosition = useOffset ? newPosition + Offset : newPosition;
             if (useRectTransformPositioning)
             {
                 Vector3 localPos;
@@ -104,30 +108,30 @@ namespace Poke.Unity
                 transform.position = Vector3.Lerp(transform.position, TargetPosition, LerpPercentage);
                 return;
             }
-            transform.position = newPosition;
+            transform.position = TargetPosition;
         }
 
-        public void MoveTo(Vector3 worldPosition)
+        public void MoveTo(Vector3 worldPosition, bool useOffset = true)
         {
             transform.SetParent(null);
             if (ShouldLerpToPosition)
             {
                 TargetPosition = worldPosition;
-                SetPosition();
+                SetPosition(useOffset);
                 return;
             }
             transform.position = worldPosition;
-            SetPosition();
+            SetPosition(useOffset);
         }
 
-        public void MoveToTarget(bool setParent = false)
+        public void MoveToTarget()
         {
-            MoveTo(Target, setParent);
+            MoveTo(Target);
         }
 
-        public void MoveToOrigin(bool setParent = false)
+        public void MoveToOrigin()
         {
-            MoveTo(_originalParent, setParent);
+            MoveTo(_originalParent);
         }
 
         public void MoveToCursor()
@@ -145,7 +149,7 @@ namespace Poke.Unity
             mode = Mode.Cursor;
             instanceOnCursor = gameObject;
             var cursorPosition = Camera.main.WorldCursorButALittleTowardsTheCamera(distanceTowardsCamera, transform);
-            MoveTo(cursorPosition);
+            MoveTo(cursorPosition, false);
         }
 
         public void ReleaseCursor()

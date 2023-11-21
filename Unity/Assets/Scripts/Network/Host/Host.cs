@@ -7,9 +7,10 @@ using Poke.Unity;
 
 namespace Poke.Network
 {
-
     public partial class Host // General
     {
+        public static Host Instance { get; private set; }
+
         private const int maxConnections = 8;
 
         NetworkManager netManager;
@@ -30,6 +31,11 @@ namespace Poke.Network
 
         public Host(Account account, NetworkManager netManager, UnityTransport transport, UIPersistentStatus connectionStatus, HostBehaviour hostBehaviour)
         {
+            if (Instance != null && Instance != this)
+            {
+                throw new Exception("Only one instance of Host is allowed.");
+            }
+            Instance = this;
             this.account = account;
             this.netManager = netManager;
             this.transport = transport;

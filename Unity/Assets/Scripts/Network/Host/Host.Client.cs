@@ -1,7 +1,5 @@
+using Poke.Unity;
 using Unity.Netcode;
-using Unity.Netcode.Transports.UTP;
-using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace Poke.Network
 {
@@ -20,7 +18,7 @@ namespace Poke.Network
             transport.ConnectionData.Address = ipAddress;
             transport.ConnectionData.Port = port;
             // https://github.com/Unity-Technologies/com.unity.multiplayer.samples.coop/blob/fa6d2ba907f2ee18150163dd66773b3f1fc3f5f3/Assets/BossRoom/Scripts/Shared/Net/ConnectionManagement/ClientGameNetPortal.cs#L260
-            UIWindowManager.Instance.CreatePopupMessage($"Connecting to\n\n{transport.ConnectionData.Address}:{transport.ConnectionData.Port}");
+            UIWindowManagerBehaviour.Instance.CreatePopupMessage($"Connecting to\n\n{transport.ConnectionData.Address}:{transport.ConnectionData.Port}");
             netManager.StartClient(); // synchronous
                                       // I would've thought that StartClient() would return false if the server doesn't exist
                                       // but it actually still returns true... although IsConnectedClient is false. Don't know why
@@ -28,14 +26,14 @@ namespace Poke.Network
             {
                 connectionStatus.SetMessage($"Connected to host {ipAddress}:{port}");
                 connectionStatus.SetStatus("Connected", UIPersistentStatus.ConnectionState.Good);
-                UIWindowManager.Instance.CreatePopupMessage("Connected to server");
+                UIWindowManagerBehaviour.Instance.CreatePopupMessage("Connected to server");
             }
             else
             {
                 netManager.Shutdown();
                 connectionStatus.SetMessage($"Failed to connect to host {ipAddress}:{port}");
                 connectionStatus.SetIdle();
-                UIWindowManager.Instance.CreatePopupMessage($"Failed to connect to server\n\nIP: {transport.ConnectionData.Address}\nPort: {transport.ConnectionData.Port}");
+                UIWindowManagerBehaviour.Instance.CreatePopupMessage($"Failed to connect to server\n\nIP: {transport.ConnectionData.Address}\nPort: {transport.ConnectionData.Port}");
             }
             return (netManager.IsConnectedClient);
         }

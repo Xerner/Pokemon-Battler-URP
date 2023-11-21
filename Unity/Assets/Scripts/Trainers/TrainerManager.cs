@@ -35,6 +35,7 @@ namespace Poke.Core {
             {
                 throw new NotImplementedException();
             }
+            trainer.OnReady +=
             // Find next available slot
             int index = Array.FindIndex(Trainers, trainer => trainer == null);
             if (index > -1)
@@ -48,6 +49,16 @@ namespace Poke.Core {
             {   
                 // Game slots are full
                 throw new NotImplementedException();
+            }
+        }
+
+        public void HandleTrainerReady(ulong clientID)
+        {
+            int index = trainerIndexes[clientID];
+            Trainers[index].Ready = true;
+            if (Trainers[index].Ready && Trainers[index].Ready)
+            {
+
             }
         }
     }

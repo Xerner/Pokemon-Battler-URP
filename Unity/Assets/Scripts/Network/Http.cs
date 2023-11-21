@@ -13,6 +13,8 @@ namespace Poke.Network
             BaseAddress = new Uri("https://jsonplaceholder.typicode.com"),
         };
 
+        #region Generic URL stuff
+
         public static string Get(string url, Action<HttpResponseMessage> onError, Action<string> onSuccess)
         {
             return Get<string>(url, onError, onSuccess);
@@ -105,5 +107,7 @@ namespace Poke.Network
             var result = await ProcessTexture2DResponseAsync(width, height, response);
             return result;
         }
+
+        #endregion
     }
 }

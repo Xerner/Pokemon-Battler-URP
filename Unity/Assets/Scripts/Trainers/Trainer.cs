@@ -1,11 +1,13 @@
 using Poke.Unity;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace Poke.Core
 {
-    public class Trainer
+    public partial class Trainer
     {
         public Account Account;
         public ArenaBehaviour Arena;
@@ -22,30 +24,21 @@ namespace Poke.Core
 
         public TrainersPokemon ActivePokemon = new TrainersPokemon();
 
-        public static readonly int baseIncome = 5;
-        public static readonly int pvpWinIncome = 1;
-        public static Dictionary<int, int> winStreakIncome = new Dictionary<int, int>() {
-            { 1, 0 },
-            { 2, 1 },
-            { 3, 1 },
-            { 4, 2 },
-            { 5, 3 }
-        };
-        public static Dictionary<int, int> LevelToExpNeededToLevelUp = new Dictionary<int, int>() {
-            { 1, 0 },
-            { 2, 2 },
-            { 3, 6 },
-            { 4, 10 },
-            { 5, 20 },
-            { 6, 36 },
-            { 7, 56 },
-            { 8, 80 },
-            { 9, 100 }
-        };
+        Action<bool> onReady;
+
+        public void OnReadySubscribe(Action<bool> action) => onReady += action;
+        public void OnReadyUnsubscribe(Action<bool> action) => onReady -= action;
 
         public Trainer(Account account)
         {
             Account = account;
+        }
+
+        public bool OnReady(bool ready)
+        {
+            Ready = ready;
+            onReady?.Invoke(ready);
+            return ready;
         }
 
         public int CalculateInterest() => Mathf.FloorToInt(Money / 10);

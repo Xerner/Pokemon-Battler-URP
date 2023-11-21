@@ -7,6 +7,7 @@ namespace Poke.Core
         public TrainerManager TrainerManager = new TrainerManager();
         public Trainer ClientsTrainer;
         public PokemonPool PokemonPool;
+        public Timer RoundTimer = new();
 
         public Action<PokemonPool> OnPokemonDataLoaded;
 

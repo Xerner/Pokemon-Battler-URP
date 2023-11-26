@@ -1,9 +1,42 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Services\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Zenject">
+      <HintPath>..\Zenject\NonUnityBuild\Bin\Debug\Zenject.dll</HintPath>
+    </Reference>
+    <Reference Include="Zenject-ReflectionBaking">
+      <HintPath>..\Zenject\NonUnityBuild\Bin\Debug\Zenject-ReflectionBaking.dll</HintPath>
+    </Reference>
+    <Reference Include="Zenject-Signals">
+      <HintPath>..\Zenject\NonUnityBuild\Bin\Debug\Zenject-Signals.dll</HintPath>
+    </Reference>
+    <Reference Include="Zenject-usage">
+      <HintPath>..\Zenject\NonUnityBuild\Bin\Debug\Zenject-usage.dll</HintPath>
+    </Reference>
+    <Reference Include="Zenject.ReflectionBaking.Mono.Cecil">
+      <HintPath>..\Zenject\NonUnityBuild\Bin\Debug\Zenject.ReflectionBaking.Mono.Cecil.dll</HintPath>
+    </Reference>
+    <Reference Include="Zenject.ReflectionBaking.Mono.Cecil.Mdb">
+      <HintPath>..\Zenject\NonUnityBuild\Bin\Debug\Zenject.ReflectionBaking.Mono.Cecil.Mdb.dll</HintPath>
+    </Reference>
+    <Reference Include="Zenject.ReflectionBaking.Mono.Cecil.Pdb">
+      <HintPath>..\Zenject\NonUnityBuild\Bin\Debug\Zenject.ReflectionBaking.Mono.Cecil.Pdb.dll</HintPath>
+    </Reference>
+    <Reference Include="Zenject.ReflectionBaking.Mono.Cecil.Rocks">
+      <HintPath>..\Zenject\NonUnityBuild\Bin\Debug\Zenject.ReflectionBaking.Mono.Cecil.Rocks.dll</HintPath>
+    </Reference>
+  </ItemGroup>
 
 </Project>

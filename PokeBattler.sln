@@ -4,29 +4,66 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.7.34221.43
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PokeBattler.Server", "PokeBattler.Server\PokeBattler.Server.csproj", "{44E9F3FB-4312-443E-9E52-36FBBEA4B1FC}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PokeBattler.Client", "PokeBattler.Client\PokeBattler.Client.csproj", "{FEBC3279-A973-4A9B-8BD0-410246FE9281}"
+	ProjectSection(ProjectDependencies) = postProject
+		{471653B9-5490-4E9B-A11F-979C8084C1A2} = {471653B9-5490-4E9B-A11F-979C8084C1A2}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PokeBattler.Core", "PokeBattler.Core\PokeBattler.Core.csproj", "{471653B9-5490-4E9B-A11F-979C8084C1A2}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GetDependencies", "GetDependencies\GetDependencies.csproj", "{02D319A8-4CA0-41C6-8DE2-6BC3DD3D6654}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PokeBattler.App", "PokeBattler.App\PokeBattler.App.csproj", "{B9FDDD10-F953-4B9E-8027-927401397A89}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp", "PokeBattler.Unity\Assembly-CSharp.csproj", "{D849F70A-2D8C-A455-070D-1C77C4E8A3CF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug.InternalCloud|Any CPU = Debug.InternalCloud|Any CPU
 		Debug|Any CPU = Debug|Any CPU
+		Release.InternalCloud|Any CPU = Release.InternalCloud|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{44E9F3FB-4312-443E-9E52-36FBBEA4B1FC}.Debug.InternalCloud|Any CPU.ActiveCfg = Debug|Any CPU
+		{44E9F3FB-4312-443E-9E52-36FBBEA4B1FC}.Debug.InternalCloud|Any CPU.Build.0 = Debug|Any CPU
 		{44E9F3FB-4312-443E-9E52-36FBBEA4B1FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{44E9F3FB-4312-443E-9E52-36FBBEA4B1FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44E9F3FB-4312-443E-9E52-36FBBEA4B1FC}.Release.InternalCloud|Any CPU.ActiveCfg = Release|Any CPU
+		{44E9F3FB-4312-443E-9E52-36FBBEA4B1FC}.Release.InternalCloud|Any CPU.Build.0 = Release|Any CPU
 		{44E9F3FB-4312-443E-9E52-36FBBEA4B1FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{44E9F3FB-4312-443E-9E52-36FBBEA4B1FC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FEBC3279-A973-4A9B-8BD0-410246FE9281}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FEBC3279-A973-4A9B-8BD0-410246FE9281}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FEBC3279-A973-4A9B-8BD0-410246FE9281}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FEBC3279-A973-4A9B-8BD0-410246FE9281}.Release|Any CPU.Build.0 = Release|Any CPU
+		{471653B9-5490-4E9B-A11F-979C8084C1A2}.Debug.InternalCloud|Any CPU.ActiveCfg = Debug|Any CPU
+		{471653B9-5490-4E9B-A11F-979C8084C1A2}.Debug.InternalCloud|Any CPU.Build.0 = Debug|Any CPU
 		{471653B9-5490-4E9B-A11F-979C8084C1A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{471653B9-5490-4E9B-A11F-979C8084C1A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{471653B9-5490-4E9B-A11F-979C8084C1A2}.Release.InternalCloud|Any CPU.ActiveCfg = Release|Any CPU
+		{471653B9-5490-4E9B-A11F-979C8084C1A2}.Release.InternalCloud|Any CPU.Build.0 = Release|Any CPU
 		{471653B9-5490-4E9B-A11F-979C8084C1A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{471653B9-5490-4E9B-A11F-979C8084C1A2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{02D319A8-4CA0-41C6-8DE2-6BC3DD3D6654}.Debug.InternalCloud|Any CPU.ActiveCfg = Debug|Any CPU
+		{02D319A8-4CA0-41C6-8DE2-6BC3DD3D6654}.Debug.InternalCloud|Any CPU.Build.0 = Debug|Any CPU
+		{02D319A8-4CA0-41C6-8DE2-6BC3DD3D6654}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{02D319A8-4CA0-41C6-8DE2-6BC3DD3D6654}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{02D319A8-4CA0-41C6-8DE2-6BC3DD3D6654}.Release.InternalCloud|Any CPU.ActiveCfg = Release|Any CPU
+		{02D319A8-4CA0-41C6-8DE2-6BC3DD3D6654}.Release.InternalCloud|Any CPU.Build.0 = Release|Any CPU
+		{02D319A8-4CA0-41C6-8DE2-6BC3DD3D6654}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{02D319A8-4CA0-41C6-8DE2-6BC3DD3D6654}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B9FDDD10-F953-4B9E-8027-927401397A89}.Debug.InternalCloud|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9FDDD10-F953-4B9E-8027-927401397A89}.Debug.InternalCloud|Any CPU.Build.0 = Debug|Any CPU
+		{B9FDDD10-F953-4B9E-8027-927401397A89}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9FDDD10-F953-4B9E-8027-927401397A89}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B9FDDD10-F953-4B9E-8027-927401397A89}.Release.InternalCloud|Any CPU.ActiveCfg = Release|Any CPU
+		{B9FDDD10-F953-4B9E-8027-927401397A89}.Release.InternalCloud|Any CPU.Build.0 = Release|Any CPU
+		{B9FDDD10-F953-4B9E-8027-927401397A89}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B9FDDD10-F953-4B9E-8027-927401397A89}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D849F70A-2D8C-A455-070D-1C77C4E8A3CF}.Debug.InternalCloud|Any CPU.ActiveCfg = Debug|Any CPU
+		{D849F70A-2D8C-A455-070D-1C77C4E8A3CF}.Debug.InternalCloud|Any CPU.Build.0 = Debug|Any CPU
+		{D849F70A-2D8C-A455-070D-1C77C4E8A3CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D849F70A-2D8C-A455-070D-1C77C4E8A3CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D849F70A-2D8C-A455-070D-1C77C4E8A3CF}.Release.InternalCloud|Any CPU.ActiveCfg = Release|Any CPU
+		{D849F70A-2D8C-A455-070D-1C77C4E8A3CF}.Release.InternalCloud|Any CPU.Build.0 = Release|Any CPU
+		{D849F70A-2D8C-A455-070D-1C77C4E8A3CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D849F70A-2D8C-A455-070D-1C77C4E8A3CF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

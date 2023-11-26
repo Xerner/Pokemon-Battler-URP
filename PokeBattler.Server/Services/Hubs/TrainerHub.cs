@@ -1,12 +1,14 @@
 ﻿using Microsoft.AspNetCore.SignalR;
-using PokeServer.Models;
+using System.Threading.Tasks;
 
-namespace PokeBattler.Server.Services.Hubs;
-
-public sealed class TrainerHub : Hub
+namespace PokeBattler.Server.Services.Hubs
 {
-    public Task NotifyAll(Notification notification)
+    public class TrainerHub : Hub
     {
-        return Clients.All.SendAsync("NotificationReceived", notification);
+        public async Task UpdateTrainerReady(bool ready)
+        {
+            await Clients.All.SendAsync("UpdateTrainerReady", ready);
+            return;
+        }
     }
 }

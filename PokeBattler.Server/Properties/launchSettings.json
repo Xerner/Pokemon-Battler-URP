@@ -9,7 +9,7 @@
     }
   },
   "profiles": {
-    "PokeBattler.API": {
+    "PokeBattler.Server": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,

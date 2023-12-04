@@ -1,46 +1,39 @@
-using PokeBattler.Core;
-using PokeBattler.Models;
-using PokeBattler.Services;
+using PokeBattler.Client.Services;
+using PokeBattler.Common;
+using PokeBattler.Common.Services;
+using PokeBattler.Common.Models;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Zenject;
+using PokeBattler.Client.Controllers;
 
 namespace PokeBattler.Unity
 {
-    public class MainMenu : MonoBehaviour
+    public class MainMenu : MonoInstaller<MainMenu>
     {
         public static MainMenu Instance { get; private set; }
 
-        private GameService gameService;
-        private ClientService clientService;
+        private GameController gameController;
+        private IClientService clientService;
 
         [Inject]
-        public void Construct(GameService gameService, ClientService clientService)
+        public void Construct(GameController gameController, IClientService clientService)
         {
-            this.gameService = gameService;
+            this.gameController = gameController;
             this.clientService = clientService;
         }
 
-        void Awake()
+        public void CreateGame()
         {
-            if (Instance != null && Instance != this)
-            {
-                Destroy(this);
-                return;
-            }
-            else
-            {
-                Instance = this;
-            }
+            gameController.RequestCreateGame();
         }
-
-        public void CreateGame() => gameService.CreateGame();
 
         public void JoinGame(string ipAddress, string port)
         {
             // port validation
-            if (!int.TryParse(port, out int port_int) && (port_int < 1 || port_int > 65535))
+            if (!int.TryParse(port, out int port_int) && (port_int < 1 || port_int > ushort.MaxValue))
             {
-                UIWindowManagerBehaviour.Instance.CreatePopupMessage("Invalid port\n\nPorts are only digits and no larger than 65535", 170f);
+                UIWindowManagerBehaviour.Instance.CreatePopupMessage($"Invalid port\n\nPorts are only digits and no larger than {ushort.MaxValue}", 170f);
                 return;
             }
             // TODO
@@ -54,29 +47,31 @@ namespace PokeBattler.Unity
         /// </summary>
         public void LoadSettings(string username, GameObject nextMenu)
         {
-            AccountSettings settings = SaveSystem.LoadAccount(username.Trim().ToLower());
-            if (settings == null)
+            Account account = SaveSystem.LoadAccount(username.Trim().ToLower());
+            if (account == null)
             {
                 UIWindowManagerBehaviour.Instance.CreatePopupMessage("Trainer not found");
             }
             else
             {
-                Debug.Log("Loading trainer '" + username.Trim().ToLower() + "' with Settings\n" + settings);
+                Debug.Log("Loading trainer '" + username.Trim().ToLower() + "' with Settings\n" + account);
                 ViewManager.Instance.ChangeViews(nextMenu);
-                clientService.Account.Settings = settings;
+                clientService.Account = account;
             }
         }
 
         /// <summary>Save username, trainer sprite, and trainer background sprite to the account file</summary>
         public void SaveSettings(string username, string trainerSpriteName, string trainerBackgroundName)
         {
-            clientService.Account.Settings = new AccountSettings(
-                username,
-                trainerSpriteName,
-                trainerBackgroundName,
-                clientService.Account.Settings.ClientID,
-                clientService.Account.Settings.GameID);
-            SaveSystem.SaveAccount(clientService.Account.Settings);
+            clientService.Account = new Account()
+            {
+                Username = username,
+                TrainerSpriteId = trainerSpriteName,
+                TrainerBackgroundId = trainerBackgroundName,
+                Id = clientService.Account.Id,
+                GameId = clientService.Account.GameId
+            };
+            SaveSystem.SaveAccount(clientService.Account);
         }
     }
 }

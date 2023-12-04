@@ -1,6 +1,6 @@
 using UnityEngine;
-using PokeBattler.Services;
 using Zenject;
+using PokeBattler.Client.Services;
 
 namespace PokeBattler.Unity
 {
@@ -11,19 +11,19 @@ namespace PokeBattler.Unity
         public ImageSelector trainerBackground;
 
 
-        private ClientService clientService;
+        private IClientService clientService;
 
         [Inject]
-        public void Construct(ClientService clientService)
+        public void Construct(IClientService clientService)
         {
             this.clientService = clientService;
         }
 
         private void OnEnable()
         {
-            username.text = clientService.Account.Settings.Username;
-            trainerSprite.SetSprite(clientService.Account.Settings.TrainerSpriteId);
-            trainerBackground.SetSprite(clientService.Account.Settings.TrainerBackgroundId);
+            username.text = clientService.Account.Username;
+            trainerSprite.SetSprite(clientService.Account.TrainerSpriteId);
+            trainerBackground.SetSprite(clientService.Account.TrainerBackgroundId);
         }
 
         public void SaveSettings() => MainMenu.Instance.SaveSettings(username.text, trainerSprite.ActiveSprite, trainerBackground.ActiveSprite);

@@ -1,46 +1,17 @@
-using PokeBattler.Models;
-using PokeBattler.Services;
+using PokeBattler.Common.Models;
 using System;
-using System.Collections.Generic;
 
-namespace PokeBattler.Core
+namespace PokeBattler.Client.Services
 {
-    public class GameService
+    public interface IGameService
     {
-        private readonly GameSettings defaultGameSettings;
-        public Game Game;
-        public Action<Game> OnGameCreated;
-        public Action<PokemonPool> OnPokemonDataLoaded;
+        public Game Game { get; set; }
+        Action<Game> OnGameCreated { get; set; }
+    }
 
-        private readonly TrainersService trainersService;
-
-        public GameService(GameSettings defaultGameSettings, TrainersService trainersService)
-        {
-            this.defaultGameSettings = defaultGameSettings;
-            this.trainersService = trainersService;
-        }
-
-        public Game CreateGame()
-        {
-            var game = new Game()
-            {
-                GameSettings = defaultGameSettings
-            };
-            game.RoundTimer.SetDuration(game.GameSettings.RoundTime);
-            Pokemon.InitializeListOfPokemon(new List<string>() { "bulbasaur", "squirtle", "charmander", "magnemite", "abra" }).Wait();
-            game.PokemonPool = new PokemonPool(trainersService);
-            OnPokemonDataLoaded(game.PokemonPool);
-
-            Game = game;
-            OnGameCreated.Invoke(game);
-            return game;
-        }
-
-        public Trainer CreateTrainer(Account hostAccount)
-        {
-            Trainer trainer = new Trainer(hostAccount);
-            trainersService.Add(trainer);
-            return trainer;
-        }
+    public class GameService : IGameService
+    {
+        public Game Game { get; set; }
+        Action<Game> IGameService.OnGameCreated { get; set; }
     }
 }

@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Linq;
-using PokeBattler.Core;
+using PokeBattler.Common;
 
 namespace PokeBattler.Unity {
     public class ImageSelector : MonoBehaviour
@@ -25,7 +25,7 @@ namespace PokeBattler.Unity {
             image.SetNativeSize();
         }
 
-        void Start()
+        void Awake()
         {
             sprites = StaticAssets.EnumToSpriteDict(assetType);
             keys = sprites.Keys.ToList();

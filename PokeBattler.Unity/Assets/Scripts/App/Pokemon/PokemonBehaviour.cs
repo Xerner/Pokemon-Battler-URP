@@ -1,12 +1,13 @@
-using PokeBattler.Core;
+using PokeBattler.Common;
+using PokeBattler.Common.Models;
+using PokeBattler.Common.Models.Interfaces;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 namespace PokeBattler.Unity {
-    [AddComponentMenu("Poke Battler/Pokemon")]
+    [AddComponentMenu("Poke Battler/PokemonGO")]
     [RequireComponent(typeof(SpriteRenderer))]
     [RequireComponent(typeof(Animator))]
     [RequireComponent(typeof(BoxCollider2D))]
@@ -29,7 +30,7 @@ namespace PokeBattler.Unity {
         public MoveToBehaviour MoveTo;
         public Trainer trainer;
         public Action<PokemonBehaviour> OnDestroyed;
-        [Header("Pokemon API")][SerializeField] string pokemonName;
+        [Header("PokemonGO API")][SerializeField] string pokemonName;
 
         public Pokemon Pokemon { get { return pokemon; } }
 
@@ -81,7 +82,7 @@ namespace PokeBattler.Unity {
             }
             else
             {
-                Debug.LogError("Invalid pokemon ID or name given: " + pokemonName);
+                Debug.LogError("Invalid pokemon Id or name given: " + pokemonName);
             }
         }
 
@@ -91,7 +92,7 @@ namespace PokeBattler.Unity {
             Debug2.Log("Initializing PokemonBehaviour for " + pokemon.name, LogLevel.Detailed, gameObject);
             if (pokemon == null)
             {
-                Debug2.LogError("Null Pokemon object given", gameObject);
+                Debug2.LogError("Null PokemonGO object given", gameObject);
             }
 
             InitializeComponents();
@@ -112,8 +113,8 @@ namespace PokeBattler.Unity {
 
         #endregion
 
-        /// <summary>If possible, evolves the Pokemon to the next stage</summary>
-        /// <returns>The next stage of evolution for the current Pokemon</returns>
+        /// <summary>If possible, evolves the PokemonGO to the next stage</summary>
+        /// <returns>The next stage of evolution for the current PokemonGO</returns>
         public async Task Evolve()
         {
             await Initialize(pokemon.Evolutions[pokemon.EvolutionStage]);
@@ -136,11 +137,11 @@ namespace PokeBattler.Unity {
 
         #endregion
 
-        public void SetPokeContainer(PokeContainerBehaviour container)
+        public void SetPokeContainer(IPokeContainer container)
         {
             if (container != null && container.Pokemon == null)
             {
-                container.SetPokemon(this);
+                container.Pokemon = Pokemon;
                 MoveTo.ReleaseCursor();
             }
         }

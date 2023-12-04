@@ -12,7 +12,7 @@ using UnityEngine;
         public bool HasBackdrop { get => true; }
 
         /// <summary>
-        /// Create a Popup instance and return it
+        /// RequestAddToGame a Popup instance and return it
         /// </summary>
         public UIModal Create(string message, Transform backdrop)
         {
@@ -22,7 +22,7 @@ using UnityEngine;
         }
 
         /// <summary>
-        /// Create a Popup instance, set its height, and return it
+        /// RequestAddToGame a Popup instance, set its height, and return it
         /// </summary>
         /// <returns></returns>
         public UIModal Create(string message, Transform backdrop, float height)

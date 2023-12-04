@@ -1,6 +1,6 @@
+using PokeBattler.Client.Services;
 using UnityEngine;
 using UnityEngine.UI;
-using PokeBattler.Services;
 using Zenject;
 
 namespace PokeBattler.Unity
@@ -15,10 +15,10 @@ namespace PokeBattler.Unity
         Button button;
         bool isReady = false;
 
-        private TrainersService trainersService;
+        private ITrainersService trainersService;
 
         [Inject]
-        public void Construct(TrainersService trainersService)
+        public void Construct(ITrainersService trainersService)
         {
             this.trainersService = trainersService;
         }

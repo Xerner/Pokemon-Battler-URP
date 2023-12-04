@@ -1,32 +1,20 @@
-using PokeBattler.Core;
+using PokeBattler.Common;
+using PokeBattler.Common.Models;
 using UnityEngine;
+using Zenject;
 
 namespace PokeBattler.Unity
 {
     // TODO: Try and refactor this class into a normal class and a MonoBehaviour class
-    public class TrainerCardManager : MonoBehaviour
+    [AddComponentMenu("Poke Battler/Trainer Card Manager")]
+    public class TrainerCardManager : MonoInstaller<TrainerCardManager>
     {
-        public static TrainerCardManager Instance { get; private set; }
-
-        [SerializeField] UnityEngine.GameObject TrainerCardPrefab; // set in the editor
+        [SerializeField] GameObject TrainerCardPrefab; // set in the editor
         [SerializeField] Transform VerticalLayoutGroup; // set in the editor
 
         public TrainerCard[] TrainerCards = new TrainerCard[8];
 
-        void Awake()
-        {
-            if (Instance != null && Instance != this)
-            {
-                Destroy(this);
-                return;
-            }
-            else
-            {
-                Instance = this;
-            }
-        }
-
-        void Start()
+        public override void Start()
         {
             for (int i = 0; i < TrainerCards.Length; i++)
             {
@@ -41,9 +29,9 @@ namespace PokeBattler.Unity
         public void AddTrainerCard(Trainer trainer)
         {
             TrainerCard trainerCard = Instantiate(TrainerCardPrefab, VerticalLayoutGroup).GetComponent<TrainerCard>();
-            Sprite trainerSprite = StaticAssets.Trainers[trainer.Account.Settings.TrainerSpriteId];
-            Sprite trainerBackgroundSprite = StaticAssets.TrainerBackgrounds[trainer.Account.Settings.TrainerBackgroundId];
-            trainerCard.Initialize(trainer.Account.Settings.Username, trainerSprite, trainerBackgroundSprite);
+            Sprite trainerSprite = StaticAssets.Trainers[trainer.Account.TrainerSpriteId];
+            Sprite trainerBackgroundSprite = StaticAssets.TrainerBackgrounds[trainer.Account.TrainerBackgroundId];
+            trainerCard.Initialize(trainer.Account.Username, trainerSprite, trainerBackgroundSprite);
         }
     }
 }

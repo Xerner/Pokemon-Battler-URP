@@ -2,7 +2,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace PokeBattler.Core
+namespace PokeBattler.Common
 {
     public static class CameraExtensions
     {

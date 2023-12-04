@@ -1,5 +1,5 @@
-using PokeBattler.Core;
-using PokeBattler.Models;
+using PokeBattler.Client.Services;
+using PokeBattler.Common.Models;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
@@ -15,14 +15,13 @@ namespace PokeBattler.Unity
         [SerializeField] Sprite ResumedSprite;
 
 
-        private GameService gameService;
+        private IGameService gameService;
 
         [Inject]
-        public void Construct(GameService gameService)
+        public void Construct(IGameService gameService)
         {
             this.gameService = gameService;
         }
-
 
         void Start()
         {
@@ -49,6 +48,7 @@ namespace PokeBattler.Unity
 
         void Update()
         {
+            if (gameService.Game is null) return;
             button.enabled = gameService.Game.RoundTimer.IsComplete();
         }
 

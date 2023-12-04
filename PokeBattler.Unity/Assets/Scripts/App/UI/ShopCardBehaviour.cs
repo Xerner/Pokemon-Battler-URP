@@ -1,5 +1,8 @@
-using PokeBattler.Core;
-using PokeBattler.Services;
+using PokeBattler.Client.Controllers;
+using PokeBattler.Client.Services;
+using PokeBattler.Common;
+using PokeBattler.Common.Models;
+using PokeBattler.Common.Models.Enums;
 using System;
 using TMPro;
 using UnityEngine;
@@ -23,19 +26,17 @@ namespace PokeBattler.Unity {
 
         private Pokemon pokemon;
         public Action<ShopCardBehaviour> OnClick;
-        public int Cost { get => pokemon.tier; }
+        public int Cost { get; set; }
 
-
-        private TrainersService trainersService;
-        private GameService gameService;
+        private ITrainersService trainersService;
+        private ShopController shopController;
 
         [Inject]
-        public void Construct(TrainersService trainersService, GameService gameService)
+        public void Construct(ITrainersService trainersService, ShopController shopController)
         {
             this.trainersService = trainersService;
-            this.gameService = gameService;
+            this.shopController = shopController;
         }
-
 
         void Start()
         {
@@ -43,10 +44,11 @@ namespace PokeBattler.Unity {
             Reset();
         }
 
-        public void SetPokemon(Pokemon pokemon)
+        public void SetPokemon(Pokemon pokemon, int cost)
         {
             pokemonName.text = pokemon.name;
-            background.sprite = StaticAssets.ShopCardSprites[pokemon.tier.ToString()];
+            Cost = cost;
+            background.sprite = StaticAssets.ShopCardSprites[Cost.ToString()];
             pokemonImage.sprite = pokemon.ShopSprite;
             pokemonImage.color = new Color(pokemonImage.color.r, pokemonImage.color.g, pokemonImage.color.b, 1f);
             pokemonImage.SetNativeSize();
@@ -66,7 +68,7 @@ namespace PokeBattler.Unity {
             }
             this.pokemon = pokemon;
             pokeDollar.SetActive(true);
-            costText.text = pokemon.tier.ToString();
+            costText.text = Cost.ToString();
         }
 
         public void Reset()
@@ -83,33 +85,10 @@ namespace PokeBattler.Unity {
             costText.text = "";
         }
 
-        public async void TryToBuy()
+        public void RequestToBuy()
         {
             if (pokemon == null) return;
-            if (trainersService.ClientsTrainer.Money < Cost && !gameService.Game.GameSettings.FreePokemon)
-            {
-                Debug2.Log("Not enough money", LogLevel.Detailed);
-                return;
-            }
-            BenchBehaviour bench = trainersService.ClientsTrainer.Arena.Bench.GetAvailableBench();
-            // Trainer bought a Pokemon, but the bench is full, BUT the purchased Pokemon can be used in an evolution to free up space
-            if (!BenchHasValidContainer(bench))
-                return;
-            //else
-            //container = TrainerManager.ActiveTrainer.ActivePokemon[pokemon.name][0].MoveTo;
-            trainersService.ClientsTrainer.Money -= Cost;
-            DashboardBehaviour.Instance.Money = trainersService.ClientsTrainer.Money.ToString();
-            Debug2.Log($"bought a {pokemon.name} for {pokemon.tier}", LogLevel.Detailed);
-            var pokemonBehaviour = await trainersService.ClientsTrainer.AddPokemonToBench(pokemon);
-            if (pokemonBehaviour != null)
-            {
-                Reset();
-            }
-        }
-
-        private bool BenchHasValidContainer(BenchBehaviour bench)
-        {
-            return bench != null || (bench == null && trainersService.ClientsTrainer.ActivePokemon.IsAboutToEvolve(pokemon));
+            shopController.RequestToBuyPokemon(pokemon);
         }
     }
 }

@@ -1,3 +1,4 @@
+using PokeBattler.Client.Models.SO;
 using UnityEngine;
 
 namespace PokeBattler.Unity

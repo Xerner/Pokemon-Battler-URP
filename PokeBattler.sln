@@ -8,11 +8,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PokeBattler.Server", "PokeB
 		{471653B9-5490-4E9B-A11F-979C8084C1A2} = {471653B9-5490-4E9B-A11F-979C8084C1A2}
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PokeBattler.Core", "PokeBattler.Core\PokeBattler.Core.csproj", "{471653B9-5490-4E9B-A11F-979C8084C1A2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PokeBattler.Common", "PokeBattler.Core\PokeBattler.Common.csproj", "{471653B9-5490-4E9B-A11F-979C8084C1A2}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GetDependencies", "GetDependencies\GetDependencies.csproj", "{02D319A8-4CA0-41C6-8DE2-6BC3DD3D6654}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PokeBattler.App", "PokeBattler.App\PokeBattler.App.csproj", "{B9FDDD10-F953-4B9E-8027-927401397A89}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp", "PokeBattler.Unity\Assembly-CSharp.csproj", "{D849F70A-2D8C-A455-070D-1C77C4E8A3CF}"
 EndProject
@@ -48,14 +46,6 @@ Global
 		{02D319A8-4CA0-41C6-8DE2-6BC3DD3D6654}.Release.InternalCloud|Any CPU.Build.0 = Release|Any CPU
 		{02D319A8-4CA0-41C6-8DE2-6BC3DD3D6654}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{02D319A8-4CA0-41C6-8DE2-6BC3DD3D6654}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B9FDDD10-F953-4B9E-8027-927401397A89}.Debug.InternalCloud|Any CPU.ActiveCfg = Debug|Any CPU
-		{B9FDDD10-F953-4B9E-8027-927401397A89}.Debug.InternalCloud|Any CPU.Build.0 = Debug|Any CPU
-		{B9FDDD10-F953-4B9E-8027-927401397A89}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B9FDDD10-F953-4B9E-8027-927401397A89}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B9FDDD10-F953-4B9E-8027-927401397A89}.Release.InternalCloud|Any CPU.ActiveCfg = Release|Any CPU
-		{B9FDDD10-F953-4B9E-8027-927401397A89}.Release.InternalCloud|Any CPU.Build.0 = Release|Any CPU
-		{B9FDDD10-F953-4B9E-8027-927401397A89}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B9FDDD10-F953-4B9E-8027-927401397A89}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D849F70A-2D8C-A455-070D-1C77C4E8A3CF}.Debug.InternalCloud|Any CPU.ActiveCfg = Debug|Any CPU
 		{D849F70A-2D8C-A455-070D-1C77C4E8A3CF}.Debug.InternalCloud|Any CPU.Build.0 = Debug|Any CPU
 		{D849F70A-2D8C-A455-070D-1C77C4E8A3CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU

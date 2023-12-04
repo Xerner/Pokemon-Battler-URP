@@ -1,7 +1,5 @@
-using PokeBattler.Core;
-using PokeBattler.Models;
-using PokeBattler.Core;
-using UnityEditor.PackageManager;
+using PokeBattler.Client.Services;
+using PokeBattler.Common.Models;
 using UnityEngine;
 using Zenject;
 
@@ -12,10 +10,10 @@ namespace PokeBattler.Unity
     {
         [SerializeField] TMPro.TextMeshProUGUI text;
 
-        private GameService gameService;
+        private IGameService gameService;
 
         [Inject]
-        public void Construct(GameService gameService)
+        public void Construct(IGameService gameService)
         {
             this.gameService = gameService;
         }

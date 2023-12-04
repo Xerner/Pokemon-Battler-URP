@@ -1,4 +1,5 @@
-﻿using PokeBattler.Core;
+﻿using PokeBattler.Common;
+using PokeBattler.Common.Models.Enums;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -30,7 +31,7 @@ namespace PokeBattler.Unity
         {
             base.SetPokemon(pokemon);
 
-            if (Pokemon == null)
+            if (PokemonGO == null)
             {
                 displayedName.text = "";
                 type1.sprite = null;
@@ -41,24 +42,24 @@ namespace PokeBattler.Unity
             }
 
             // Set type sprite
-            displayedName.text = Pokemon.name;
-            type1.sprite = StaticAssets.typeMiniSprites[Pokemon.Pokemon.types[0].ToString()];
+            displayedName.text = PokemonGO.name;
+            type1.sprite = StaticAssets.typeMiniSprites[PokemonGO.Pokemon.types[0].ToString()];
             type1.color = new Color(1f, 1f, 1f, 1f);
 
             // Set second type sprite
-            if (Pokemon.Pokemon.types[1] == EPokemonType.None)
+            if (PokemonGO.Pokemon.types[1] == EPokemonType.None)
             {
                 type2.sprite = null;
                 type2.color = new Color(1f, 1f, 1f, 0f);
             }
             else
             {
-                type2.sprite = StaticAssets.typeMiniSprites[Pokemon.Pokemon.types[1].ToString()];
+                type2.sprite = StaticAssets.typeMiniSprites[PokemonGO.Pokemon.types[1].ToString()];
                 type2.color = new Color(1f, 1f, 1f, 1f);
             }
 
             // Move pokemon
-            Pokemon.MoveTo.MoveTo(MoveToSpot, true);
+            PokemonGO.MoveTo.MoveTo(MoveToSpot, true);
             return true;
         }
 

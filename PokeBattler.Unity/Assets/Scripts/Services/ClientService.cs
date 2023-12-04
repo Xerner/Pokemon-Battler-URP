@@ -1,47 +1,24 @@
 using System;
-using UnityEngine.SceneManagement;
-using PokeBattler.Core;
-using PokeBattler.Models;
+using PokeBattler.Common.Models;
 
-namespace PokeBattler.Services
+namespace PokeBattler.Client.Services
 {
     public interface IClientService
     {
-
+        public Guid ClientID { get; set; }
+        public Account Account { get; set; }
     }
 
     public class ClientService : IClientService
     {
-        /// <summary>The local clients ID</summary>
-        public Guid ClientID { get; private set; }
-        Account account;
+        /// <summary>The local clients Id</summary>
+        public Guid ClientID { get; set; }
+        public Account Account { get; set; }
 
-        public GameService Game;
-
-        public Account Account { get => account; }
-
-        private readonly GameService gameService;
-
-        public ClientService(Account account, GameService gameService)
+        public ClientService(Account account)
         {
             ClientID = Guid.NewGuid();
-            this.account = account;
-            this.gameService = gameService;
-            SceneManager.sceneLoaded += OnSceneLoaded;
-            gameService.OnGameCreated += CreateTrainer;
-        }
-
-        void OnSceneLoaded(Scene scene, LoadSceneMode _)
-        {
-            if (scene.name == "ArenaScene")
-            {
-                if (gameService.Game is null) gameService.CreateGame();
-            }
-        }
-
-        void CreateTrainer(Game _)
-        {
-            gameService.CreateTrainer(account);
+            Account = account;
         }
     }
 }

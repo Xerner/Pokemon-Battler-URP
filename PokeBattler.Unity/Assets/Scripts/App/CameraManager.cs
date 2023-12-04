@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
@@ -8,8 +9,6 @@ namespace PokeBattler.Unity
 {
     public class CameraManager : MonoBehaviour
     {
-        public static CameraManager Instance { get; private set; }
-
         static readonly int arenaColumns = 3;
 
         [SerializeField] Transform cameraRig;
@@ -28,23 +27,7 @@ namespace PokeBattler.Unity
 
         void Start()
         {
-            if (Instance != null && Instance != this)
-            {
-                Destroy(this);
-                return;
-            }
-            else
-            {
-                Instance = this;
-            }
-            StartCoroutine(InitialMove());
-        }
-
-        IEnumerator InitialMove()
-        {
-            yield return new WaitForSeconds(1f);
-            MoveInput.action.performed += Move;
-            MoveToArena(activeArena);
+            Task.Delay(1000).ContinueWith((Task task) => MoveToArena(activeArena));
         }
 
         public void Move(CallbackContext context) => Move(((KeyControl)context.control).keyCode);

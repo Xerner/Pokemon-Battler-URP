@@ -33,7 +33,7 @@ namespace PokeBattler.Unity
         }
 
         /// <summary>
-        /// Create a new UI Popup with the given message and an optional height. UI Popups always have a backdrop
+        /// RequestAddToGame a new UI Popup with the given message and an optional height. UI Popups always have a backdrop
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>

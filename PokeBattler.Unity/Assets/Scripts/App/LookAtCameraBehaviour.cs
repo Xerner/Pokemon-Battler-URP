@@ -1,4 +1,4 @@
-using PokeBattler.Core;
+using PokeBattler.Common;
 using UnityEngine;
 
 namespace PokeBattler.Unity

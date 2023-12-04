@@ -1,5 +1,5 @@
-using PokeBattler.Core;
-using System.Linq;
+using PokeBattler.Common.Models;
+using PokeBattler.Common.Models.Interfaces;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -8,17 +8,16 @@ namespace PokeBattler.Unity
     [AddComponentMenu("Poke Battler/Poke Container")]
     public class PokeContainerBehaviour : MonoBehaviour, IPokeContainer
     {
-        PokemonBehaviour pokemon = null;
-
-        public PokemonBehaviour Pokemon { get => pokemon; protected set => pokemon = value; }
+        public PokemonBehaviour PokemonGO { get; protected set; }
+        Pokemon IPokeContainer.Pokemon { get => PokemonGO.pokemon; set => PokemonGO.pokemon = value; }
 
         public virtual void OnPointerDown(PointerEventData eventData)
         {
             if (MoveToBehaviour.InstanceOnCursor == null)
             {
-                if (Pokemon != null)
+                if (PokemonGO != null)
                 {
-                    Pokemon.MoveTo.MoveToCursor();
+                    PokemonGO.MoveTo.MoveToCursor();
                     SetPokemon(null);
                 }
                 return;
@@ -35,7 +34,7 @@ namespace PokeBattler.Unity
             {
                 pokemon.OnDestroyed += Reset;
             }
-            Pokemon = pokemon;
+            PokemonGO = pokemon;
             return true;
         }
 

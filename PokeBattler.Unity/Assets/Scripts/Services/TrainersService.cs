@@ -1,65 +1,52 @@
-﻿using Microsoft.AspNetCore.SignalR.Client;
-using PokeBattler.Core;
-using PokeBattler.Core;
-using PokeBattler.Unity;
-using PokeBattler.Client.Controllers.HubConnections;
+﻿using PokeBattler.Common;
 using System;
-using System.Linq;
-using System.Threading.Tasks;
-using UnityEngine;
+using System.Collections.Generic;
+using PokeBattler.Common.Models;
 
-namespace PokeBattler.Services
+namespace PokeBattler.Client.Services
 {
     public interface ITrainersService
     {
-        Trainer[] Trainers { get; }
+        Trainer ClientsTrainer { get; }
+        Dictionary<Guid, Trainer> Trainers { get; }
+        void TrainerCreated(Trainer trainer);
+        void UpdateReadyStatus(Guid id, bool ready);
     }
 
-    public class TrainersService : ITrainersService
+    public partial class TrainersService : ITrainersService
     {
-        public Trainer[] Trainers { get; private set; }
+        public Trainer ClientsTrainer { get => Trainers[clientService.ClientID]; }
+        public Dictionary<Guid, Trainer> Trainers { get; private set; }
 
-        private ClientService clientService;
+        readonly IAppConfig appConfig;
+        readonly IClientService clientService;
 
-        public Trainer ClientsTrainer
-        {
-            get => Trainers.FirstOrDefault(trainer_ => trainer_.ClientID == clientService.ClientID);
-        }
+        public Action<Trainer> OnTrainerAdded;
 
-        public TrainersService(ClientService clientService)
+        public TrainersService(IClientService clientService, IAppConfig appConfig)
         {
             this.clientService = clientService;
+            this.appConfig = appConfig;
         }
 
-        public TrainersService(ITrainerHubConnection trainerHub, ISignalRService signalr)
+        //public void AddTrainerCard(Trainer trainer, int index)
+        //{
+        //    trainer.Arena = GameObject.Find("Arenas").transform.GetChild(index).GetComponent<ArenaBehaviour>();
+        //    TrainerCardManager.Instance.AddTrainerCard(trainer);
+        //}
+
+        //[ServerSubscription("Create")]
+        public void TrainerCreated(Trainer trainer)
         {
-            trainerHub.HubConnection.On<ulong, bool>("UpdateTrainerReady", UpdateReadyStatus);
+            OnTrainerAdded.Invoke(trainer);
         }
 
-        public async Task UpdateReadyStatus(ulong trainerID, bool ready)
+        //[ServerSubscription("UpdateTrainerReady")]
+        public void UpdateReadyStatus(Guid id, bool ready)
         {
-
-        }
-
-        public void Add(Trainer trainer)
-        {
-            // if trainer was already in-game and is reconnecting
-            var existingTrainer = Trainers.FirstOrDefault(trainer_ => trainer_.ClientID == trainer.ClientID);
-            if (existingTrainer != null)
-            {
-                throw new NotImplementedException();
-            }
-            // Find next available slot
-            int index = Array.FindIndex(Trainers, trainer => trainer == null);
-            if (index > -1)
-            {
-                Trainers[index] = trainer;
-                trainer.Arena = GameObject.Find("Arenas").transform.GetChild(index).GetComponent<ArenaBehaviour>();
-                TrainerCardManager.Instance.AddTrainerCard(trainer);
-                return;
-            }
-            // Game slots are full
-            throw new NotImplementedException();
+            var trainer = Trainers[id];
+            if (trainer == null) return;
+            trainer.SetReady(ready);
         }
     }
 }

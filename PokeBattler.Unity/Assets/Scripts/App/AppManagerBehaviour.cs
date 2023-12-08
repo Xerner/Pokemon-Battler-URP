@@ -1,10 +1,9 @@
 using Microsoft.AspNetCore.SignalR.Client;
 using PokeBattler.Client.Controllers;
 using PokeBattler.Client.Services;
-using PokeBattler.Common;
-using PokeBattler.Common.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using UnityEditor.MemoryProfiler;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Zenject;
@@ -15,30 +14,34 @@ namespace PokeBattler.Unity
     public class AppManager : MonoBehaviour
     {
         IGameService gameService;
-        GameController gameController;
         HubConnection connection;
 
         [Inject]
-        public void Construct(IGameService gameService, GameController gameController, HubConnection connection)
+        public void Construct(IGameService gameService, HubConnection connection)
         {
             this.gameService = gameService;
-            this.gameController = gameController;
             this.connection = connection;
         }
 
         void Start()
         {
-            StartApp();
+            // please do not remove the assignment to _. It will cause squiggly
+            _ = StartApp();
         }
 
         async Task StartApp()
         {
-            await Pokemon.InitializeListOfPokemon(new List<string>() { "bulbasaur", "squirtle", "charmander", "magnemite", "abra" });
             await connection.StartAsync();
             Debug.Log($"Connected to {HubConnectionService.HubUrl}");
+            connection.On("Test", Test);
             await connection.InvokeAsync("Test", "Test");
             SceneManager.sceneLoaded += OnSceneLoaded;
             OnSceneLoaded(SceneManager.GetActiveScene(), LoadSceneMode.Single);
+        }
+
+        void Test()
+        {
+            Debug.Log("SignalR test");
         }
 
         void OnSceneLoaded(Scene scene, LoadSceneMode _)
@@ -47,7 +50,7 @@ namespace PokeBattler.Unity
             {
                 case "ArenaScene":
                     if (gameService.Game is null)
-                        gameController.RequestCreateGame();
+                        gameService.CreateGame();
                     return;
                 default:
                     return;

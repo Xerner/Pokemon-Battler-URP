@@ -8,9 +8,8 @@ namespace PokeBattler.Common.Models
 
         public Game(GameSettings gameSettings)
         {
-            GameSettings = gameSettings;
             PokemonPool = new PokemonPool();
-            Debug2.Log($"Initialized PokemonPool with {Pokemon.CachedPokemon.Count} different Pokemon", LogLevel.Detailed);
+            GameSettings = gameSettings;
             RoundTimer.SetDuration(GameSettings.RoundTime);
         }
     }

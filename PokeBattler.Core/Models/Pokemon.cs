@@ -11,7 +11,7 @@ namespace PokeBattler.Common.Models
         public Guid Id;
         public int PokeId;
         public string name;
-        private string correctedName;
+        public string correctedName;
         public int tier;
 
         public PokemonStat Hp = new PokemonStat() { baseStat = 50, effort = 0 };
@@ -24,8 +24,8 @@ namespace PokeBattler.Common.Models
         public PokemonAbility Ability;
         public PokemonMove Move;
         public PokemonMove PPMove;
-        private int BaseExperience; // TODO: make use of it, or get rid of it
-        private int height; // TODO: make use of it, or get rid of it
+        public int BaseExperience; // TODO: make use of it, or get rid of it
+        public int height; // TODO: make use of it, or get rid of it
 
         public EPokemonType[] types = new EPokemonType[] { EPokemonType.Normal, EPokemonType.None };
 
@@ -58,27 +58,5 @@ namespace PokeBattler.Common.Models
             }
             return str;
         }
-
-        #region Helper Classes
-
-        [Serializable]
-        public class PokemonStat
-        {
-            public int baseStat;
-            public int effort;
-        }
-
-        [Serializable]
-        public class PokemonAbility
-        {
-            public string name;
-            public string description;
-            public string longDescription;
-            public string url;
-            public bool isHidden;
-            public int slot;
-        }
-
-        #endregion
     }
 }

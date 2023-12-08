@@ -5,13 +5,16 @@ using Zenject;
 using System;
 using PokeBattler.Client.Services;
 using PokeBattler.Common.Models;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.SignalR.Client;
 
 namespace PokeBattler.Unity
 {
     [AddComponentMenu("Poke Battler/Dashboard")]
+    [Obsolete("Refactor to use DashboardService")]
     public class DashboardBehaviour : MonoInstaller<DashboardBehaviour>
     {
-        [Obsolete("Refactor to use DashboardService")]
 
         [SerializeField] TextMeshProUGUI trainerLevel;
         [SerializeField] TextMeshProUGUI experience;
@@ -22,11 +25,11 @@ namespace PokeBattler.Unity
 
         public ShopCardBehaviour[] ShopCards { get; private set; }
         Pokemon[] pokemons;
-        const int shopCost = 2;
-        const int experienceCost = 4;
 
-        private IGameService gameService;
+        private HubConnection connection;
         private ITrainersService trainersService;
+        private IPokemonPoolService pokemonPoolService;
+        private IShopService shopService;
 
         public string Level { get { return trainerLevel.text; } set { trainerLevel.text = value; } }
         public string Experience { get { return experience.text; } set { experience.text = value; } }
@@ -38,13 +41,13 @@ namespace PokeBattler.Unity
             //{
             //    PokemonGO.InitializeAllPokemon((pokemon) => { if (PokemonGO.CachedPokemon.Keys.Count == PokemonGO.TotalPokemon) RefreshShop(); });
             //}
-            if (GUI.Button(new Rect(Screen.width - 205, 40, 200, 30), "Fetch 5 PokemonGO"))
-            {
-                Pokemon.InitializeListOfPokemon(
-                    new List<string>() { "bulbasaur", "squirtle", "charmander", "magnemite", "geodude" },
-                    (pokemon) => { if (Pokemon.CachedPokemon.Keys.Count == 5) RefreshShop(false); }
-                );
-            }
+            //if (GUI.Button(new Rect(Screen.width - 205, 40, 200, 30), "Fetch 5 PokemonGO"))
+            //{
+            //    Pokemon.InitializeListOfPokemon(
+            //        new List<string>() { "bulbasaur", "squirtle", "charmander", "magnemite", "geodude" },
+            //        (pokemon) => { if (Pokemon.CachedPokemon.Keys.Count == 5) RefreshShop(false); }
+            //    );
+            //}
         }
 
         public override void InstallBindings()
@@ -53,10 +56,15 @@ namespace PokeBattler.Unity
         }
 
         [Inject]
-        public void Construct(IGameService gameService, ITrainersService trainersService)
+        public void Construct(HubConnection connection,
+                              ITrainersService trainersService,
+                              IShopService shopService,
+                              IPokemonPoolService pokemonPoolService)
         {
-            this.gameService = gameService;
+            this.connection = connection;
             this.trainersService = trainersService;
+            this.pokemonPoolService = pokemonPoolService;
+            this.shopService = shopService;
         }
 
         /// <summary>Sets the level, experience, and money elements in the DashboardBehaviour based on the provided trainer</summary>
@@ -65,56 +73,37 @@ namespace PokeBattler.Unity
             Level = trainer.Level.ToString();
             Experience = trainer.ExperienceStr;
             Money = trainer.Money.ToString();
-            SetTierChances(trainer.Level);
+            pokemonPoolService.GetTierChances(trainer.Level);
         }
 
-        private void SetTierChances(int level)
+        private void SetTierChances(IEnumerable<int> tierChances_)
         {
-            for (int i = 0; i < 5; i++)
+            foreach (var (tierChance, i) in tierChances_.Select((v, i) => (v, i)))
             {
-                tierChances[i].text = PokemonPool.Constants.TierChances[level, i].ToString();
+                tierChances[i].text = tierChance.ToString();
             }
         }
 
         /// <summary>ActiveTrainer attempts to buy experience. Updates UI and trainer variables accordingly</summary>
-        public void BuyExperience()
+        public async Task BuyExperience()
         {
-            if (!gameService.Game.GameSettings.FreeExperience)
-            {
-                if (trainersService.ClientsTrainer.Money < experienceCost)
-                {
-                    Debug2.Log("Not enough money to buy experience!");
-                    return;
-                }
-                trainersService.ClientsTrainer.Money -= experienceCost;
-                money.text = trainersService.ClientsTrainer.Money.ToString();
-            }
-            if (trainersService.ClientsTrainer.AddExperience(experienceCost))
-            {
-                trainerLevel.text = trainersService.ClientsTrainer.Level.ToString();
-                SetTierChances(trainersService.ClientsTrainer.Level);
-            }
+            var dto = await shopService.BuyExperience();
+            SetTierChances(dto.TierChances);
+            money.text = dto.Money.ToString();
+            trainerLevel.text = dto.Level.ToString();
             experience.text = trainersService.ClientsTrainer.ExperienceStr;
         }
 
         /// <summary>ActiveTrainer attempts to refresh the entire shop. Updates UI and trainer variables accordingly</summary>
-        public void RefreshShop(bool subtractMoney = true)
+        public async Task RefreshShop()
         {
-            if (!gameService.Game.GameSettings.FreeRefreshShop)
+            var dto = await shopService.RefreshShop();
+            pokemons = dto.ShopPokemon.ToArray();
+            money.text = dto.Money.ToString();
+            foreach (var (shopCard, i) in shopCards.Select((v,i) => (v,i)))
             {
-                if (trainersService.ClientsTrainer.Money < shopCost)
-                {
-                    Debug2.Log("Not enough money to refresh the shop!");
-                    return;
-                }
-                if (subtractMoney) trainersService.ClientsTrainer.Money -= shopCost;
-                money.text = trainersService.ClientsTrainer.Money.ToString();
+                shopCard.SetPokemon(pokemons[i], pokemons[i].tier);
             }
-            if (this.pokemons != null) gameService.Game.PokemonPool.Refund(this.pokemons);
-            Pokemon[] pokemons = gameService.Game.PokemonPool.Withdraw5(trainersService.ClientsTrainer.Level);
-            for (int i = 0; i < pokemons.Length; i++)
-                shopCards[i].SetPokemon(pokemons[i], pokemons[i].tier);
-            this.pokemons = pokemons;
         }
     }
 }

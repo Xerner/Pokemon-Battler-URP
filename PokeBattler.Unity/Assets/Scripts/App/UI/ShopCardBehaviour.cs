@@ -1,4 +1,3 @@
-using PokeBattler.Client.Controllers;
 using PokeBattler.Client.Services;
 using PokeBattler.Common;
 using PokeBattler.Common.Models;
@@ -29,13 +28,13 @@ namespace PokeBattler.Unity {
         public int Cost { get; set; }
 
         private ITrainersService trainersService;
-        private ShopController shopController;
+        private IShopService shopService;
 
         [Inject]
-        public void Construct(ITrainersService trainersService, ShopController shopController)
+        public void Construct(ITrainersService trainersService, IShopService shopService)
         {
             this.trainersService = trainersService;
-            this.shopController = shopController;
+            this.shopService = shopService;
         }
 
         void Start()
@@ -85,7 +84,7 @@ namespace PokeBattler.Unity {
             costText.text = "";
         }
 
-        public void RequestToBuy()
+        public void BuyPokemon()
         {
             if (pokemon == null) return;
             shopController.RequestToBuyPokemon(pokemon);

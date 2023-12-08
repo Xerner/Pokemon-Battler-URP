@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using PokeBattler.Server.Services;
+using PokeBattler.Server.Services.Hubs;
 using System;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,9 +17,10 @@ builder.Services.AddSignalR(options =>
     options.EnableDetailedErrors = true;
 });
 
+// API services
+//builder.Services.AddSingleton<GameHub>();
 // Services
-builder.Services.AddSingleton<HubService>();
-builder.Services.AddSingleton<ITrainerService, TrainersService>();
+builder.Services.AddSingleton<ITrainersService, TrainersService>();
 builder.Services.AddSingleton<IAccountService, AccountService>();
 builder.Services.AddSingleton<IShopService, ShopService>();
 
@@ -34,10 +36,10 @@ var app = builder.Build();
 //app.UseHttpsRedirection();
 //app.UseAuthorization();
 
-app.MapControllers();
+//app.MapControllers();
 
-app.MapHub<HubService>($"/{HubService.HubName}");
-Console.WriteLine($"SignalR hub listening at '/{HubService.HubName}'");
+app.MapHub<GameHub>($"/{GameHub.HubName}");
+Console.WriteLine($"SignalR hub listening at '/{GameHub.HubName}'");
 
 app.Run();
 Console.WriteLine("Server is now running");

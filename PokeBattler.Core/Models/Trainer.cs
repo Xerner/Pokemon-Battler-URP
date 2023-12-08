@@ -11,18 +11,19 @@ namespace PokeBattler.Common.Models
         int TotalHealth = 100;
         int experience = 0;
         public int Money = 10;
-        int level = 2;
-        public int Level { get => level; }
-        public int Experience { get => experience; }
-        public string ExperienceStr { get => experience + "/" + LevelToExpNeededToLevelUp[level]; }
+        public int Level { get; set; } = 1;
+        public int Experience { get; set; } = 0;
+        public int ExperienceNeededToLevelUp { get; set; }
+        public string ExperienceStr { get => experience + "/" + ExperienceNeededToLevelUp; }
         Action<bool> onReady;
 
         public void OnReadySubscribe(Action<bool> action) => onReady += action;
         public void OnReadyUnsubscribe(Action<bool> action) => onReady -= action;
 
-        public Trainer(Account account)
+        public Trainer(Account account, int experienceNeededToLevelUp)
         {
             Account = account;
+            ExperienceNeededToLevelUp = experienceNeededToLevelUp;
         }
 
         public bool SetReady(bool ready)
@@ -30,36 +31,6 @@ namespace PokeBattler.Common.Models
             Ready = ready;
             onReady?.Invoke(ready);
             return ready;
-        }
-
-        public int CalculateInterest() => Money / 10;
-
-        /// <summary>Create experience to the Trainer. Rolls over exp if they level up.</summary>
-        /// <returns>True if the player levels up</returns>
-        public bool AddExperience(int expToAdd)
-        {
-            int expNeeded = LevelToExpNeededToLevelUp[level];
-            int newExp = experience + expToAdd;
-            int difference = expNeeded - newExp;
-            if (difference <= 0)
-            { // leveled up
-              // edge case: player is already max level
-                if (!LevelToExpNeededToLevelUp.ContainsKey(level + 1))
-                {
-                    experience = LevelToExpNeededToLevelUp[level];
-                    difference = 1;
-                }
-                else
-                {
-                    level++;
-                    experience = Math.Abs(difference);
-                }
-            }
-            else
-            {
-                experience = newExp;
-            }
-            return difference <= 0;
         }
     }
 }

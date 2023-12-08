@@ -7,7 +7,9 @@ namespace PokeBattler.Server.Services;
 
 public interface IArenaService
 {
-
+    public Arena AssignArena(Guid id);
+    public Arena GetArena(Guid id);
+    public IPokeContainer GetAvailableBench(Trainer arena);
 }
 
 public class ArenaService
@@ -32,8 +34,9 @@ public class ArenaService
         return null;
     }
 
-    public IPokeContainer GetAvailableBench(Arena arena)
+    public IPokeContainer GetAvailableBench(Trainer trainer)
     {
+        var arena = GetArena(trainer.Id);
         foreach (IPokeContainer bench in arena.Bench)
             if (bench.Pokemon == null)
                 return bench;

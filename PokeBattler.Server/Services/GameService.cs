@@ -8,8 +8,6 @@ namespace PokeBattler.Client.Services;
 public interface IGameService
 {
     public Game Game { get; }
-    public Action<Game> OnGameCreated { get; set; }
-    public Action<PokemonPool> OnPokemonDataLoaded { get; set; }
     public Game CreateGame();
 }
 
@@ -19,8 +17,6 @@ public class GameService(ILogger<GameService> logger,
                          GameSettings defaultGameSettings) : IGameService
 {
     public Game Game { get; private set; }
-    public Action<Game> OnGameCreated { get; set; }
-    public Action<PokemonPool> OnPokemonDataLoaded { get; set; }
 
     public Game CreateGame()
     {
@@ -29,9 +25,7 @@ public class GameService(ILogger<GameService> logger,
         // for reuse on next game launch
         Game = new(defaultGameSettings);
         pokemonPools.InitializeFromCache(Game.PokemonPool);
-        OnPokemonDataLoaded?.Invoke(Game.PokemonPool);
-        logger.LogInformation($"Initialized PokemonPoolService with {pokemonService.CachedPokemon.Count} different Pokemon", LogLevel.Detailed);
-        OnGameCreated?.Invoke(Game);
+        logger.LogInformation($"Initialized PokemonPoolService with {pokemonService.CachedPokemon.Count} different Pokemon");
         return Game;
     }
 }

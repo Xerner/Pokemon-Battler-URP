@@ -5,6 +5,6 @@ namespace PokeBattler.Common.Models.DTOs
     public class RefreshShopDTO
     {
         public int Money { get; set; }
-        public IEnumerable<Pokemon> ShopPokemon { get; set; }
+        public TrainerShop Shop { get; set; }
     }
 }

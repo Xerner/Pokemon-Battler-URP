@@ -10,7 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PokeBattler.Core\PokeBattler.Common.csproj" />
+    <ProjectReference Include="..\PokeBattler.Common\PokeBattler.Common.csproj" />
   </ItemGroup>
 
 </Project>

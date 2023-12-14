@@ -8,11 +8,11 @@ using PokeBattler.Common.Models;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR.Client;
+using PokeBattler.Common.Models.DTOs;
 
 namespace PokeBattler.Unity
 {
     [AddComponentMenu("Poke Battler/Dashboard")]
-    [Obsolete("Refactor to use DashboardService")]
     public class DashboardBehaviour : MonoInstaller<DashboardBehaviour>
     {
 
@@ -24,9 +24,7 @@ namespace PokeBattler.Unity
         [HideInInspector] public Trainer[] Trainers;
 
         public ShopCardBehaviour[] ShopCards { get; private set; }
-        Pokemon[] pokemons;
 
-        private HubConnection connection;
         private ITrainersService trainersService;
         private IPokemonPoolService pokemonPoolService;
         private IShopService shopService;
@@ -35,8 +33,8 @@ namespace PokeBattler.Unity
         public string Experience { get { return experience.text; } set { experience.text = value; } }
         public string Money { get { return money.text; } set { money.text = value; } }
 
-        void OnGUI()
-        {
+        //void OnGUI()
+        //{
             //if (GUI.Button(new Rect(Screen.width - 205, 5, 200, 30), "Fetch All PokemonGO"))
             //{
             //    PokemonGO.InitializeAllPokemon((pokemon) => { if (PokemonGO.CachedPokemon.Keys.Count == PokemonGO.TotalPokemon) RefreshShop(); });
@@ -48,7 +46,7 @@ namespace PokeBattler.Unity
             //        (pokemon) => { if (Pokemon.CachedPokemon.Keys.Count == 5) RefreshShop(false); }
             //    );
             //}
-        }
+        //}
 
         public override void InstallBindings()
         {
@@ -56,15 +54,16 @@ namespace PokeBattler.Unity
         }
 
         [Inject]
-        public void Construct(HubConnection connection,
-                              ITrainersService trainersService,
+        public void Construct(ITrainersService trainersService,
                               IShopService shopService,
-                              IPokemonPoolService pokemonPoolService)
+                              IPokemonPoolService pokemonPoolService,
+                              ArenaManagerBehaviour arenaManager)
         {
-            this.connection = connection;
             this.trainersService = trainersService;
             this.pokemonPoolService = pokemonPoolService;
             this.shopService = shopService;
+            shopService.OnPokemonBought += PokemonBought;
+            shopService.OnShopRefreshed += OnShopRefreshed;
         }
 
         /// <summary>Sets the level, experience, and money elements in the DashboardBehaviour based on the provided trainer</summary>
@@ -84,6 +83,15 @@ namespace PokeBattler.Unity
             }
         }
 
+        public void PokemonBought(BuyPokemonDTO dto)
+        {
+            if (dto.TrainerId != trainersService.ClientsTrainer.Id)
+            {
+                return;
+            }
+            Money = dto.Shop.Money.ToString();
+        }
+
         /// <summary>ActiveTrainer attempts to buy experience. Updates UI and trainer variables accordingly</summary>
         public async Task BuyExperience()
         {
@@ -95,14 +103,17 @@ namespace PokeBattler.Unity
         }
 
         /// <summary>ActiveTrainer attempts to refresh the entire shop. Updates UI and trainer variables accordingly</summary>
-        public async Task RefreshShop()
+        public void RefreshShop()
         {
-            var dto = await shopService.RefreshShop();
-            pokemons = dto.ShopPokemon.ToArray();
+            shopService.RefreshShop();
+        }
+
+        public void OnShopRefreshed(RefreshShopDTO dto)
+        {
             money.text = dto.Money.ToString();
-            foreach (var (shopCard, i) in shopCards.Select((v,i) => (v,i)))
+            foreach (var (shopCard, i) in shopCards.Select((v, i) => (v, i)))
             {
-                shopCard.SetPokemon(pokemons[i], pokemons[i].tier);
+                shopCard.SetPokemon(dto.Shop.ShopPokemon[i], dto.Shop.ShopPokemon[i].tier);
             }
         }
     }

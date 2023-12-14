@@ -2,13 +2,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Manages a list of GameObjects or its own children who are assumed to represent in-game views
+/// Manages a list of Behaviours or its own children who are assumed to represent in-game views
 /// </summary>
 public class ViewManager : MonoBehaviour
 {
     public static ViewManager Instance { get; private set; }
 
-    [Description("Assumes this GameObjects children are to be managed instead of the list below")]
+    [Description("Assumes this Behaviours children are to be managed instead of the list below")]
     public bool UseChildren;
     public List<UnityEngine.GameObject> Views;
     //[Header("The 0 index of the Views list, or the 1st child of this GameObject")]

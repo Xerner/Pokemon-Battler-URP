@@ -8,7 +8,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PokeBattler.Server", "PokeB
 		{471653B9-5490-4E9B-A11F-979C8084C1A2} = {471653B9-5490-4E9B-A11F-979C8084C1A2}
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PokeBattler.Common", "PokeBattler.Core\PokeBattler.Common.csproj", "{471653B9-5490-4E9B-A11F-979C8084C1A2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PokeBattler.Common", "PokeBattler.Common\PokeBattler.Common.csproj", "{471653B9-5490-4E9B-A11F-979C8084C1A2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

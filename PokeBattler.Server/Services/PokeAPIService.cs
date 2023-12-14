@@ -6,29 +6,28 @@ using System;
 using PokeBattler.Common.Models.Json;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using System.Linq;
 
 namespace PokeBattler.Server.Services;
 
-public class PokeAPIService
+public interface IPokeApiService
 {
-    readonly ILogger<PokeAPIService> logger;
-    readonly HttpService http;
+    public Dictionary<int, Pokemon> CachedPokemon { get; set; }
+    public int TotalPokemon { get; }
+    public Task<Pokemon> GetEvolution(Pokemon pokemon);
+    public Task<Pokemon> GetPokemon(int pokemonId);
+    public Task<Pokemon> GetPokemon(string pokemonName);
+    public Task<Pokemon> AddPokemonToCache(string json);
+    public Task<IEnumerable<Pokemon>> InitializeAllPokemon(Action<IEnumerable<Pokemon>> callback = null);
+    public Task<IEnumerable<Pokemon>> InitializeListOfPokemon(IEnumerable<string> pokemonNames, Action<IEnumerable<Pokemon>> callback = null);
+    public Task<Pokemon> PokemonFromJson(string json, bool hasHiddenAbility);
+    public IEnumerable<Pokemon> InitializeFromCache(PokemonPool pokemonPool);
+}
 
-    public PokeAPIService(ILogger<PokeAPIService> logger, HttpService http)
-    {
-        this.logger = logger;
-        this.http = http;
-        InitializeListOfPokemon(new List<string>() { "bulbasaur", "squirtle", "charmander", "magnemite", "abra" });
-    }
+public class PokeAPIService(ILogger<PokeAPIService> logger, HttpService http) : IPokeApiService
+{
+    public Dictionary<int, Pokemon> CachedPokemon { get; set; } = [];
 
-    public Dictionary<string, Pokemon> CachedPokemon = new Dictionary<string, Pokemon>();
-    public Dictionary<int, List<Pokemon>> TierToPokemonList = new Dictionary<int, List<Pokemon>>() {
-        { 1, new List<Pokemon>() },
-        { 2, new List<Pokemon>() },
-        { 3, new List<Pokemon>() },
-        { 4, new List<Pokemon>() },
-        { 5, new List<Pokemon>() }
-    };
     public int TotalPokemon
     {
         get
@@ -37,73 +36,86 @@ public class PokeAPIService
         }
     }
 
-    public async Task<Pokemon> GetPokemonFromAPI(string idOrName)
+    public async Task<Pokemon> GetEvolution(Pokemon pokemon)
     {
-        string correctedName = correctPokemonName(idOrName);
-        // if we already fetched this TrainerToShopPokemon data, do not fetch it again
-        if (CachedPokemon.ContainsKey(correctedName))
+        if (pokemon.EvolutionStage == pokemon.Evolutions.Count)
         {
-            //Debug.Log("Fetched from cache: " + correctedName);
-            return CachedPokemon[correctedName];
-        }
-        else
-        {
-            string url;
-            if (correctedName == "nidoran") url = $"https://pokeapi.co/protocol/v2/pokemon/nidoran-m/";
-            else url = $"https://pokeapi.co/protocol/v2/pokemon/{correctedName}/";
-            logger.LogInformation("Fetching pokemon: " + idOrName, LogLevel.All);
-            string json = "";
-            try
-            {
-                json = await http.GetAsync(url);
-            }
-            catch
-            {
-                logger.LogError($"Failed to fetch Pokemon ({idOrName})\n");
-            }
-            var pokemon = await PokemonFromJson(json, false);
-            logger.LogInformation($"Adding {pokemon.name} to the cached Pokemon", LogLevel.Detailed);
-            // Do not simplify name. It is needed like this for watching its variable value because asynchronous debugging is a bitch
-            CachedPokemon.Add(pokemon.correctedName, pokemon);
-            TierToPokemonList[pokemon.tier].Add(pokemon);
             return pokemon;
         }
-    }
-
-    private string correctPokemonName(string pokemonName)
-    {
-        switch (pokemonName)
+        var evolution = pokemon.Evolutions[pokemon.EvolutionStage];
+        if (evolution == null)
         {
-            case "nidoran-m":
-                return "nidoran";
-            default:
-                return pokemonName.ToLower();
+            return pokemon;
         }
+        return await GetPokemon(evolution);
     }
 
-    public async Task<List<Pokemon>> InitializeAllPokemon(Action<List<Pokemon>> callback = null)
+    public async Task<Pokemon> GetPokemon(int pokemonId)
     {
-        logger.LogInformation("Initializing all Pokemon");
-        string[] pokemonNames = Enum.GetNames(typeof(EPokemonName));
-        for (int i = 0; i < pokemonNames.Length; i++) pokemonNames[i] = pokemonNames[i].ToLower();
-        List<string> pokemonToInitialize = new List<string>();
-        foreach (var name in pokemonNames) if (!CachedPokemon.ContainsKey(name)) pokemonToInitialize.Add(name);
-        var pokemon = await InitializeListOfPokemon(pokemonToInitialize);
-        if (callback != null)
-            callback(pokemon);
+        return await GetPokemon(pokemonId.ToString());
+    }
+
+    public async Task<Pokemon> GetPokemon(string pokemonName)
+    {
+        string url = $"https://pokeapi.co/api/v2/pokemon/{pokemonName}/";
+        logger.LogInformation("Fetching pokemon: " + pokemonName);
+        string json = "";
+        try
+        {
+            json = await http.GetAsync(url);
+        }
+        catch
+        {
+            logger.LogError($"Failed to fetch Pokemon ({pokemonName})\n");
+        }
+        return await AddPokemonToCache(json);
+    }
+
+    public async Task<Pokemon> AddPokemonToCache(string json)
+    {
+        var pokemon = await PokemonFromJson(json, false);
+        logger.LogInformation($"Adding {pokemon.name} to the cached Pokemon");
+        // Do not simplify name. It is needed like this for watching its variable value because asynchronous debugging is a bitch
+        CachedPokemon.Add(pokemon.PokeId, pokemon);
         return pokemon;
     }
 
-    /// <summary>Recursive</summary>
-    public async Task<List<Pokemon>> InitializeListOfPokemon(List<string> pokemonNames, Action<List<Pokemon>> callback = null)
+    public async Task<IEnumerable<Pokemon>> InitializeAllPokemon(Action<IEnumerable<Pokemon>> callback = null)
     {
-        logger.LogInformation($"Fetching {pokemonNames.Count} Pokemon");
-        logger.LogInformation(string.Join(",", pokemonNames.ToArray()), LogLevel.Detailed);
+        throw new NotImplementedException("This needs to be done through a json file or something. Not through an enum");
+        //logger.LogInformation("Initializing all Pokemon");
+        //string[] pokemonNames = Enum.GetNames(typeof(EPokemonName));
+        //for (int i = 0; i < pokemonNames.Length; i++) pokemonNames[i] = pokemonNames[i].ToLower();
+        //List<string> pokemonToInitialize = new List<string>();
+        //foreach (var name in pokemonNames) if (!CachedPokemon.ContainsKey(name)) pokemonToInitialize.Add(name);
+        //var pokemon = await InitializeListOfPokemon(pokemonToInitialize);
+        //if (callback != null)
+        //    callback(pokemon);
+        //return pokemon;
+    }
+
+    public IEnumerable<Pokemon> InitializeFromCache(PokemonPool pokemonPool)
+    {
+        
+        foreach (int pokemonId in CachedPokemon.Keys)
+        {
+            Pokemon pokemon = CachedPokemon[pokemonId];
+            if (pokemon.EvolutionStage == 1) pokemonPool.TierToPokemonCounts[pokemon.tier].Add(pokemon.name, PokemonPoolService.Constants.TierCounts[pokemon.tier]);
+        }
+        logger.LogInformation($"Initialized PokemonPoolService with {CachedPokemon.Count} different Pokemon");
+        return CachedPokemon.Values;
+    }
+
+    /// <summary>Recursive</summary>
+    public async Task<IEnumerable<Pokemon>> InitializeListOfPokemon(IEnumerable<string> pokemonNames, Action<IEnumerable<Pokemon>> callback = null)
+    {
+        logger.LogInformation($"Fetching {pokemonNames.Count()} Pokemon");
+        logger.LogInformation(string.Join(",", pokemonNames.ToArray());
         var pokemon = new List<Pokemon>();
         var tasks = new List<Task<Pokemon>>();
         foreach (var name in pokemonNames)
         {
-            tasks.Add(GetPokemonFromAPI(name));
+            tasks.Add(GetPokemon(name));
         }
         await Task.WhenAll(tasks);
         foreach (var task in tasks)
@@ -190,28 +202,39 @@ public class PokeAPIService
             url = ability.ability.url
         };
 
-        logger.LogInformation("Fetching pokemon ability: " + pokemon.name, LogLevel.All);
+        logger.LogInformation("Fetching pokemon ability: " + pokemon.name);
         var abilityJson = await http.GetAsync<AbilityWithDescription>(ability.ability.url);
         AbilityEffect effect = abilityJson.effect_entries.Find((effect_) => effect_.language.name == "en");
         pokemon.Ability.description = effect.short_effect;
         pokemon.Ability.longDescription = effect.effect;
 
         // Species
-        logger.LogInformation("Fetching pokemon species: " + pokemon.name, LogLevel.All);
+        logger.LogInformation("Fetching pokemon species: " + pokemon.name);
         var species = await http.GetAsync<PokemonSpecies>(pokemonJson.species.url);
 
         // Evolution Chain
-        logger.LogInformation("Fetching pokemon evolution chain: " + pokemon.name, LogLevel.All);
+        logger.LogInformation("Fetching pokemon evolution chain: " + pokemon.name);
         var evolutionChain = await http.GetAsync<EvolutionChain>(species.evolution_chain.url);
         pokemon.Evolutions = evolutionChain.GetEvolutions();
         pokemon.EvolutionStage = evolutionChain.GetEvolutionStage(pokemonJson.name);
 
         // Textures
-        logger.LogInformation("Fetching pokemon sprites: " + pokemon.name, LogLevel.All);
+        logger.LogInformation("Fetching pokemon sprites: " + pokemon.name);
         byte[] texture = await http.GetTexture2DAsync(pokemonJson.sprites.versions["generation-v"]["black-white"].front_default);
         //pokemon.Sprite = Sprite.Create(texture, new Rect(0.0f, 0.0f, texture.width, texture.height), new Vector2(0.5f, 0.5f), 1f);
         //pokemon.ShopSprite = Sprite.Create(texture, new Rect(0.0f, 0.0f, texture.width, texture.height), new Vector2(0.5f, 0.5f), 1f);
         //pokemon.TrueSpriteSize = TextureUtil.GetTrueSizeInPixels(pokemon.Sprite.texture, 0f);
         return pokemon;
+    }
+
+    private string correctPokemonName(string pokemonName)
+    {
+        switch (pokemonName)
+        {
+            case "nidoran-m":
+                return "nidoran";
+            default:
+                return pokemonName.ToLower();
+        }
     }
 }

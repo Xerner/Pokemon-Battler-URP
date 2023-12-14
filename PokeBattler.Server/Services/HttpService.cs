@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
 using System.Net.Http;
@@ -7,9 +8,12 @@ namespace PokeBattler.Server.Services;
 
 public class HttpService
 {
+    readonly ILogger<HttpService> logger;
     readonly HttpClient protocol;
-    public HttpService()
+
+    public HttpService(ILogger<HttpService> logger)
     {
+        this.logger = logger;
         protocol = new HttpClient();
     }
 
@@ -25,7 +29,7 @@ public class HttpService
 
     public T Get<T>(string url, Action<HttpResponseMessage> onError, Action<T> onSuccess)
     {
-        //Debug2.Log("Fetching data from the web: " + url, LogLevel.All);
+        logger.LogInformation("Fetching data from the web: " + url);
         Task<HttpResponseMessage> task = protocol.GetAsync(url);
         task.Wait();
         var response = task.Result;
@@ -38,7 +42,7 @@ public class HttpService
 
     public async Task<T> GetAsync<T>(string url)
     {
-        //Debug2.Log("Fetching string data from the web: " + url, LogLevel.All);
+        logger.LogInformation("Fetching string data from the web: " + url);
         var response = await protocol.GetAsync(url);
         var result = await ProcessJsonResponseAsync<T>(response);
         return result;
@@ -52,12 +56,12 @@ public class HttpService
         }
         catch (HttpRequestException)
         {
-            //Debug2.Log("HTTP request failed: " + response.RequestMessage.RequestUri, LogLevel.All);
+            logger.LogInformation("HTTP request failed: " + response.RequestMessage.RequestUri);
             onError?.Invoke(response);
             return default;
         }
         var str = await response.Content.ReadAsStringAsync();
-        //Debug2.Log("HTTP request succeeded: " + response.RequestMessage.RequestUri, LogLevel.All);
+        logger.LogInformation("HTTP request succeeded: " + response.RequestMessage.RequestUri);
         if (typeof(T) == typeof(string))
         {
             return (T)Convert.ChangeType(str, typeof(T));
@@ -74,12 +78,13 @@ public class HttpService
         }
         catch (HttpRequestException)
         {
-            //Debug2.Log("HTTP request failed: " + response.RequestMessage.RequestUri, LogLevel.All);
+            logger.LogInformation("HTTP request failed: " + response.RequestMessage.RequestUri);
             onError?.Invoke(response);
             return default;
         }
         var bytes = await response.Content.ReadAsByteArrayAsync();
-        //Debug2.Log("HTTP request succeeded: " + response.RequestMessage.RequestUri, LogLevel.All);
+        logger.LogInformation("HTTP request succeeded: " + response.RequestMessage.RequestUri);
+        // TODO: Move to PokeBattler.Unity
         //var texture = new Texture2D(2, 2);
         //texture.LoadImage(bytes);
         return bytes;
@@ -87,7 +92,7 @@ public class HttpService
 
     public byte[] GetTexture2D(string url, Action<HttpResponseMessage> onError, Action<byte[]> onSuccess)
     {
-        //Debug2.Log("Fetching string data from the web: " + url, LogLevel.All);
+        logger.LogInformation("Fetching string data from the web: " + url);
         Task task = protocol.GetAsync(url);
         task.Wait();
         var response = protocol.GetAsync(url).Result;
@@ -100,7 +105,7 @@ public class HttpService
 
     public async Task<byte[]> GetTexture2DAsync(string url)
     {
-        //Debug2.Log("Fetching string data from the web: " + url, LogLevel.All);
+        logger.LogInformation("Fetching string data from the web: " + url);
         var response = await protocol.GetAsync(url);
         var result = await ProcessTexture2DResponseAsync(response);
         return result;

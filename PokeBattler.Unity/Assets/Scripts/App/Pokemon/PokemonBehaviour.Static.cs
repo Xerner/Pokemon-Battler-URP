@@ -6,7 +6,7 @@ namespace PokeBattler.Unity {
     public partial class PokemonBehaviour : MonoBehaviour
     {
         /// <summary>Spawns a PokemonGO prefab and instantiates its PokemonBehaviour</summary>
-        public static PokemonBehaviour Spawn(string pokemonName) => Spawn(Common.Models.Pokemon.CachedPokemon[pokemonName]);
+        //public static PokemonBehaviour Spawn(string pokemonName) => Spawn(Common.Models.Pokemon.CachedPokemon[pokemonName]);
 
         /// <summary>Spawns a PokemonGO prefab and instantiates its PokemonBehaviour</summary>
         public static PokemonBehaviour Spawn(Pokemon pokemon)
@@ -18,7 +18,7 @@ namespace PokeBattler.Unity {
         }
 
         /// <summary>Spawns a PokemonGO prefab and instantiates its PokemonBehaviour</summary>
-        public static PokemonBehaviour Spawn(string pokemonName, Transform moveToTransform) => Spawn(Common.Models.Pokemon.CachedPokemon[pokemonName], moveToTransform);
+        //public static PokemonBehaviour Spawn(string pokemonName, Transform moveToTransform) => Spawn(Common.Models.Pokemon.CachedPokemon[pokemonName], moveToTransform);
 
         /// <summary>Spawns a PokemonGO prefab and instantiates its PokemonBehaviour</summary>
         public static PokemonBehaviour Spawn(Pokemon pokemon, Transform moveToTransform)

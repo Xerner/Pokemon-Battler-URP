@@ -18,6 +18,7 @@ public class GlobalInstaller : MonoInstaller
         Container.Bind<IGameService>().To<GameService>().AsSingle().NonLazy();
         Container.Bind<IClientService>().To<ClientService>().AsSingle().NonLazy();
         Container.Bind<IPokemonPoolService>().To<PokemonPoolService>().AsSingle().NonLazy();
+        Container.Bind<IGameObjectService>().To<GameObjectService>().AsSingle().NonLazy();
 
         // UI Services
         Container.Bind<UIPersistentStatus>().FromComponentInHierarchy().AsSingle();

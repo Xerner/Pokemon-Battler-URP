@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using PokeBattler.Common.Models;
 using Microsoft.AspNetCore.SignalR.Client;
+using PokeBattler.Unity;
+using PokeBattler.Client.Models;
 
 namespace PokeBattler.Client.Services
 {
@@ -35,8 +37,8 @@ namespace PokeBattler.Client.Services
             this.clientService = clientService;
             this.appConfig = appConfig;
             gameService.OnGameCreated += AddClientTrainerToGame;
-            connection.On<Trainer>("AddToGame", trainersService.TrainerCreated);
-            connection.On<Guid, bool>("UpdateTrainerReady", trainersService.UpdateReadyStatus);
+            connection.On<Trainer>(nameof(HubClient.Singleton.AddTrainerToGame), trainersService.TrainerCreated);
+            //connection.On<Guid, bool>(nameof(HubClient.Singleton.UpdateTrainerReady), trainersService.UpdateReadyStatus);
         }
 
         //public void AddTrainerCard(Trainer trainer, int index)
@@ -59,14 +61,9 @@ namespace PokeBattler.Client.Services
 
         void AddClientTrainerToGame(Game _)
         {
-            RequestAddToGame(clientService.Account);
-        }
-
-        public void RequestAddToGame(Account account)
-        {
             if (connection.State == HubConnectionState.Disconnected) return;
-            connection.InvokeAsync<Account>("AddToGame", account);
-            Debug2.Log($"Requesting to create Trainer with username '{account.Username}'");
+            connection.InvokeAsync<Account>("AddToGame", clientService.Account);
+            Debug2.Log($"Requesting to create Trainer with username '{clientService.Account.Username}'");
         }
 
         public void RequestUpdateReadyStatus(Guid trainerID, bool ready)

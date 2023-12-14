@@ -1,4 +1,5 @@
 using PokeBattler.Common.Models;
+using PokeBattler.Common.Models.Enums;
 using PokeBattler.Common.Models.Interfaces;
 using UnityEngine;
 
@@ -9,11 +10,11 @@ namespace PokeBattler.Unity
     {
         public Arena Arena;
 
-        public PokemonBehaviour AddPokemonToBench(int index, PokemonBehaviour pokemon)
+        public PokemonBehaviour AddPokemonToContainer(EContainerType containerType, int index, PokemonBehaviour pokemon)
         {
-            IPokeContainer bench = Arena.Bench[index];
+            IPokeContainer container = Arena.PokeContainers[containerType][index];
             pokemon.MoveTo.ShouldLerpToPosition = false;
-            pokemon.SetPokeContainer(bench);
+            pokemon.SetPokeContainer(container);
             pokemon.MoveTo.ShouldLerpToPosition = true;
             return pokemon;
         }

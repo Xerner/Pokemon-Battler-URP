@@ -2,29 +2,17 @@
 using PokeBattler.Client.Services;
 using PokeBattler.Common.Models;
 using PokeBattler.Common.Models.DTOs;
+using PokeBattler.Common.Models.Interfaces;
 using System;
 using System.Threading.Tasks;
 
 namespace PokeBattler.Server.Services.Hubs;
 
-public interface IHubClient
-{
-    Task Ping(string str);
-    #region GameService
-    Task CreateGame();
-    #endregion
-    #region ShopService
-    int[] GetTierChances(int trainerLevel);
-    public BuyExperienceDTO BuyExperience(Guid id);
-    public BuyExperienceDTO BuyPokemon(Guid id);
-    #endregion
-}
-
 public class GameHub(IGameService gameService,
                      IPokemonPoolService pokemonPoolService,
                      IShopService shopService,
                      ITrainersService trainersService
-                     ) : Hub<IHubClient>
+                     ) : Hub<IHubClient>, IHubServer
 {
     public const string HubName = "Games";
 
@@ -43,6 +31,16 @@ public class GameHub(IGameService gameService,
 
     #endregion
 
+    #region
+
+    public void AddToGame(Account account)
+    {
+        var trainer = trainersService.Create(account);
+        Clients.All.AddTrainerToGame(trainer);
+    }
+
+    #endregion
+
     #region ShopService
 
     public int[] GetTierChances(int trainerLevel)
@@ -51,18 +49,35 @@ public class GameHub(IGameService gameService,
         return tierChances;
     }
 
-    public BuyExperienceDTO BuyExperience(Guid id)
+    public RefreshShopDTO RefreshShop(Guid id)
     {
         var trainer = trainersService.GetTrainer(id);
-        var dto = shopService.BuyExperience(trainer);
+        var dto = shopService.RefreshShop(trainer);
         return dto;
     }
 
-    public BuyExperienceDTO BuyPokemon(Guid id)
+    public BuyExperienceDTO BuyExperience(Guid id)
     {
         var trainer = trainersService.GetTrainer(id);
+        var level = trainer.Level;
         var dto = shopService.BuyExperience(trainer);
+        // TODO: implement this in the client
+        if (trainer.Level == level)
+        {
+            var trainerLevelUpDTO = new TrainerLevelUpDTO()
+            {
+                Id = id,
+                Level = level,
+            };
+            Clients.All.TrainerLevelUp(trainerLevelUpDTO);
+        }
         return dto;
+    }
+    public async Task BuyPokemon(Guid id, int shopIndex, int pokemonId)
+    {
+        var trainer = trainersService.GetTrainer(id);
+        var dto = await shopService.BuyPokemon(trainer, shopIndex, pokemonId);
+        await Clients.All.PokemonBought(dto);
     }
 
     #endregion

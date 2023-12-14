@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.SignalR.Client;
 using PokeBattler.Client.Controllers;
+using PokeBattler.Client.Models;
 using PokeBattler.Client.Services;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -33,13 +34,13 @@ namespace PokeBattler.Unity
         {
             await connection.StartAsync();
             Debug.Log($"Connected to {HubConnectionService.HubUrl}");
-            connection.On("Test", Test);
-            await connection.InvokeAsync("Test", "Test");
+            connection.On(nameof(HubClient.Singleton.Ping), Ping);
+            await connection.InvokeAsync(nameof(HubServer.Singleton.Ping), "Ping");
             SceneManager.sceneLoaded += OnSceneLoaded;
             OnSceneLoaded(SceneManager.GetActiveScene(), LoadSceneMode.Single);
         }
 
-        void Test()
+        void Ping()
         {
             Debug.Log("SignalR test");
         }

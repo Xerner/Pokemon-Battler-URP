@@ -23,6 +23,9 @@ builder.Services.AddSignalR(options =>
 builder.Services.AddSingleton<ITrainersService, TrainersService>();
 builder.Services.AddSingleton<IAccountService, AccountService>();
 builder.Services.AddSingleton<IShopService, ShopService>();
+builder.Services.AddSingleton<IPokeApiService, PokeAPIService>();
+builder.Services.AddSingleton<IPokemonPoolService, PokemonPoolService>();
+builder.Services.AddSingleton<IArenaService, ArenaService>();
 
 var app = builder.Build();
 

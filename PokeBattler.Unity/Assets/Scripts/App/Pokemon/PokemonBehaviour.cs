@@ -2,7 +2,6 @@ using PokeBattler.Common;
 using PokeBattler.Common.Models;
 using PokeBattler.Common.Models.Interfaces;
 using System;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -17,6 +16,7 @@ namespace PokeBattler.Unity {
     {
         #region  Varables
 
+        public Guid Id;
         SpriteRenderer sprite;
         Animator animator;
         new BoxCollider2D collider;
@@ -70,23 +70,6 @@ namespace PokeBattler.Unity {
         }
 
         /// <summary>Initializes the Pokemons class, name, sprite, and ScriptableObject</summary>
-        public async Task Initialize() => await Initialize(pokemonName);
-
-        /// <summary>Initializes the Pokemons class, name, sprite, and ScriptableObject. Called by FetchPokemonButton</summary>
-        public async Task Initialize(string pokemonName)
-        {
-            if (pokemonName.Trim() != "")
-            {
-                var pokemon = await Pokemon.GetPokemonFromAPI(pokemonName);
-                Initialize(pokemon);
-            }
-            else
-            {
-                Debug.LogError("Invalid pokemon Id or name given: " + pokemonName);
-            }
-        }
-
-        /// <summary>Initializes the Pokemons class, name, sprite, and ScriptableObject</summary>
         public void Initialize(Pokemon pokemon)
         {
             Debug2.Log("Initializing PokemonBehaviour for " + pokemon.name, LogLevel.Detailed, gameObject);
@@ -112,13 +95,6 @@ namespace PokeBattler.Unity {
         }
 
         #endregion
-
-        /// <summary>If possible, evolves the PokemonGO to the next stage</summary>
-        /// <returns>The next stage of evolution for the current PokemonGO</returns>
-        public async Task Evolve()
-        {
-            await Initialize(pokemon.Evolutions[pokemon.EvolutionStage]);
-        }
 
         #region Pointer Events
 

@@ -3,6 +3,7 @@ using PokeBattler.Common;
 using PokeBattler.Common.Models;
 using PokeBattler.Common.Models.Enums;
 using System;
+using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -27,14 +28,14 @@ namespace PokeBattler.Unity {
         public Action<ShopCardBehaviour> OnClick;
         public int Cost { get; set; }
 
-        private ITrainersService trainersService;
         private IShopService shopService;
+        private DashboardBehaviour dashboard;
 
         [Inject]
-        public void Construct(ITrainersService trainersService, IShopService shopService)
+        public void Construct(IShopService shopService, DashboardBehaviour dashboard)
         {
-            this.trainersService = trainersService;
             this.shopService = shopService;
+            this.dashboard = dashboard;
         }
 
         void Start()
@@ -45,6 +46,11 @@ namespace PokeBattler.Unity {
 
         public void SetPokemon(Pokemon pokemon, int cost)
         {
+            if (pokemon == null)
+            {
+                Reset();
+                return;
+            }
             pokemonName.text = pokemon.name;
             Cost = cost;
             background.sprite = StaticAssets.ShopCardSprites[Cost.ToString()];
@@ -84,10 +90,11 @@ namespace PokeBattler.Unity {
             costText.text = "";
         }
 
-        public void BuyPokemon()
+        public async Task BuyPokemon()
         {
             if (pokemon == null) return;
-            shopController.RequestToBuyPokemon(pokemon);
+            var shopIndex = Array.IndexOf(dashboard.ShopCards, this);
+            await shopService.RequestToBuyPokemon(shopIndex, pokemon);
         }
     }
 }

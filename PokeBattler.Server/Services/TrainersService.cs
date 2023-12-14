@@ -1,25 +1,28 @@
-﻿using PokeBattler.Common.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.SignalR;
 using System.Threading.Tasks;
-using System.Reflection.Emit;
+using PokeBattler.Common.Models;
 using PokeBattler.Server.Services.Hubs;
+using PokeBattler.Common.Models.Interfaces;
+using PokeBattler.Server.Extensions;
+using PokeBattler.Server.Models;
 
 namespace PokeBattler.Server.Services;
 
 public interface ITrainersService
 {
+    public Dictionary<Guid, TrainersPokemon> TrainersPokemon { get; }
     public Dictionary<int, int> LevelToExpNeededToLevelUp { get; set; }
     public const int PlayerCount = 8;
     public Trainer GetTrainer(Guid id);
-    public TrainersPokemon GetTrainersPokemon(Guid id);
     public Trainer Create(Account account);
     public bool AddExperience(Trainer trainer, int expToAdd);
 }
 
-public class TrainersService(ILogger<TrainersService> logger, IHubContext<GameHub> hub) : ITrainersService
+public class TrainersService(ILogger<TrainersService> logger, 
+                             IHubContext<GameHub> hub) : ITrainersService
 {
     public readonly int baseIncome = 5;
     public readonly int pvpWinIncome = 1;
@@ -43,15 +46,9 @@ public class TrainersService(ILogger<TrainersService> logger, IHubContext<GameHu
     };
 
     readonly Dictionary<Guid, Trainer> Trainers = [];
-    readonly Dictionary<Guid, TrainersPokemon> TrainersPokemon = [];
+    public Dictionary<Guid, TrainersPokemon> TrainersPokemon { get; set; } = [];
 
     readonly ILogger<TrainersService> logger;
-
-    public async Task AddToGame(Account account)
-    {
-        var trainer = Create(account);
-        await hub.Clients.All.SendAsync("AddToGame", trainer);
-    }
 
     public async Task UpdateTrainerReady(Guid id, bool ready)
     {
@@ -61,11 +58,6 @@ public class TrainersService(ILogger<TrainersService> logger, IHubContext<GameHu
     public Trainer GetTrainer(Guid id)
     {
         return Trainers[id];
-    }
-
-    public TrainersPokemon GetTrainersPokemon(Guid id)
-    {
-        return TrainersPokemon[id];
     }
 
     public Trainer Create(Account account)
@@ -117,5 +109,31 @@ public class TrainersService(ILogger<TrainersService> logger, IHubContext<GameHu
         }
         var leveledUp = difference <= 0;
         return leveledUp;
+    }
+
+    /// <summary>
+    /// Adds a Pokemon to the Trainer's active Pokemon if there is room on the bench, or a species is about to evolve
+    /// </summary>
+    /// <param name="pokemon">The Pokemon to attempt to add to the bench</param>
+    /// <param name="bench">The bench spot to add it to</param>
+    /// <returns>The PokemonBehaviour instance if the Pokemon was added successfully</returns>
+    public Pokemon AddPokemon(Trainer trainer, Pokemon pokemon, IPokeContainer bench)
+    {
+        bool evolving = TrainersPokemon[trainer.Id].IsAboutToEvolve(pokemon);
+        if (bench == null && !evolving)
+        {
+            return null; // no fucking room
+                         // evolve and/or set the PokemonBehaviour inside the container
+        }
+        //PokemonBehaviour pokemonBehaviour = PokemonBehaviour.Spawn(pokemon);
+        TrainersPokemon[trainer.Id].Evolve(pokemon);
+        // Create it to the Trainers ActivePokemon dictionary
+        if (!TrainersPokemon[trainer.Id].ContainsKey(pokemon.name))
+        {
+            TrainersPokemon[trainer.Id].Add(pokemon.name, new List<Pokemon>());
+        }
+        TrainersPokemon[trainer.Id][pokemon.name].Add(pokemon);
+        //pokemonBehaviour.OnDestroyed += R;
+        return pokemon;
     }
 }

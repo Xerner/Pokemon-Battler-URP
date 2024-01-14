@@ -20,12 +20,7 @@ namespace PokeBattler.Unity
 
         void Start()
         {
-            gameService.OnGameCreated += SubscribeToOnTick;
-        }
-
-        void SubscribeToOnTick(Game game)
-        {
-            game.RoundTimer.OnTick += UpdateText;
+            gameService.Game.RoundTimer.OnTick += UpdateText;
         }
 
         void UpdateText(float time)

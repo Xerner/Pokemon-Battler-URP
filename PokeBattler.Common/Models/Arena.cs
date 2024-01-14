@@ -1,7 +1,7 @@
 ﻿using System;
-using PokeBattler.Common.Models.Interfaces;
+using System.Numerics;
 using System.Collections.Generic;
-using UnityEngine;
+using PokeBattler.Common.Models.Interfaces;
 using PokeBattler.Common.Models.Enums;
 
 namespace PokeBattler.Common.Models
@@ -12,7 +12,7 @@ namespace PokeBattler.Common.Models
         public const int Columns = 5;
 
         public Guid OwnerId = Guid.Empty;
-        public Trainer EnemyTrainer;
+        public Trainer EnemyTrainer = new();
         public bool CombatMode;
         public Dictionary<EContainerType, IPokeContainer[]> PokeContainers { get; private set; } = [];
         public IPokeContainer[] Bench { get; private set; } = [];
@@ -34,7 +34,7 @@ namespace PokeBattler.Common.Models
             }
         }
 
-        public ArenaSpot this[Vector2Int index]
+        public ArenaSpot this[Vector2 index]
         {
             get
             {
@@ -44,7 +44,7 @@ namespace PokeBattler.Common.Models
                 }
                 else
                 {
-                    return ArenaSpots[index.x + (index.y * Columns)];
+                    return ArenaSpots[(int)(index.X + (index.Y * Columns))];
                 }
             }
         }
@@ -66,14 +66,14 @@ namespace PokeBattler.Common.Models
             return index >= 0 && index < Rows * Columns;
         }
 
-        private bool InBounds(Vector2Int index)
+        private bool InBounds(Vector2 index)
         {
-            return index.y >= 0 && index.y < Rows && index.x >= 0 && index.x < Columns;
+            return index.X >= 0 && index.Y < Rows && index.X >= 0 && index.Y < Columns;
         }
 
-        public ArenaSpot RandomOpenAdjacent(Vector2Int origin)
+        public ArenaSpot RandomOpenAdjacent(Vector2 origin)
         {
-            Vector2Int adjacent;
+            Vector2 adjacent;
             EDirection side = (EDirection)new System.Random().Next(4);
             for (int i = 0; i < 4; i++)
             {
@@ -81,16 +81,16 @@ namespace PokeBattler.Common.Models
                 switch (side)
                 {
                     case EDirection.Top:
-                        adjacent.x--;
+                        adjacent.X--;
                         break;
                     case EDirection.Right:
-                        adjacent.y++;
+                        adjacent.Y++;
                         break;
                     case EDirection.Bottom:
-                        adjacent.x++;
+                        adjacent.X++;
                         break;
                     case EDirection.Left:
-                        adjacent.y--;
+                        adjacent.Y--;
                         break;
                     default:
                         throw new Exception("Invalid arena direction");

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using UnityEngine;
 
 namespace PokeBattler.Common.Models.Json
 {
@@ -45,7 +44,7 @@ namespace PokeBattler.Common.Models.Json
         {
             if (chainLink == null || chainLink.species == null)
             {
-                Debug.LogError("Could not calculate evolution stage. Invalid Pokemon name: " + pokemonName);
+                //Debug.LogError("Could not calculate evolution stage. Invalid Pokemon name: " + pokemonName);
                 return -1;
             }
             else if (chainLink.species.name == pokemonName)

@@ -1,31 +1,34 @@
+using System;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using PokeBattler.Client.Services;
+using PokeBattler.Common.Models;
 using PokeBattler.Server.Services;
 using PokeBattler.Server.Services.Hubs;
-using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-//builder.Services.AddControllers();
-
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-//builder.Services.AddEndpointsApiExplorer();
-//builder.Services.AddSwaggerGen();
 builder.Services.AddSignalR(options =>
 {
     options.EnableDetailedErrors = true;
 });
 
+builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+builder.Services.Configure<GameSettings>(builder.Configuration.GetSection(GameSettings.Key));
+
 // API services
 //builder.Services.AddSingleton<GameHub>();
 // Services
+builder.Services.AddSingleton<HttpService>();
+builder.Services.AddSingleton<GameSettings>();
+builder.Services.AddSingleton<IArenaService, ArenaService>();
 builder.Services.AddSingleton<ITrainersService, TrainersService>();
 builder.Services.AddSingleton<IAccountService, AccountService>();
-builder.Services.AddSingleton<IShopService, ShopService>();
 builder.Services.AddSingleton<IPokeApiService, PokeAPIService>();
 builder.Services.AddSingleton<IPokemonPoolService, PokemonPoolService>();
-builder.Services.AddSingleton<IArenaService, ArenaService>();
+builder.Services.AddSingleton<IGameService, GameService>();
+builder.Services.AddSingleton<IShopService, ShopService>();
 
 var app = builder.Build();
 

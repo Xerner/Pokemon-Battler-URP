@@ -10,6 +10,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PokeBattler.Server", "PokeB
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PokeBattler.Common", "PokeBattler.Common\PokeBattler.Common.csproj", "{471653B9-5490-4E9B-A11F-979C8084C1A2}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PokeBattler.Client.Dependencies", "GetDependencies\PokeBattler.Client.Dependencies.csproj", "{F2B4D30F-FAD2-4596-A58B-BE652C17B97F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug.InternalCloud|Any CPU = Debug.InternalCloud|Any CPU
@@ -34,6 +36,14 @@ Global
 		{471653B9-5490-4E9B-A11F-979C8084C1A2}.Release.InternalCloud|Any CPU.Build.0 = Release|Any CPU
 		{471653B9-5490-4E9B-A11F-979C8084C1A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{471653B9-5490-4E9B-A11F-979C8084C1A2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F2B4D30F-FAD2-4596-A58B-BE652C17B97F}.Debug.InternalCloud|Any CPU.ActiveCfg = Debug|Any CPU
+		{F2B4D30F-FAD2-4596-A58B-BE652C17B97F}.Debug.InternalCloud|Any CPU.Build.0 = Debug|Any CPU
+		{F2B4D30F-FAD2-4596-A58B-BE652C17B97F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F2B4D30F-FAD2-4596-A58B-BE652C17B97F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F2B4D30F-FAD2-4596-A58B-BE652C17B97F}.Release.InternalCloud|Any CPU.ActiveCfg = Release|Any CPU
+		{F2B4D30F-FAD2-4596-A58B-BE652C17B97F}.Release.InternalCloud|Any CPU.Build.0 = Release|Any CPU
+		{F2B4D30F-FAD2-4596-A58B-BE652C17B97F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F2B4D30F-FAD2-4596-A58B-BE652C17B97F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

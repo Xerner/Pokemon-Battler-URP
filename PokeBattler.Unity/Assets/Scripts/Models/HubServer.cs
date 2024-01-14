@@ -49,10 +49,5 @@ namespace PokeBattler.Client.Models
         {
             throw new NotImplementedException();
         }
-
-        Task IHubServer.BuyPokemon(Guid id, int shopIndex, int pokemonId)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

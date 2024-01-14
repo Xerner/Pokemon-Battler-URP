@@ -12,11 +12,13 @@ namespace PokeBattler.Unity
 
 
         private IClientService clientService;
+        IMainMenuService mainMenuService;
 
         [Inject]
-        public void Construct(IClientService clientService)
+        public void Construct(IClientService clientService, IMainMenuService mainMenuService)
         {
             this.clientService = clientService;
+            this.mainMenuService = mainMenuService;
         }
 
         private void OnEnable()
@@ -26,6 +28,6 @@ namespace PokeBattler.Unity
             trainerBackground.SetSprite(clientService.Account.TrainerBackgroundId);
         }
 
-        public void SaveSettings() => MainMenu.Instance.SaveSettings(username.text, trainerSprite.ActiveSprite, trainerBackground.ActiveSprite);
+        public void SaveSettings() => mainMenuService.SaveSettings(username.text, trainerSprite.ActiveSprite, trainerBackground.ActiveSprite);
     }
 }

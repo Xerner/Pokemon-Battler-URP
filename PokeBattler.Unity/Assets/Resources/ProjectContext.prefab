@@ -76,4 +76,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DefaultAccount: {fileID: 11400000, guid: 4be20e5a559682a459327e53187c2a46, type: 2}
-  DefaultGameSettings: {fileID: 11400000, guid: 171a9506efc566f4fb7286b8fb58540a, type: 2}

@@ -1,17 +1,16 @@
 using System;
-using UnityEngine;
 
 namespace PokeBattler.Common.Models {
     [Serializable]
     public class PokemonStats
     {
-        [SerializeField] int hp;
-        [SerializeField] int pp;
-        [SerializeField] int attack;
-        [SerializeField] int defense;
-        [SerializeField] int specialAttack;
-        [SerializeField] int specialDefense;
-        [SerializeField] float attackSpeed;
+        int hp;
+        int pp;
+        int attack;
+        int defense;
+        int specialAttack;
+        int specialDefense;
+        float attackSpeed;
 
         public PokemonStats(Pokemon pokemon)
         {

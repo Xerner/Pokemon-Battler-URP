@@ -12,8 +12,8 @@ public interface IGameService
 }
 
 public class GameService(ILogger<GameService> logger, 
-                         PokemonPoolService pokemonPools, 
-                         PokeAPIService pokemonService, 
+                         IPokemonPoolService pokemonPools,
+                         IPokeApiService pokemonService, 
                          GameSettings defaultGameSettings) : IGameService
 {
     public Game Game { get; private set; }

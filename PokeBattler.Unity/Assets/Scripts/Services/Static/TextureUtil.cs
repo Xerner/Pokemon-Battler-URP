@@ -6,9 +6,9 @@ public class TextureUtil {
     /// </summary>
     /// <param name="ignoredAlpha">value should be from 0 to 1</param>
     /// <returns>The tallest height of the inside of the texture that has an alpha higher than the ignored alpha</returns>
-    public static Vector2 GetTrueSizeInPixels(Texture2D texture, float ignoredAlpha) {
-        MinMax heightMinMax = new MinMax();
-        MinMax widthMinMax = new MinMax();
+    public static Vector2Int GetTrueSizeInPixels(Texture2D texture, float ignoredAlpha) {
+        var heightMinMax = new MinMax();
+        var widthMinMax = new MinMax();
         for (int y = 0; y < texture.height; y++) {
             for (int x = 0; x < texture.width; x++) {
                 if (texture.GetPixel(y, x).a > ignoredAlpha) {
@@ -19,7 +19,7 @@ public class TextureUtil {
                 }
             }
         }
-        return new Vector2(heightMinMax.Max - heightMinMax.Min + 1, widthMinMax.Max - widthMinMax.Min + 1);
+        return new Vector2Int(heightMinMax.Max - heightMinMax.Min + 1, widthMinMax.Max - widthMinMax.Min + 1);
     }
 
     private class MinMax {

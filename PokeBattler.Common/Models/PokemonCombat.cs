@@ -1,6 +1,5 @@
-using PokeBattler.Common.Models.Enums;
 using System;
-using UnityEngine;
+using PokeBattler.Common.Models.Enums;
 
 namespace PokeBattler.Common.Models {
     [Serializable]
@@ -9,7 +8,7 @@ namespace PokeBattler.Common.Models {
         public bool combatMode;
         public ArenaSpot combatField;
         public EAllegiance Allegiance;
-        [SerializeField] private Pokemon targetEnemy;
+        private Pokemon targetEnemy;
         //private Pathing Path;
         public bool invulnerable;
     }

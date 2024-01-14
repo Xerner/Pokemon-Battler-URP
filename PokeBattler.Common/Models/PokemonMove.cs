@@ -1,9 +1,8 @@
 using PokeBattler.Common.Models.Enums;
-using UnityEngine;
 
 namespace PokeBattler.Common.Models
 {
-    public class PokemonMove : ScriptableObject
+    public class PokemonMove
     {
         public string Name;
         public string Description;

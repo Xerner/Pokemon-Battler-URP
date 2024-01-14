@@ -25,11 +25,8 @@ namespace PokeBattler.Unity
 
         void Start()
         {
-            gameService.OnGameCreated += (Game game) =>
-            {
-                game.RoundTimer.OnComplete += OnTimerComplete;
-                game.RoundTimer.OnStart += OnTimerStart;
-            };
+            gameService.Game.RoundTimer.OnComplete += OnTimerComplete;
+            gameService.Game.RoundTimer.OnStart += OnTimerStart;
             button = GetComponent<Button>();
             button.onClick.AddListener(ToggleTimer);
         }

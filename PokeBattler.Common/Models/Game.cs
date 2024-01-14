@@ -1,7 +1,10 @@
+using System;
+
 namespace PokeBattler.Common.Models
 {
     public class Game
     {
+        public Guid Id;
         public PokemonPool PokemonPool;
         public Timer RoundTimer = new();
         public GameSettings GameSettings;

@@ -25,17 +25,14 @@ namespace PokeBattler.Client.Services
         readonly HubConnection connection;
         readonly IClientService clientService;
         readonly ITrainersService trainersService;
-        readonly IGameObjectService gameObjectService;
 
         public ShopService(HubConnection connection, 
                            IClientService clientService, 
-                           ITrainersService trainersService,
-                           IGameObjectService gameObjectService)
+                           ITrainersService trainersService)
         {
             this.connection = connection;
             this.clientService = clientService;
             this.trainersService = trainersService;
-            this.gameObjectService = gameObjectService;
             connection.On<BuyPokemonDTO>(nameof(HubClient.Singleton.PokemonBought), PokemonBought);
         }
 

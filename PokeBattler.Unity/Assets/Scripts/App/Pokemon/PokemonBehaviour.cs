@@ -1,9 +1,11 @@
+using PokeBattler.Client.Extensions;
 using PokeBattler.Common;
 using PokeBattler.Common.Models;
 using PokeBattler.Common.Models.Interfaces;
 using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 namespace PokeBattler.Unity {
     [AddComponentMenu("Poke Battler/PokemonGO")]
@@ -85,10 +87,13 @@ namespace PokeBattler.Unity {
             if (pokemon != null)
             {
                 pokemonSO.Pokemon = pokemon;
-                sprite.sprite = pokemon.Sprite;
-                collider.size = pokemon.TrueSpriteSize;
+                collider.size = pokemon.TrueSpriteSize.ToUnity();
                 gameObject.name = pokemon.name;
-                transform.RectTransform().sizeDelta = pokemon.TrueSpriteSize;
+                transform.RectTransform().sizeDelta = pokemon.TrueSpriteSize.ToUnity();
+                if (ImageConversion.LoadImage(sprite.sprite.texture, pokemon.Sprite))
+                {
+                    Debug2.LogError("Failed to load Pokemon sprite data");
+                }
             }
 
             Stats = new PokemonStats(pokemon);

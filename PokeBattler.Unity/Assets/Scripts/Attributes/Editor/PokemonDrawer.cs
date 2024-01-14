@@ -1,6 +1,6 @@
 using UnityEditor;
 using UnityEngine;
-using PokeBattler.Core;
+using PokeBattler.Common.Models;
 
 [CustomPropertyDrawer(typeof(PokemonAttribute))]
 public class PokemonDrawer : PropertyDrawer {

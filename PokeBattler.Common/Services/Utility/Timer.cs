@@ -1,5 +1,4 @@
 using System;
-using UnityEngine;
 
 namespace PokeBattler.Common
 {
@@ -19,13 +18,13 @@ namespace PokeBattler.Common
             Paused = paused;
         }
 
-        public void Tick()
+        public void Tick(float deltaTime)
         {
             if (Paused || Duration < 0f)
             {
                 return;
             }
-            Duration = Mathf.Clamp(Duration - Time.deltaTime, 0f, float.MaxValue);
+            Duration = Math.Clamp(Duration - deltaTime, 0f, float.MaxValue);
             OnTick?.Invoke(Duration);
             if (Duration < 0f)
             {

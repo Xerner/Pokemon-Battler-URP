@@ -7,20 +7,6 @@ namespace PokeBattler.Unity
     public class AccountSO : ScriptableObject
     {
         [SerializeField]
-        public Account Account;
-        public string Username;
-        public Sprite TrainerSprite;
-        public Sprite TrainerBackground;
-
-        void OnValidate()
-        {
-            if (Username != null)
-                Account.Username = Username;
-            if (TrainerSprite != null) 
-                Account.TrainerSpriteId = TrainerSprite.name;
-            if (TrainerBackground != null) 
-                Account.TrainerBackgroundId = TrainerBackground.name;
-        }
+        public Account Account = new();
     }
 }
-

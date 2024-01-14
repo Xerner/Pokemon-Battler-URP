@@ -1,4 +1,6 @@
+using PokeBattler.Client.Services;
 using UnityEngine;
+using Zenject;
 
 namespace PokeBattler.Unity
 {
@@ -7,6 +9,14 @@ namespace PokeBattler.Unity
         [SerializeField] private TMPro.TMP_InputField ipAddress;
         [SerializeField] private TMPro.TMP_InputField port;
 
-        public void JoinGame() => MainMenu.Instance.JoinGame(ipAddress.text, port.text);
+        IMainMenuService mainMenuService;
+
+        [Inject]
+        public void Construct(IMainMenuService mainMenuService)
+        {
+            this.mainMenuService = mainMenuService;
+        }
+
+        public void JoinGame() => mainMenuService.JoinGame(ipAddress.text, port.text);
     }
 }

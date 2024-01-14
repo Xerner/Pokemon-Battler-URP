@@ -1,10 +1,7 @@
 using Microsoft.AspNetCore.SignalR.Client;
-using PokeBattler.Client.Controllers;
 using PokeBattler.Client.Models;
 using PokeBattler.Client.Services;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using UnityEditor.MemoryProfiler;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Zenject;
@@ -51,7 +48,10 @@ namespace PokeBattler.Unity
             {
                 case "ArenaScene":
                     if (gameService.Game is null)
-                        gameService.CreateGame();
+                    {
+                        Task.Run(() => gameService.CreateGame()).Wait();
+                    }
+                    
                     return;
                 default:
                     return;

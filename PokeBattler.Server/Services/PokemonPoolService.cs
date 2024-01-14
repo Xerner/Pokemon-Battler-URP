@@ -1,14 +1,12 @@
-using Microsoft.AspNetCore.SignalR;
-using Microsoft.Extensions.Logging;
-using PokeBattler.Common.Models;
-using PokeBattler.Common.Models.DTOs;
-using PokeBattler.Common.Models.Interfaces;
-using PokeBattler.Server.Extensions;
-using PokeBattler.Server.Services.Hubs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using PokeBattler.Common.Models;
+using PokeBattler.Common.Models.DTOs;
+using PokeBattler.Server.Extensions;
+using PokeBattler.Server.Models;
 
 namespace PokeBattler.Server.Services;
 
@@ -18,6 +16,7 @@ public interface IPokemonPoolService
     public Pokemon[] Withdraw5(PokemonPool pokemonPool, int trainerLevel);
     public void Refund(PokemonPool pokemonPool, IEnumerable<Pokemon> pokemons);
     public Task<BuyPokemonDTO> Evolve(TrainersPokemon trainersPokemon, Pokemon pokemon, List<Guid> pokemonToDestroy = null);
+    public void InitializeFromCache(PokemonPool pokemonPool);
 }
 
 public class PokemonPoolService : IPokemonPoolService

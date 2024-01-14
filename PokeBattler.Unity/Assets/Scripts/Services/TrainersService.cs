@@ -1,9 +1,8 @@
-﻿using PokeBattler.Common;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using PokeBattler.Common.Models;
 using Microsoft.AspNetCore.SignalR.Client;
-using PokeBattler.Unity;
+using PokeBattler.Common;
+using PokeBattler.Common.Models;
 using PokeBattler.Client.Models;
 
 namespace PokeBattler.Client.Services
@@ -12,8 +11,6 @@ namespace PokeBattler.Client.Services
     {
         Trainer ClientsTrainer { get; }
         Dictionary<Guid, Trainer> Trainers { get; }
-        void TrainerCreated(Trainer trainer);
-        void UpdateReadyStatus(Guid id, bool ready);
     }
 
     public partial class TrainersService : ITrainersService
@@ -30,14 +27,13 @@ namespace PokeBattler.Client.Services
         public TrainersService(HubConnection connection, 
                                IClientService clientService, 
                                IAppConfig appConfig, 
-                               IGameService gameService, 
-                               ITrainersService trainersService)
+                               IGameService gameService)
         {
             this.connection = connection;
             this.clientService = clientService;
             this.appConfig = appConfig;
             gameService.OnGameCreated += AddClientTrainerToGame;
-            connection.On<Trainer>(nameof(HubClient.Singleton.AddTrainerToGame), trainersService.TrainerCreated);
+            connection.On<Trainer>(nameof(HubClient.Singleton.AddTrainerToGame), TrainerCreated);
             //connection.On<Guid, bool>(nameof(HubClient.Singleton.UpdateTrainerReady), trainersService.UpdateReadyStatus);
         }
 
@@ -47,12 +43,12 @@ namespace PokeBattler.Client.Services
         //    TrainerCardManager.Instance.AddTrainerCard(trainer);
         //}
 
-        public void TrainerCreated(Trainer trainer)
+        void TrainerCreated(Trainer trainer)
         {
             OnTrainerAdded.Invoke(trainer);
         }
 
-        public void UpdateReadyStatus(Guid id, bool ready)
+        void UpdateReadyStatus(Guid id, bool ready)
         {
             var trainer = Trainers[id];
             if (trainer == null) return;

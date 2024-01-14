@@ -1,5 +1,4 @@
 ﻿using System;
-using UnityEngine;
 using System.Collections.Generic;
 using PokeBattler.Common.Models.Enums;
 
@@ -32,9 +31,9 @@ namespace PokeBattler.Common.Models
         public List<string> Evolutions;
         public int EvolutionStage;
 
-        public Sprite Sprite;
-        public Sprite ShopSprite;
-        public Vector2 TrueSpriteSize;
+        public byte[] Sprite;
+        public byte[] ShopSprite;
+        public Vector2Int TrueSpriteSize;
 
         public string EvolutionsToString()
         {

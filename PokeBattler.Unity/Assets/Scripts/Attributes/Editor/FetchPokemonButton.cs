@@ -10,6 +10,8 @@ public class FetchPokemonButton : Editor
 
         PokemonBehaviour pokemonBehaviour = (PokemonBehaviour)target;
         if (GUILayout.Button("Fetch from PokemonGO API"))
-            pokemonBehaviour.Initialize();
+        {
+            //pokemonBehaviour.Initialize();
+        }
     }
 }

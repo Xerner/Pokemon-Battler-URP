@@ -1,12 +1,10 @@
 using PokeBattler.Unity;
 using Zenject;
 using PokeBattler.Client.Services;
-using PokeBattler.Client.Models.SO;
 
 public class GlobalInstaller : MonoInstaller
 {
     public AccountSO DefaultAccount;
-    public GameSettingsSO DefaultGameSettings;
 
     public override void InstallBindings()
     {
@@ -18,14 +16,15 @@ public class GlobalInstaller : MonoInstaller
         Container.Bind<IGameService>().To<GameService>().AsSingle().NonLazy();
         Container.Bind<IClientService>().To<ClientService>().AsSingle().NonLazy();
         Container.Bind<IPokemonPoolService>().To<PokemonPoolService>().AsSingle().NonLazy();
+        Container.Bind<IShopService>().To<ShopService>().AsSingle().NonLazy();
         Container.Bind<IGameObjectService>().To<GameObjectService>().AsSingle().NonLazy();
 
-        // UI Services
+        // UI/View Services
+        Container.Bind<IMainMenuService>().To<MainMenuService>().AsSingle().NonLazy();
         Container.Bind<UIPersistentStatus>().FromComponentInHierarchy().AsSingle();
 
         // Scriptable Objects
         Container.BindInstance(DefaultAccount.Account).AsSingle().NonLazy();
-        Container.BindInstance(DefaultGameSettings).AsSingle().NonLazy();
         #endregion
     }
 }

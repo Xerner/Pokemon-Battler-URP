@@ -20,20 +20,16 @@ namespace PokeBattler.Common.Services {
 
         public static Account LoadAccount(string username)
         {
-            var filePath = accountSettingsPath + username.Trim().ToLower();
-            if (File.Exists(accountSettingsPath + username))
-            {
-                BinaryFormatter formatter = new BinaryFormatter();
-                FileStream stream = new FileStream(filePath, FileMode.Open);
-                var settings = formatter.Deserialize(stream) as Account;
-                stream.Close();
-                return settings;
-            }
-            else
+            if (!File.Exists(accountSettingsPath + username))
             {
                 Debug.LogWarning($"Account with name '{username}' save file does not exist!\n\n{accountSettingsPath}{username}\n");
                 return null;
             }
+            BinaryFormatter formatter = new BinaryFormatter();
+            var filePath = accountSettingsPath + username.Trim().ToLower();
+            using var stream = new FileStream(filePath, FileMode.Open);
+            var settings = formatter.Deserialize(stream) as Account;
+            return settings;
         }
     }
 }

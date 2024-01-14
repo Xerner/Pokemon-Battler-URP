@@ -1,8 +1,5 @@
-﻿using PokeBattler.Common.Models.Interfaces;
-using PokeBattler.Common.Models;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.SignalR;
+﻿using PokeBattler.Common.Models;
+using PokeBattler.Server.Models;
 
 namespace PokeBattler.Server.Extensions;
 

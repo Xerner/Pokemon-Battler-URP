@@ -126,7 +126,7 @@ public class TrainersService(ILogger<TrainersService> logger,
                          // evolve and/or set the PokemonBehaviour inside the container
         }
         //PokemonBehaviour pokemonBehaviour = PokemonBehaviour.Spawn(pokemon);
-        TrainersPokemon[trainer.Id].Evolve(pokemon);
+        //TrainersPokemon[trainer.Id].Evolve(pokemon);
         // Create it to the Trainers ActivePokemon dictionary
         if (!TrainersPokemon[trainer.Id].ContainsKey(pokemon.name))
         {

@@ -110,7 +110,7 @@ public class PokeAPIService(ILogger<PokeAPIService> logger, HttpService http) : 
     public async Task<IEnumerable<Pokemon>> InitializeListOfPokemon(IEnumerable<string> pokemonNames, Action<IEnumerable<Pokemon>> callback = null)
     {
         logger.LogInformation($"Fetching {pokemonNames.Count()} Pokemon");
-        logger.LogInformation(string.Join(",", pokemonNames.ToArray());
+        logger.LogInformation(string.Join(",", pokemonNames.ToArray()));
         var pokemon = new List<Pokemon>();
         var tasks = new List<Task<Pokemon>>();
         foreach (var name in pokemonNames)

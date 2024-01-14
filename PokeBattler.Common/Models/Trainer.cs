@@ -20,6 +20,12 @@ namespace PokeBattler.Common.Models
         public void OnReadySubscribe(Action<bool> action) => onReady += action;
         public void OnReadyUnsubscribe(Action<bool> action) => onReady -= action;
 
+        public Trainer()
+        {
+            Account = new();
+            ExperienceNeededToLevelUp = 0;
+        }
+
         public Trainer(Account account, int experienceNeededToLevelUp)
         {
             Account = account;

@@ -1,3 +1,4 @@
+using PokeBattler.Client.Extensions;
 using PokeBattler.Client.Services;
 using PokeBattler.Common;
 using PokeBattler.Common.Models;
@@ -54,7 +55,7 @@ namespace PokeBattler.Unity {
             pokemonName.text = pokemon.name;
             Cost = cost;
             background.sprite = StaticAssets.ShopCardSprites[Cost.ToString()];
-            pokemonImage.sprite = pokemon.ShopSprite;
+            pokemonImage.sprite = pokemon.ShopSprite.ToSprite();
             pokemonImage.color = new Color(pokemonImage.color.r, pokemonImage.color.g, pokemonImage.color.b, 1f);
             pokemonImage.SetNativeSize();
             type1.sprite = StaticAssets.typeMiniSprites[pokemon.types[0].ToString()];

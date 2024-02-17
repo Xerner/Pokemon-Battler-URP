@@ -24,7 +24,7 @@ public class GameService(ILogger<GameService> logger,
         // game launch based on a ScriptableObject or something, and then cache them somehow
         // for reuse on next game launch
         Game = new(defaultGameSettings);
-        pokemonPools.InitializeFromCache(Game.PokemonPool);
+        pokemonPools.Initialize(Game.PokemonPool);
         logger.LogInformation($"Initialized PokemonPoolService with {pokemonService.CachedPokemon.Count} different Pokemon");
         return Game;
     }

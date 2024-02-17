@@ -2,15 +2,25 @@
 
 namespace PokeBattler.Common.Models
 {
-    public class PokemonPool
+    /// <summary>
+    /// {
+    ///   [pokemon tier]: {
+    ///     "bulbasaur": [count in pool],
+    ///   }
+    /// }
+    /// </summary>
+    public class PokemonPool : Dictionary<int, Dictionary<string, int>>
     {
-        /// <summary>The count of each Pokemon left in a game</summary>
-        public Dictionary<int, Dictionary<string, int>> TierToPokemonCounts = new Dictionary<int, Dictionary<string, int>>() {
-            { 1, new Dictionary<string, int>() },
-            { 2, new Dictionary<string, int>() },
-            { 3, new Dictionary<string, int>() },
-            { 4, new Dictionary<string, int>() },
-            { 5, new Dictionary<string, int>() }
-        };
+        public void Initialize(int[] tierCounts)
+        {
+            foreach (var item in this)
+            {
+                Remove(item.Key);
+            }
+            foreach (var item in tierCounts)
+            {
+                Add(item, []);
+            }
+        }
     }
 }

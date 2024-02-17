@@ -1,5 +1,6 @@
 using PokeBattler.Client.Extensions;
 using PokeBattler.Common;
+using PokeBattler.Common.Extensions;
 using PokeBattler.Common.Models;
 using PokeBattler.Common.Models.Interfaces;
 using System;

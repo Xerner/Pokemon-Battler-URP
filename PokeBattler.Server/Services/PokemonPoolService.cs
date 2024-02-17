@@ -16,7 +16,7 @@ public interface IPokemonPoolService
     public Pokemon[] Withdraw5(PokemonPool pokemonPool, int trainerLevel);
     public void Refund(PokemonPool pokemonPool, IEnumerable<Pokemon> pokemons);
     public Task<BuyPokemonDTO> Evolve(TrainersPokemon trainersPokemon, Pokemon pokemon, List<Guid> pokemonToDestroy = null);
-    public void InitializeFromCache(PokemonPool pokemonPool);
+    public void Initialize(PokemonPool pokemonPool);
 }
 
 public class PokemonPoolService : IPokemonPoolService
@@ -43,10 +43,10 @@ public class PokemonPoolService : IPokemonPoolService
 
     public int[] GetTierChances(int trainerLevel)
     {
-        return Constants.TierChances[trainerLevel];
+        return Constants.TierChancesByLevel[trainerLevel];
     }
 
-    public void InitializeFromCache(PokemonPool pokemonPool)
+    public void Initialize(PokemonPool pokemonPool)
     {
         var pokemons = pokeApiService.InitializeFromCache(pokemonPool);
         AddToPool(pokemons);
@@ -211,7 +211,7 @@ public class PokemonPoolService : IPokemonPoolService
         // rolls a tier 2 unit
         for (int i = 0; i < 5; i++)
         {
-            chanceSum += Constants.TierChances[trainerLevel][i];
+            chanceSum += Constants.TierChancesByLevel[trainerLevel][i];
             if (roll < chanceSum)
             {
                 return i + 1;
@@ -226,7 +226,7 @@ public class PokemonPoolService : IPokemonPoolService
         /// <summary>How many Pokemon are allowed in each respective tier</summary>
         public static readonly int[] TierCounts = [0, 39, 26, 21, 13, 10]; // 0 for tier 0, because technically there is no tier 0
         /// <summary>Chance to roll a 1 tier, 2 tier, 3 tier, 4 tier, 5 tier respective to Trainer level</summary>
-        public static readonly List<int[]> TierChances = [
+        public static readonly List<int[]> TierChancesByLevel = [
             [ 100, 0,  0,  0,  0  ],
             [ 100, 0,  0,  0,  0  ],
             [ 75,  25, 0,  0,  0  ],

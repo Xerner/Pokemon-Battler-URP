@@ -1,9 +1,9 @@
-using PokeBattler.Client.Services;
-using PokeBattler.Common.Models;
 using System.IO;
 using System.Runtime.Serialization;
 using UnityEngine;
 using Zenject;
+using PokeBattler.Common.Models;
+using PokeBattler.Client.Services;
 
 namespace PokeBattler.Unity
 {
@@ -13,8 +13,6 @@ namespace PokeBattler.Unity
         [SerializeField] GameObject nextMenu;
         [SerializeField] TMPro.TMP_InputField username;
         [SerializeField] ErrorTextBehaviour error;
-
-        IMainMenuService mainMenuService;
 
         void OnValidate()
         {
@@ -32,10 +30,16 @@ namespace PokeBattler.Unity
             }
         }
 
+        ISaveSystem saveSystem;
+        IClientService clientService;
+        IViewManagerService viewManager;
+
         [Inject]
-        public void Construct(IMainMenuService mainMenuService)
+        public void Construct(IClientService clientService, ISaveSystem saveSystem, IViewManagerService viewManager)
         {
-            this.mainMenuService = mainMenuService;
+            this.clientService = clientService;
+            this.saveSystem = saveSystem;
+            this.viewManager = viewManager;
         }
 
         public void LoadSettings()
@@ -43,7 +47,7 @@ namespace PokeBattler.Unity
             Account account = null;
             try
             {
-                account = mainMenuService.LoadSettings(username.text, nextMenu);
+                account = LoadSettings(username.text, nextMenu);
             }
             catch (SerializationException)
             {
@@ -62,6 +66,20 @@ namespace PokeBattler.Unity
                 return;
             }
             error.gameObject.SetActive(false);
+        }
+
+        public Account LoadSettings(string username, GameObject nextMenu)
+        {
+            Account account = saveSystem.LoadAccount(username.Trim().ToLower());
+            if (account == null)
+            {
+                UIWindowManagerBehaviour.Instance.CreatePopupMessage("Trainer not found");
+                return account;
+            }
+            Debug.Log("Loading trainer '" + username.Trim().ToLower() + "' with Settings\n" + account);
+            viewManager.ChangeViews(nextMenu);
+            clientService.Account = account;
+            return account;
         }
     }
 }

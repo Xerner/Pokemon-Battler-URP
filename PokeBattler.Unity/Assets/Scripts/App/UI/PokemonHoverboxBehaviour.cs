@@ -5,6 +5,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using PokeBattler.Common;
 using PokeBattler.Common.Models.Enums;
+using PokeBattler.Common.Extensions;
 
 namespace PokeBattler.Unity
 {

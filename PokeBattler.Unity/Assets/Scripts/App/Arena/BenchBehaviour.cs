@@ -1,4 +1,5 @@
 ﻿using PokeBattler.Common;
+using PokeBattler.Common.Extensions;
 using PokeBattler.Common.Models.Enums;
 using TMPro;
 using UnityEngine;

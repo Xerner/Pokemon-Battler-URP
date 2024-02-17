@@ -8,7 +8,8 @@
     ".NETCoreApp,Version=v2.1": {
       "PokeBattler.Client.Dependencies/1.0.0": {
         "dependencies": {
-          "Microsoft.AspNetCore.SignalR.Client": "3.1.32"
+          "Microsoft.AspNetCore.SignalR.Client": "3.1.32",
+          "Serilog": "2.12.0"
         },
         "runtime": {
           "PokeBattler.Client.Dependencies.dll": {}
@@ -226,6 +227,14 @@
           }
         }
       },
+      "Serilog/2.12.0": {
+        "runtime": {
+          "lib/netstandard2.0/Serilog.dll": {
+            "assemblyVersion": "2.0.0.0",
+            "fileVersion": "2.12.0.0"
+          }
+        }
+      },
       "System.ComponentModel.Annotations/4.7.0": {},
       "System.IO.Pipelines/4.7.5": {
         "runtime": {
@@ -406,6 +415,13 @@
       "sha512": "sha512-N8lTVwdjR+df9Sx3VdHfrecV6zl8KQoAx7kQXJ3rYwQBEw2vuZM0LKVAqjnaA/TBC8ZKnt99ptwH5iaEOxBuYQ==",
       "path": "microsoft.extensions.primitives/3.1.32",
       "hashPath": "microsoft.extensions.primitives.3.1.32.nupkg.sha512"
+    },
+    "Serilog/2.12.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-xaiJLIdu6rYMKfQMYUZgTy8YK7SMZjB4Yk50C/u//Z4OsvxkUfSPJy4nknfvwAC34yr13q7kcyh4grbwhSxyZg==",
+      "path": "serilog/2.12.0",
+      "hashPath": "serilog.2.12.0.nupkg.sha512"
     },
     "System.ComponentModel.Annotations/4.7.0": {
       "type": "package",

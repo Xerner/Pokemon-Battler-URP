@@ -4,6 +4,7 @@ using UnityEngine.SceneManagement;
 using Microsoft.AspNetCore.SignalR.Client;
 using PokeBattler.Common;
 using PokeBattler.Common.Models;
+using PokeBattler.Unity;
 
 namespace PokeBattler.Client.Services
 {
@@ -11,7 +12,8 @@ namespace PokeBattler.Client.Services
     {
         public Game Game { get; }
         public Action<Game> OnGameCreated { get; set; }
-        public Task CreateGame();
+        public Task<bool> CreateGame();
+        public Task JoinGame(string ipAddress, string port);
         public Task JoinGame(Guid gameID, Account account);
     }
 
@@ -33,10 +35,25 @@ namespace PokeBattler.Client.Services
             this.clientService = clientService;
         }
 
-        public async Task CreateGame()
+        public async Task<bool> CreateGame()
         {
+            if (!(connection.State == HubConnectionState.Connected))
+            {
+                return false;
+            }
             var game = await connection.InvokeAsync<Game>("CreateGame");
             await JoinGame(game.Id, clientService.Account);
+            return true;
+        }
+
+        public async Task JoinGame(string ipAddress, string port)
+        {
+            if (!int.TryParse(port, out int port_int) && (port_int < 1 || port_int > ushort.MaxValue))
+            {
+                UIWindowManagerBehaviour.Instance.CreatePopupMessage($"Invalid port\n\nPorts are only digits and no larger than {ushort.MaxValue}", 170f);
+                return;
+            }
+            // TODO
         }
 
         public async Task JoinGame(Guid gameID, Account account)

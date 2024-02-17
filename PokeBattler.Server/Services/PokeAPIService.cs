@@ -96,14 +96,23 @@ public class PokeAPIService(ILogger<PokeAPIService> logger, HttpService http) : 
 
     public IEnumerable<Pokemon> InitializeFromCache(PokemonPool pokemonPool)
     {
-        
+        pokemonPool.Initialize(PokemonPoolService.Constants.TierCounts);
         foreach (int pokemonId in CachedPokemon.Keys)
         {
-            Pokemon pokemon = CachedPokemon[pokemonId];
-            if (pokemon.EvolutionStage == 1) pokemonPool.TierToPokemonCounts[pokemon.tier].Add(pokemon.name, PokemonPoolService.Constants.TierCounts[pokemon.tier]);
+            InitializePokemonsPoolCount(pokemonPool, pokemonId);
         }
         logger.LogInformation($"Initialized PokemonPoolService with {CachedPokemon.Count} different Pokemon");
         return CachedPokemon.Values;
+    }
+
+    void InitializePokemonsPoolCount(PokemonPool pokemonPool, int pokemonId)
+    {
+        Pokemon pokemon = CachedPokemon[pokemonId];
+        var poolCounts = pokemonPool[pokemon.tier];
+        if (pokemon.EvolutionStage == 1)
+        {
+            poolCounts.Add(pokemon.name, PokemonPoolService.Constants.TierCounts[pokemon.tier]);
+        }
     }
 
     /// <summary>Recursive</summary>

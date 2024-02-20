@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.SignalR.Client;
+using System.Threading.Tasks;
 using PokeBattler.Client.Models;
 using PokeBattler.Client.Services;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Zenject;
@@ -11,12 +11,16 @@ namespace PokeBattler.Unity
     [AddComponentMenu("Poke Battler/App Manager")]
     public class AppManager : MonoBehaviour
     {
+        Serilog.ILogger logger;
         IGameService gameService;
         HubConnection connection;
 
         [Inject]
-        public void Construct(IGameService gameService, HubConnection connection)
+        public void Construct(Serilog.ILogger logger,
+                              IGameService gameService, 
+                              HubConnection connection)
         {
+            this.logger = logger;
             this.gameService = gameService;
             this.connection = connection;
         }
@@ -30,7 +34,7 @@ namespace PokeBattler.Unity
         async Task StartApp()
         {
             await connection.StartAsync();
-            Debug.Log($"Connected to {HubConnectionService.HubUrl}");
+            logger.Information($"Connected to {HubConnectionService.HubUrl}");
             connection.On(nameof(HubClient.Singleton.Ping), Ping);
             await connection.InvokeAsync(nameof(HubServer.Singleton.Ping), "Ping");
             SceneManager.sceneLoaded += OnSceneLoaded;
@@ -49,9 +53,15 @@ namespace PokeBattler.Unity
                 case "ArenaScene":
                     if (gameService.Game is null)
                     {
-                        Task.Run(() => gameService.CreateGame()).Wait();
+                        var task = Task.Run(() => gameService.CreateGame());
+                        task.Wait();
+                        var succeeded = task.Result;
+                        if (!succeeded)
+                        {
+                            logger.Error("Failed to create game");
+                            return;
+                        }
                     }
-                    
                     return;
                 default:
                     return;

@@ -1,3 +1,4 @@
+using Assets.Scripts.App.UI.Popups;
 using PokeBattler.Client.Services;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -10,12 +11,14 @@ namespace PokeBattler.Unity
     {
         IGameService gameService;
         IViewManagerService viewManager;
+        IModalService modalService;
 
         [Inject]
-        public void Construct(IGameService gameService, IViewManagerService viewManager)
+        public void Construct(IGameService gameService, IViewManagerService viewManager, IModalService modalService)
         {
             this.gameService = gameService;
             this.viewManager = viewManager;
+            this.modalService = modalService;
         }
 
         public void CreateGame() {
@@ -29,7 +32,7 @@ namespace PokeBattler.Unity
                 return;
             }
             viewManager.ChangeViews(gameObject);
-            UIWindowManagerBehaviour.Instance.CreatePopupMessage("Failed to create game");
+            modalService.Create<MessageModal, string>("Failed to create game");
         }
     }
 }

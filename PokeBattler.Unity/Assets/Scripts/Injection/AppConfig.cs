@@ -12,7 +12,7 @@ namespace PokeBattler.Common
         public int PlayerCount { get; }
     }
 
-    [CreateAssetMenu(fileName = "New App Config", menuName = "PokemonGO/App Config")]
+    [CreateAssetMenu(fileName = "New App Config", menuName = "PokeBattler/App Config")]
     public class AppConfig : ScriptableObjectInstaller<AppConfig>, IAppConfig
     {
         [SerializeField] string arenaSceneName = "ArenaScene";

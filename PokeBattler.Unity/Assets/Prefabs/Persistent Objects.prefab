@@ -10024,7 +10024,6 @@ GameObject:
   - component: {fileID: 7102423461840928130}
   - component: {fileID: 9006010649624356931}
   - component: {fileID: 3156959525659798688}
-  - component: {fileID: 7335407118148396858}
   m_Layer: 0
   m_Name: Popup Manager & Canvas
   m_TagString: Untagged
@@ -10116,20 +10115,6 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &7335407118148396858
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6680967076851013907}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eb182df1ad3315b4390aebaef6b4351a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  prefab: {fileID: 4441493516921702177, guid: 6885453390775bc4dacb5e0ede8eeaf5, type: 3}
-  message: {fileID: 0}
 --- !u!1 &6687238494837028335
 GameObject:
   m_ObjectHideFlags: 0

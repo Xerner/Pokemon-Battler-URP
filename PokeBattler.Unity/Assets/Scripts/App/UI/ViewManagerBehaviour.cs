@@ -5,7 +5,7 @@ using UnityEngine;
 using Zenject;
 
 /// <summary>
-/// Manages a list of Behaviours or its own children who are assumed to represent in-game views
+/// Manages a list of TrackedBehaviours or its own children who are assumed to represent in-game views
 /// </summary>
 namespace PokeBattler.Unity
 {

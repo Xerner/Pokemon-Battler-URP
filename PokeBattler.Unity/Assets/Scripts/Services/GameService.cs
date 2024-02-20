@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.SignalR.Client;
 using PokeBattler.Common;
 using PokeBattler.Common.Models;
 using PokeBattler.Unity;
+using Assets.Scripts.App.UI.Popups;
 
 namespace PokeBattler.Client.Services
 {
@@ -22,17 +23,20 @@ namespace PokeBattler.Client.Services
         readonly HubConnection connection;
         readonly IAppConfig appConfig;
         readonly IClientService clientService;
+        readonly IModalService modalService;
 
         public Game Game { get; set; }
         public Action<Game> OnGameCreated { get; set; }
 
         public GameService(HubConnection connection, 
                            IAppConfig appConfig,
-                           IClientService clientService)
+                           IClientService clientService,
+                           IModalService modalService)
         {
             this.connection = connection;
             this.appConfig = appConfig;
             this.clientService = clientService;
+            this.modalService = modalService;
         }
 
         public async Task<bool> CreateGame()
@@ -50,7 +54,7 @@ namespace PokeBattler.Client.Services
         {
             if (!int.TryParse(port, out int port_int) && (port_int < 1 || port_int > ushort.MaxValue))
             {
-                UIWindowManagerBehaviour.Instance.CreatePopupMessage($"Invalid port\n\nPorts are only digits and no larger than {ushort.MaxValue}", 170f);
+                modalService.Create<MessageModal, string>($"Invalid port\n\nPorts are only digits and no larger than {ushort.MaxValue}");
                 return;
             }
             // TODO

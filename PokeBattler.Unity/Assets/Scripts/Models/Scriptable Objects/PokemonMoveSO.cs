@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace PokeBattler.Client.Models.SO
 {
-    [CreateAssetMenu(fileName = "New PokemonGO Move", menuName = "PokemonGO/PokemonGO Move")]
+    [CreateAssetMenu(fileName = "New Pokemon Move", menuName = "PokeBattler/Pokemon/Move")]
 	public class PokemonMoveSO : ScriptableObject
 	{
 		public PokemonMove PokemonMove;

@@ -4,6 +4,8 @@ using UnityEngine;
 using Zenject;
 using PokeBattler.Common.Models;
 using PokeBattler.Client.Services;
+using Assets.Scripts.App.UI.Popups;
+using UnityEditor;
 
 namespace PokeBattler.Unity
 {
@@ -33,13 +35,18 @@ namespace PokeBattler.Unity
         ISaveSystem saveSystem;
         IClientService clientService;
         IViewManagerService viewManager;
+        IModalService modalService;
 
         [Inject]
-        public void Construct(IClientService clientService, ISaveSystem saveSystem, IViewManagerService viewManager)
+        public void Construct(IClientService clientService, 
+                              ISaveSystem saveSystem, 
+                              IViewManagerService viewManager,
+                              IModalService modalService)
         {
             this.clientService = clientService;
             this.saveSystem = saveSystem;
             this.viewManager = viewManager;
+            this.modalService = modalService;
         }
 
         public void LoadSettings()
@@ -73,7 +80,7 @@ namespace PokeBattler.Unity
             Account account = saveSystem.LoadAccount(username.Trim().ToLower());
             if (account == null)
             {
-                UIWindowManagerBehaviour.Instance.CreatePopupMessage("Trainer not found");
+                modalService.Create<MessageModal, string>("Trainer not found");
                 return account;
             }
             Debug.Log("Loading trainer '" + username.Trim().ToLower() + "' with Settings\n" + account);

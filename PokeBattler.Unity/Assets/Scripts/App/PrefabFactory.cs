@@ -3,44 +3,42 @@ using UnityEngine;
 
 namespace PokeBattler.Unity
 {
-    public class PrefabFactory<T> : MonoBehaviour where T : MonoBehaviour
+    public class PrefabFactory : ScriptableObject
     {
-        // Reference to prefab of whatever type.
         [SerializeField]
-        [Description("Only needed if this GameObject should also be a Factory")]
-        private T prefab;
+        GameObject prefab;
 
-        public Action<T> OnCreate;
-        public Action<T> OnDestroy;
+        void OnValidate()
+        {
+            if (prefab == null)
+            {
+                throw new NullReferenceException("Factory prefab is null");
+            }   
+        }
 
         /// <summary>
         /// Creating new instance of prefab.
         /// </summary>
         /// <returns>New instance of prefab.</returns>
-        public T Create()
+        public GameObject Create()
         {
-            OnCreate?.Invoke(prefab);
-            return Instantiate(prefab);
+            var prefabFactory = Instantiate(prefab);
+            return Created(prefabFactory);
         }
 
         /// <summary>
         /// Creating new instance of prefab at the given Transform
         /// </summary>
         /// <returns>New instance of prefab.</returns>
-        public T Create(Transform transform)
+        public GameObject Create(Transform transform)
         {
-            OnCreate?.Invoke(prefab);
-            T creation = Instantiate(prefab, transform).GetComponent<T>();
-            return creation;
+            var prefabFactory = Instantiate(prefab, transform);
+            return Created(prefabFactory);
         }
 
-        /// <summary>
-        /// Destroy this instance
-        /// </summary>
-        public void Destroy()
+        GameObject Created(GameObject prefabFactory)
         {
-            UnityEngine.GameObject.Destroy(gameObject);
-            OnDestroy?.Invoke(prefab);
+            return prefabFactory;
         }
     }
 }

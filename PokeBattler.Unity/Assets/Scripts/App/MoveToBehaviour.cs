@@ -165,7 +165,7 @@ namespace PokeBattler.Unity
         }
 
         /// <summary>
-        /// Swaps snapping to the target and the Behaviours original parent transform
+        /// Swaps snapping to the target and the TrackedBehaviours original parent transform
         /// </summary>
         public void SwapMoveTarget()
         {

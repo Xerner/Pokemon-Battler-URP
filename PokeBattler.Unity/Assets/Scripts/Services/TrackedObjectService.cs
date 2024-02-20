@@ -7,20 +7,26 @@ using UnityEngine;
 
 namespace PokeBattler.Client.Services
 {
-    public interface IGameObjectService
+    /// <summary>
+    /// Service for managing game objects that should exist between clients
+    /// </summary>
+    public interface ITrackedObjectService
     {
-        public Dictionary<Guid, MonoBehaviour> Behaviours { get; }
+        /// <summary>
+        /// Contains all the tracked behaviours that should exist on all clients
+        /// </summary>
+        public Dictionary<Guid, MonoBehaviour> TrackedBehaviours { get; }
         public Action<MovePokemonDTO> OnPokemonCreated { get; set; }
         public PokemonBehaviour Create(Guid id, Pokemon pokemon);
         public void Destroy(Guid id);
     }
 
-    public class GameObjectService : IGameObjectService
+    public class TrackedObjectService : ITrackedObjectService
     {
         public Action<MovePokemonDTO> OnPokemonCreated { get; set; }
-        public Dictionary<Guid, MonoBehaviour> Behaviours { get; private set; } = new();
+        public Dictionary<Guid, MonoBehaviour> TrackedBehaviours { get; private set; } = new();
 
-        public GameObjectService(IShopService shopService)
+        public TrackedObjectService(IShopService shopService)
         {
             shopService.OnPokemonBought += OnPokemonBought;
         }
@@ -28,24 +34,24 @@ namespace PokeBattler.Client.Services
         public PokemonBehaviour Create(Guid id, Pokemon pokemon)
         {
             PokemonBehaviour pokemonGO;
-            if (Behaviours.ContainsKey(id))
+            if (TrackedBehaviours.ContainsKey(id))
             {
-                pokemonGO = Behaviours[id] as PokemonBehaviour;
+                pokemonGO = TrackedBehaviours[id] as PokemonBehaviour;
             } 
             else
             {
                 pokemonGO = PokemonBehaviour.Spawn(pokemon);
                 pokemonGO.Id = id;
-                Behaviours.Add(id, pokemonGO);
+                TrackedBehaviours.Add(id, pokemonGO);
             }
             return pokemonGO;
         }
 
         public void Destroy(Guid id)
         {
-            var go = Behaviours[id];
+            var go = TrackedBehaviours[id];
             UnityEngine.Object.Destroy(go);
-            Behaviours.Remove(id);
+            TrackedBehaviours.Remove(id);
         }
 
         public void OnPokemonBought(BuyPokemonDTO dto)

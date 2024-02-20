@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace PokeBattler.Unity
 {
-    [CreateAssetMenu(fileName = "New Account", menuName = "PokemonGO/Account")]
+    [CreateAssetMenu(fileName = "New Account", menuName = "PokeBattler/Account")]
     public class AccountSO : ScriptableObject
     {
         [SerializeField]

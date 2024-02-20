@@ -9,7 +9,7 @@ using Zenject;
 
 public class ArenaManagerBehaviour : MonoInstaller<ArenaManagerBehaviour>
 {
-    IGameObjectService gameObjectService;
+    ITrackedObjectService gameObjectService;
     public List<ArenaBehaviour> Arenas;
 
     public override void InstallBindings()
@@ -18,7 +18,7 @@ public class ArenaManagerBehaviour : MonoInstaller<ArenaManagerBehaviour>
     }
 
     [Inject]
-    public void Construct(IGameObjectService gameObjectService)
+    public void Construct(ITrackedObjectService gameObjectService)
     {
         this.gameObjectService = gameObjectService;
         gameObjectService.OnPokemonCreated += OnPokemonCreated;
@@ -33,7 +33,7 @@ public class ArenaManagerBehaviour : MonoInstaller<ArenaManagerBehaviour>
     public void OnPokemonCreated(MovePokemonDTO dto)
     {
         var arena = Arenas.FirstOrDefault(arena => arena.Arena.OwnerId == dto.TrainerId);
-        var pokeBehaviour = gameObjectService.Behaviours[dto.PokemonId] as PokemonBehaviour;
+        var pokeBehaviour = gameObjectService.TrackedBehaviours[dto.PokemonId] as PokemonBehaviour;
         arena.AddPokemonToContainer(dto.ContainerType, dto.PokeContainerIndex, pokeBehaviour);
     }
 }

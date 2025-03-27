@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
+using System.Threading;
 
 namespace AutoChess.Contracts.Models.Json
 {
@@ -20,7 +22,7 @@ namespace AutoChess.Contracts.Models.Json
         private List<string> calcEvolutions(EvolutionChainLink chainLink, List<string> evolutions = null)
         {
             if (evolutions == null) evolutions = new List<string>();
-            evolutions.Add(chainLink.species.name.ToProper());
+            evolutions.Add(ToProper(chainLink.species.name));
             if (chainLink.evolves_to.Count == 0)
             {
                 return evolutions;
@@ -62,5 +64,12 @@ namespace AutoChess.Contracts.Models.Json
         }
 
         #endregion
+
+        public static string ToProper(string str)
+        {
+            CultureInfo culture_info = Thread.CurrentThread.CurrentCulture;
+            TextInfo text_info = culture_info.TextInfo;
+            return text_info.ToTitleCase(str);
+        }
     }
 }

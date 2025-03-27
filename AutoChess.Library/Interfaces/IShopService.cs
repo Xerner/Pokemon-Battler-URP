@@ -5,10 +5,8 @@ namespace AutoChess.Library.Interfaces;
 
 public interface IShopService
 {
-    public const bool FreeUnits = false; // TODO: app config
-    public int GetCost(Pokemon pokemon);
-    public Task<UnitClaimedDTO> TryToBuyUnit(Player trainer, Unit unit);
-    public BuyExperienceDTO BuyExperience(Player trainer);
-    public RefreshShopDTO RefreshShop(Game game, Player player, bool freeShop);
+    Task<UnitClaimedDTO?> TryToBuyUnit(Game game, Player player, Unit unit);
+    BuyExperienceDTO BuyExperience(Player trainer);
+    Task<RefreshShopDTO> RefreshShopAsync(Game game, Player player, bool freeShop);
     Task<IEnumerable<Unit>> GetUnitsInShop(Game game, Player player);
 }

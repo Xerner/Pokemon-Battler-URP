@@ -12,7 +12,7 @@ namespace AutoChess.Contracts.Interfaces
     {
         Task AddPlayerToGame(Player player);
         Task PlayerLevelUp(PlayerLevelUpDTO dto);
-        Task UnitClaimed(UnitClaimedDTO dto);
+        Task UnitClaimed(UnitClaimedDTO? dto);
         Task UpdateTrainerReady(Guid accountId, Guid gameId, bool isReady);
     }
 }

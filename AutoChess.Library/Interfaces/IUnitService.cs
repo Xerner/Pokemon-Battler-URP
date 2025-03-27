@@ -9,7 +9,9 @@ public interface IUnitService
     void DepositMany(IEnumerable<Unit> units);
     void Deposit(Unit units);
     bool IsUnitClaimed(Unit unit);
-    Task<bool> CanClaimUnit(Game game, Player player, Unit unit, IAutoChessUnitContainer container);
+    bool CanClaimUnit(Game game, Player player, Unit unit, IEnumerable<Unit> playersOtherUnits, IUnitContainer? container);
     int GetSellValue(Unit unit);
     int GetCost(Unit unit);
+    IEnumerable<Unit> PromoteUnit(Unit unit, IEnumerable<Unit> playersUnits);
+    void ClaimUnit(Player player, Unit unit);
 }

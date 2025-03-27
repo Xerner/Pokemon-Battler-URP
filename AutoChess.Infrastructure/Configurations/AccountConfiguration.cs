@@ -12,6 +12,9 @@ internal class AccountConfiguration : IEntityTypeConfiguration<Account>
         builder.Property(b => b.Username).IsRequired();
         builder.Property(b => b.TrainerSpriteId).IsRequired();
         builder.Property(b => b.TrainerBackgroundId).IsRequired();
+        builder.HasMany(b => b.UnitContainers)
+               .WithOne()
+               .HasForeignKey(b => b.AccountId);
         builder.HasOne(b => b.Game).WithMany();
     }
 }

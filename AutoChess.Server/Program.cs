@@ -6,7 +6,6 @@ using AutoChess.Library.Extensions;
 using AutoChess.Server.Services;
 using AutoChess.Contracts.Options;
 using AutoChess.Infrastructure.Extensions;
-using AutoChess.Library.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 

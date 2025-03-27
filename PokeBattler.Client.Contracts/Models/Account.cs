@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using AutoChess.Contracts.Interfaces;
 
 namespace AutoChess.Contracts.Models 
 { 
@@ -12,6 +14,7 @@ namespace AutoChess.Contracts.Models
         /// <summary>The Id given to players in-game so they can have the same username but still be identifiable</summary>
         public Guid GameId; // we want to save this so we can rejoin games later
         public Game Game { get; set; }
+        public ICollection<IUnitContainer> UnitContainers { get; set; }
         public override string ToString() => $"Username: {Username}\tClient Id: {Id}\tGame Id: {GameId}";
     }
 }

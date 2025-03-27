@@ -10,7 +10,7 @@ namespace AutoChess.Library.Services;
 
 public class UnitContainerService(AutoChessContext context) : IUnitContainerService
 {
-    public async Task<IEnumerable<IAutoChessUnitContainer>> GetContainersWithTags(Player player, EContainerType tags)
+    public async Task<IEnumerable<IUnitContainer>> GetContainersWithTags(Player player, EContainerTag tags)
     {
         var containers = await context.UnitContainers.Where(container => container.GameId == player.GameId && container.AccountId == player.AccountId)
                                                      .Where(container => container.Tags.Is(tags))

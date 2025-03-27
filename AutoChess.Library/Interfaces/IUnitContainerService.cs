@@ -6,5 +6,5 @@ namespace AutoChess.Library.Interfaces;
 
 public interface IUnitContainerService
 {
-    Task<IEnumerable<IAutoChessUnitContainer>> GetContainersWithTags(Player player, EContainerType tags);
+    Task<IEnumerable<IUnitContainer>> GetContainersWithTags(Player player, EContainerTag tags);
 }

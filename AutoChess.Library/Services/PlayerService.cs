@@ -9,10 +9,10 @@ using AutoChess.Library.Interfaces;
 namespace AutoChess.Library.Services;
 
 public class PlayerService(ILogger<PlayerService> logger,
-                             IGameService gameService,
-                             IResourceOptions resourceOptions,
-                             AutoChessContext context,
-                             IGameOptions gameOptions) : IPlayerService
+                           IGameService gameService,
+                           IResourceOptions resourceOptions,
+                           AutoChessContext context,
+                           IGameOptions gameOptions) : IPlayerService
 {
     public async Task<bool> UpdateTrainerReady(Guid accountId, Guid gameId, bool ready)
     {
@@ -23,7 +23,6 @@ public class PlayerService(ILogger<PlayerService> logger,
             return false;
         }
         trainer.Ready = ready;
-        await context.SaveChangesAsync();
         return trainer.Ready;
     }
 
@@ -32,7 +31,7 @@ public class PlayerService(ILogger<PlayerService> logger,
         return await context.Players.FirstOrDefaultAsync(player => player.GameId == gameId && player.AccountId == accountId);
     }
 
-    public async Task<Player> CreateOrReconnect(Account account, Game game)
+    public async Task<Player> CreateOrFetchExisting(Account account, Game game)
     {
         var players = await gameService.GetPlayers(game);
         var player = players.FirstOrDefault(p => p.AccountId == account.Id);
@@ -56,7 +55,6 @@ public class PlayerService(ILogger<PlayerService> logger,
             GameId = game.Id
         };
         context.Players.Add(player);
-        await context.SaveChangesAsync();
         return player;
     }
 
@@ -64,7 +62,7 @@ public class PlayerService(ILogger<PlayerService> logger,
 
     /// <summary>Create experience to the Trainer. Rolls over exp if they level up.</summary>
     /// <returns>True if the player levels up</returns>
-    public async Task<bool> AddExperience(Player player, int expToAdd)
+    public bool AddExperience(Player player, int expToAdd)
     {
         int expNeeded = resourceOptions.LevelToExpNeededToLevelUp[player.Level];
         int newExp = player.Experience + expToAdd;
@@ -89,7 +87,6 @@ public class PlayerService(ILogger<PlayerService> logger,
             player.Experience = newExp;
         }
         var leveledUp = difference <= 0;
-        await context.SaveChangesAsync();
         return leveledUp;
     }
 }

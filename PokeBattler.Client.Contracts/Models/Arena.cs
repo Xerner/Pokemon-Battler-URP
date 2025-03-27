@@ -14,8 +14,8 @@ namespace AutoChess.Contracts.Models
         public Guid OwnerId = Guid.Empty;
         public Player EnemyTrainer = new();
         public bool CombatMode;
-        public Dictionary<EContainerType, IAutoChessUnitContainer[]> PokeContainers { get; private set; } = [];
-        public IAutoChessUnitContainer[] Bench { get; private set; } = [];
+        public Dictionary<EContainerTag, IUnitContainer[]> PokeContainers { get; private set; } = [];
+        public IUnitContainer[] Bench { get; private set; } = [];
         public ArenaSpot[] ArenaSpots { get; private set; } = new ArenaSpot[Rows * Columns];
         private readonly Dictionary<EAllegiance, List<Pokemon>> CombatGroups = [];
 
@@ -95,7 +95,7 @@ namespace AutoChess.Contracts.Models
                     default:
                         throw new Exception("Invalid arena direction");
                 }
-                if (this[adjacent] is ArenaSpot card && card.Pokemon == null)
+                if (this[adjacent] is ArenaSpot card && card.UnitId is null)
                 {
                     return card;
                 }

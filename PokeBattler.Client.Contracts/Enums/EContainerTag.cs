@@ -3,7 +3,7 @@
 namespace AutoChess.Contracts.Enums
 {
     [Flags]
-    public enum EContainerType
+    public enum EContainerTag
     {
         None = 1,
         Bench = 2,

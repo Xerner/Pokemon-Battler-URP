@@ -14,8 +14,8 @@ namespace AutoChess.Contracts.Models
         public int Experience { get; set; } = 0;
         public int Money { get; set; } = 10;
         public int Level { get; set; } = 1;
+        public int ShopCost { get; set; } = 2;
+        public int ExperienceCost { get; set; } = 4;
         public int ExperienceNeededToLevelUp { get; set; }
-        public Game Game { get; set; }
-        public IEnumerable<IAutoChessUnitContainer> UnitContainers { get; set; }
     }
 }

@@ -5,9 +5,8 @@ namespace AutoChess.Contracts.DTOs
 {
     public class MoveUnitDTO : BaseDTO
     {
-        public Guid TrainerId { get; set; }
-        public Guid PokemonId { get; set; }
-        public int PokeContainerIndex { get; set; }
-        public EContainerType ContainerType { get; set; }
+        public Guid AccountId { get; set; }
+        public Guid UnitId { get; set; }
+        public Guid ContainerId { get; set; }
     }
 }

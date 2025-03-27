@@ -12,5 +12,5 @@ public class AutoChessContext : DbContext
     public DbSet<Unit> Units { get; set; }
     public DbSet<UnitInfo> UnitInfos { get; set; }
     public DbSet<UnitCount> UnitCounts { get; set; }
-    public DbSet<IAutoChessUnitContainer> UnitContainers { get; set; }
+    public DbSet<IUnitContainer> UnitContainers { get; set; }
 }

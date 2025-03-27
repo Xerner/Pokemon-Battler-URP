@@ -14,7 +14,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\PokeBattler.Client.Contracts\PokeBattler.Client.Contracts.csproj" />
-    <ProjectReference Include="..\AutoChess.Contracts\AutoChess.Contracts.csproj" />
     <ProjectReference Include="..\AutoChess.Infrastructure\AutoChess.Infrastructure.csproj" />
   </ItemGroup>
 

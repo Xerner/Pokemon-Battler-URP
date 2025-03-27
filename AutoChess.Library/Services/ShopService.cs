@@ -6,29 +6,24 @@ using AutoChess.Contracts.Repositories;
 using AutoChess.Contracts.Options;
 using AutoChess.Contracts.Enums;
 using Microsoft.EntityFrameworkCore;
+using AutoChess.Library.Extensions;
 
 namespace AutoChess.Library.Services;
 
 public class ShopService(ILogger<ShopService> logger, 
                          IPlayerService playersService, 
                          IResourceOptions resourceOptions,
-                         IArenaService arenaService,
                          IUnitService unitService,
-                         IUnitQueryService autoChessUnitService,
+                         IUnitQueryService unitQueryService,
+                         IUnitContainerService unitContainerService,
                          IGameOptions gameOptions,
-                         IPoolOptions poolOptions,
-                         IGameService gameService) : IShopService
+                         IPoolOptions poolOptions) : IShopService
 {
-    public const int ExperienceCost = 4;
-    public const int ShopCost = 2;
-
-    //readonly Dictionary<Guid, TrainerShop> TrainerShops = [];
-
     public BuyExperienceDTO BuyExperience(Player player)
     {
         if (!gameOptions.FreeExperience)
         {
-            if (player.Money < ExperienceCost)
+            if (player.Money < player.ExperienceCost)
             {
                 logger.LogInformation("Not enough money to buy experience!");
                 return new BuyExperienceDTO()
@@ -40,9 +35,9 @@ public class ShopService(ILogger<ShopService> logger,
                     TierChances = poolOptions.TierChancesByLevel[player.Level]
                 };
             }
-            player.Money -= ExperienceCost;
+            player.Money -= player.ExperienceCost;
         }
-        playersService.AddExperience(player, ExperienceCost);
+        playersService.AddExperience(player, player.ExperienceCost);
         player.ExperienceNeededToLevelUp = resourceOptions.LevelToExpNeededToLevelUp[player.Level];
         return new BuyExperienceDTO()
         {
@@ -54,80 +49,71 @@ public class ShopService(ILogger<ShopService> logger,
         };
     }
 
-    public async Task<RefreshShopDTO> RefreshShop(Game game, Player player, bool freeShop)
+    public async Task<RefreshShopDTO> RefreshShopAsync(Game game, Player player, bool freeShop)
     {
         var isShopFree = freeShop || gameOptions.FreeRefreshShop;
         if (isShopFree == false)
         {
-            if (player.Money < ShopCost)
+            if (player.Money < player.ShopCost)
             {
                 logger.LogInformation("Not enough money to refresh the shop!");
                 return new RefreshShopDTO() {
                     NewMoneyBalance = player.Money,
-                    ShopUnits = []
+                    NewUnits = []
                 };
             }
-            player.Money -= ShopCost;
+            player.Money -= player.ShopCost;
         }
         var unitsToReturn = await GetUnitsInShop(game, player);
         var newUnits = await unitService.WithdrawManyAsync(game, player, unitsToReturn, gameOptions.ShopSize);
         return new RefreshShopDTO()
         {
             NewMoneyBalance = player.Money,
-            ShopUnits = newUnits
+            NewUnits = newUnits
         };
     }
 
-    public async Task<BuyPokemonDTO> BuyPokemon(Player player, Unit unit)
+    public async Task<UnitClaimedDTO?> TryToBuyUnit(Game game, Player player, Unit unit)
     {
-        var shop = TrainerShops[player.Id];
-        var pokemon = await pokemonApiService.GetPokemon(pokemonId);
-        var cost = unitService.GetCost(pokemon);
-        if (player.Money < cost && !IShopService.FreeUnits)
+        var availableBenchContainer = (await unitContainerService.GetContainersWithTags(player, EContainerTag.Bench)).FirstOrDefault();
+        var playersUnits = await unitQueryService.GetUnits(game, player);
+        var canClaimUnit = unitService.CanClaimUnit(game, player, unit, playersUnits, availableBenchContainer);
+        if (canClaimUnit == false)
         {
-            logger.LogInformation("Not enough money");
             return null;
         }
-        pokemon.Id = new Guid();
-        var containerType = EContainerType.Bench;
-        var benchIndex = arenaService.GetAvailableBenchIndex(player);
-        var isAboutToEvolve = playersService.TrainersPokemon[player.Id].IsAboutToEvolve(pokemon);
-        if (benchIndex < 0 && !isAboutToEvolve)
+        unitService.ClaimUnit(player, unit);
+        player.Money -= unitService.GetCost(unit);
+        var canBeCombined = playersUnits.CanBeCombined(unit);
+        var unitClaimedDto = new UnitClaimedDTO()
         {
-            if (!isAboutToEvolve)
-            {
-                // Trainer bought a Pokemon, but the bench is full, BUT the purchased
-                // Pokemon can be used in an evolution to free up space
-                return null;
-            }
-            var tuple = arenaService.GetContainerWithPokemonToEvolve(player, pokemon);
-            containerType = tuple.Item1;
-            benchIndex = tuple.Item2;
+            AccountId = player.AccountId,
+            NewMoneyBalance = player.Money,
+            UnitId = unit.Id
+        };
+        if (canBeCombined)
+        {
+            var existingSimilarUnit = unitQueryService.GetSimilarUnit(unit, playersUnits);
+            unitClaimedDto.UnitsToDestroy = unitService.PromoteUnit(existingSimilarUnit!, playersUnits).Select(unit => unit.Id);
+            unitClaimedDto.UnitPromoted = existingSimilarUnit!.Id;
+            return unitClaimedDto;
         }
-        logger.LogInformation($"Trainer {player.Account.Username} {player.Id} bought a {pokemon.name} for {pokemon.tier}");
-        shop.ShopPokemon[shopIndex] = null;
-        player.Money -= cost;
-        BuyPokemonDTO dto = await unitService.Evolve(playersService.TrainersPokemon[player.Id], pokemon);
-        dto.TrainerId = player.Id;
-        dto.Pokemon = pokemon;
-        dto.Shop = new RefreshShopDTO()
+        if (availableBenchContainer is null)
         {
-            Money = player.Money,
-            Shop = shop
-        };
-        dto.Move = new MovePokemonDTO()
+            throw new Exception("Unit was purchased with no available bench container found and unit cannot be combined!");
+        }
+        unitClaimedDto.Move = new MoveUnitDTO()
         {
-            TrainerId = player.Id,
-            PokemonId = pokemon.Id,
-            PokeContainerIndex = benchIndex,
-            ContainerType = containerType
+            AccountId = player.AccountId,
+            UnitId = unit.Id,
+            ContainerId = availableBenchContainer.Id,
         };
-        return dto;
+        return unitClaimedDto;
     }
 
     public async Task<IEnumerable<Unit>> GetUnitsInShop(Game game, Player player)
     {
-        var units = await autoChessUnitService.GetUnitsQuery(game, player)
+        var units = await unitQueryService.GetUnitsQuery(game, player)
             .Where(unit => unit.Container == null)
             .ToListAsync();
         return units;

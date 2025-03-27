@@ -26,7 +26,7 @@ public class UnitService(ILogger<UnitService> logger,
     /// </summary>
     /// <param name="unit">The Unit to attempt to add to the bench</param>
     /// <param name="container">The container to add it to</param>
-    public async Task<bool> CanClaimUnit(Game game, Player player, Unit unit, IAutoChessUnitContainer container)
+    public bool CanClaimUnit(Game game, Player player, Unit unit, IEnumerable<Unit> playersOtherUnits, IUnitContainer? container)
     {
         var notEnoughMoney = player.Money < unit.Cost;
         if (notEnoughMoney)
@@ -39,14 +39,18 @@ public class UnitService(ILogger<UnitService> logger,
         }
         if (container is null)
         {
-            var playersUnits = await autoChessUnitQueryService.GetUnits(game, player);
-            bool canCombine = playersUnits.CanCombine(unit);
+            bool canCombine = playersOtherUnits.CanBeCombined(unit);
             if (canCombine == false)
             {
                 return false; // no fucking room
             }
         }
         return true;
+    }
+
+    public void ClaimUnit(Player player, Unit unit)
+    {
+        unit.AccountId = player.AccountId;
     }
 
     public async Task<Unit[]> WithdrawManyAsync(Game game, Player player, IEnumerable<Unit> unitsToReturn, int count)
@@ -79,21 +83,35 @@ public class UnitService(ILogger<UnitService> logger,
         return unit.AccountId is not null && unit.Container is not null;
     }
 
+    /// <returns>The Units to destroy</returns>
+    public IEnumerable<Unit> PromoteUnit(Unit unit, IEnumerable<Unit> playersUnits)
+    {
+        if (unit.CombinationStage == 3)
+        {
+            return [];
+        }
+        var otherUnitsOfSameStage = playersUnits.Where(u => u.InfoId == unit.InfoId && u.CombinationStage == unit.CombinationStage && u.Id != unit.Id);
+        if (otherUnitsOfSameStage.Count() < 2)
+        {
+            return [];
+        }
+        unit.CombinationStage++;
+        return otherUnitsOfSameStage;
+    }
+
     #endregion
 
     #region Private Methods
 
-    /// <summary>Attempt to withdraw 1 Pokemon from the PokemonPoolService</summary>
-    /// <returns>A random Pokemon from the given tier, or null if there are no Pokemon left to pull</returns>
     async Task<Unit> Withdraw(Game game, Player player)
     {
         var tier = RollForTier(player.Level);
-        var randomUnit = await RollForAUnitAsync(game, tier);
+        var randomUnit = await CreateRandomUnit(game, tier);
         randomUnit.AccountId = player.AccountId;
         return randomUnit;
     }
 
-    async Task<Unit> RollForAUnitAsync(Game game, int tier, bool remove = false)
+    async Task<Unit> CreateRandomUnit(Game game, int tier, bool remove = false)
     {
         var random = new Random();
         var unitInfosOfTier = await context.Games.Where(game => game.Id == game.Id)
@@ -106,11 +124,6 @@ public class UnitService(ILogger<UnitService> logger,
         {
             int roll = random.Next(0, unitInfosOfTier.Count + 1);
             var randomUnitInfo = unitInfosOfTier[roll];
-            // TODO: this process should be changed to use a number count, because of how complicated selling
-            //       combined units and generated units that shouldnt be counted in the pool will be (instead
-            //       of relying on the count of units unclaimed in the pool). This also implies a new property
-            //       on the AutoChessUnitInfo model needs to be added to determine if the unit should be counted
-            //       in the pool or not, and how many counts one unit should be worth
             var countOfAvailableUnits = await unitCountService.GetUnitCount(game.Id, randomUnitInfo.Id);
             if (countOfAvailableUnits is null)
             {
@@ -184,59 +197,6 @@ public class UnitService(ILogger<UnitService> logger,
     public int GetCost(Unit unit)
     {
         return unit.Info.Tier;
-    }
-
-    #endregion
-
-    #region TODO: move to proper service
-
-    /// <summary>
-    /// Recursively evolve the pokemon until it can't no more
-    /// </summary>
-    public async Task<UnitClaimedDTO> Evolve(List<Pokemon> trainersPokemon, Pokemon pokemon, List<Guid> pokemonToDestroy = null)
-    {
-        if (!trainersPokemon.IsAboutToEvolve(pokemon))
-        {
-            return new UnitClaimedDTO()
-            {
-                Unit = pokemon,
-                UnitsToDestroy = null
-            };
-        }
-        // TODO: move this function to proper place
-        if (pokemonToDestroy == null)
-        {
-            pokemonToDestroy = [];
-        }
-        bool evolving = trainersPokemon.IsAboutToEvolve(pokemon);
-        if (!evolving)
-        {
-            return new UnitClaimedDTO()
-            {
-                Unit = pokemon,
-                UnitsToDestroy = pokemonToDestroy
-            };
-        }
-        // Destroy all other instances of this Pokemon
-        var otherPokemonWithSameName = trainersPokemon.Where(p => p.Name == pokemon.Name);
-        foreach (Pokemon otherPokemon in trainersPokemon)
-        {
-            if (pokemon != otherPokemon && otherPokemon.Name == pokemon.Name)
-            {
-                pokemonToDestroy.Add(otherPokemon.Id);
-            }
-        }
-        foreach (Pokemon otherPokemon in trainersPokemon.Where(p => pokemonToDestroy.Contains(p.Id)))
-        {
-            trainersPokemon.Remove(otherPokemon);
-        }
-        // Evooooolve
-        var id = pokemon.Id;
-        pokemon = await pokeApiService.GetEvolution(pokemon);
-        pokemon.Id = id;
-        // recursion is intended here
-        // If the evolved Pokemon is about to evolve, then it will be evolved again
-        return await Evolve(trainersPokemon, pokemon, pokemonToDestroy);
     }
 
     #endregion

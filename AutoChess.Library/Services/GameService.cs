@@ -8,15 +8,19 @@ using AutoChess.Library.Interfaces;
 namespace AutoChess.Library.Services;
 
 public class GameService(ILogger<GameService> logger,
-                         AutoChessContext context,
-                         IGameOptions defaultGameSettings) : IGameService
+                         AutoChessContext context) : IGameService
 {
+    public async Task<Game?> GetGameAsync(Guid gameId)
+    {
+        return await context.Games.Where(game => game.Id == gameId).FirstOrDefaultAsync();
+    }
+
     public async Task<IEnumerable<Player>> GetPlayers(Game game)
     {
         return await context.Players.Where(player => player.GameId == game.Id).ToListAsync();
     }
 
-    public async Task<Game> CreateGameAsync()
+    public async Task<Game> CreateGameAsync(IGameOptions gameOptions)
     {
         // This should be done differently when I have time. It should load pokemon on
         // game launch based on a ScriptableObject or something, and then cache them somehow
@@ -24,10 +28,9 @@ public class GameService(ILogger<GameService> logger,
         var game = new Game()
         {
             Id = Guid.NewGuid(),
-            GameOptions = defaultGameSettings,
+            GameOptions = gameOptions,
         };
         context.Games.Add(game);
-        await context.SaveChangesAsync();
         logger.LogInformation($"Game {game.Id} created");
         return game;
     }

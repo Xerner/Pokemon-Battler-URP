@@ -13,7 +13,7 @@ namespace AutoChess.Contracts.Models
         public int SellValue { get; set; } = 1;
         public bool IsCountedInPool { get; private set; } = true;
         public int CountTowardsPool { get; private set; } = 1;
-        public IAutoChessUnitContainer? Container { get; set; } = null;
+        public IUnitContainer? Container { get; set; } = null;
         public UnitInfo Info { get; set; }
 
         public Unit() { }

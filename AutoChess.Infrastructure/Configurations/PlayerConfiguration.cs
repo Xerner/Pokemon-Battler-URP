@@ -9,9 +9,6 @@ internal class PlayerConfiguration : IEntityTypeConfiguration<Player>
     public void Configure(EntityTypeBuilder<Player> builder)
     {
         builder.HasKey(b => new { b.AccountId, b.GameId });
-        builder.HasMany(b => b.UnitContainers)
-               .WithOne()
-               .HasForeignKey(b => b.PlayerId);
         builder.Property(b => b.Ready).IsRequired();
         builder.Property(b => b.CurrentHealth).IsRequired();
         builder.Property(b => b.TotalHealth).IsRequired();

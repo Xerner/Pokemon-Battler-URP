@@ -4,7 +4,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using AutoChess.Library.Extensions;
 using AutoChess.Server.Services;
-using AutoChess.Contracts.Options;
 using AutoChess.Infrastructure.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,32 +14,22 @@ builder.Services.AddSignalR(options =>
 });
 
 builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
-builder.Services.AddOptions<IGameOptions>()
-    .Bind(builder.Configuration.GetSection(IGameOptions.Key))
-    .ValidateDataAnnotations();
-builder.Services.AddOptions<IPoolOptions>()
-    .Bind(builder.Configuration.GetSection(IPoolOptions.Key))
-    .ValidateDataAnnotations();
-
 builder.Services.AddSwagger();
 
 // API services
 //builder.Services.AddSingleton<GameHub>();
 // Services
-builder.Services.UseAutoChessInfrastructure((services) =>
+builder.Services.AddAutoChessInfrastructure((services) =>
 {
-    services.UsePostgreSql();
-    services.UseHttpInfrastructure();
+    services.AddPostgreSql();
+    services.AddHttpInfrastructure();
 });
 builder.Services.AddAutoChessServices();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-//if (app.Environment.IsDevelopment())
-//{
-//    app.UseSwagger();
-//    app.UseSwaggerUI();
-//}
+app.UseSwagger();
+app.UseSwaggerUI();
 
 //app.UseHttpsRedirection();
 //app.UseAuthorization();

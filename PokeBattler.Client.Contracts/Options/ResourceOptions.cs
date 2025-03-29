@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-
-namespace AutoChess.Contracts.Options
+﻿namespace AutoChess.Contracts.Options
 {
-    public interface IResourceOptions
+    public class ResourceOptions
     {
         public const string Key = "ResourceOptions";
 
@@ -17,7 +15,7 @@ namespace AutoChess.Contracts.Options
         /// <summary>
         /// Win streak count to income bonus
         /// </summary>
-        public List<int> WinStreakIncome { get; }
-        public List<int> LevelToExpNeededToLevelUp { get; }
+        public int[] WinStreakIncome { get; }
+        public int[] LevelToExpNeededToLevelUp { get; }
     }
 }

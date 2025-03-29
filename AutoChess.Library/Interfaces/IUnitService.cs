@@ -1,11 +1,12 @@
 ﻿using AutoChess.Contracts.Interfaces;
 using AutoChess.Contracts.Models;
+using AutoChess.Infrastructure.Context;
 
 namespace AutoChess.Contracts.Repositories;
 
 public interface IUnitService
 {
-    Task<Unit[]> WithdrawManyAsync(Game game, Player player, IEnumerable<Unit> unitsToReturn, int count);
+    Task<Unit[]> WithdrawManyAsync(Game game, Player player, IEnumerable<Unit> unitsToReturn, int count, AutoChessContext context);
     void DepositMany(IEnumerable<Unit> units);
     void Deposit(Unit units);
     bool IsUnitClaimed(Unit unit);

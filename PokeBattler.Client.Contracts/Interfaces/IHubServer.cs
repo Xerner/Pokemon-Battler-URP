@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoChess.Contracts.DTOs;
 using AutoChess.Contracts.Models;
+using SignalRSwaggerGen.Attributes;
 
 namespace AutoChess.Contracts.Interfaces
 {
     /// <summary>
     /// The API endpoints that are reachable on the Server
     /// </summary>
+    //[SignalRHub]
     public interface IHubServer
     {
         string Ping(string str);

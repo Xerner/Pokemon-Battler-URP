@@ -7,21 +7,23 @@ using AutoChess.Contracts.Options;
 using AutoChess.Contracts.Enums;
 using Microsoft.EntityFrameworkCore;
 using AutoChess.Library.Extensions;
+using AutoChess.Infrastructure.Context;
+using Microsoft.Extensions.Options;
 
 namespace AutoChess.Library.Services;
 
 public class ShopService(ILogger<ShopService> logger, 
                          IPlayerService playersService, 
-                         IResourceOptions resourceOptions,
                          IUnitService unitService,
                          IUnitQueryService unitQueryService,
                          IUnitContainerService unitContainerService,
-                         IGameOptions gameOptions,
-                         IPoolOptions poolOptions) : IShopService
+                         IOptions<ResourceOptions> resourceOptions,
+                         IOptions<GameOptions> gameOptions,
+                         IOptions<PoolOptions> poolOptions) : IShopService
 {
     public BuyExperienceDTO BuyExperience(Player player)
     {
-        if (!gameOptions.FreeExperience)
+        if (!gameOptions.Value.FreeExperience)
         {
             if (player.Money < player.ExperienceCost)
             {
@@ -31,27 +33,27 @@ public class ShopService(ILogger<ShopService> logger,
                     Money = player.Money,
                     Level = player.Level,
                     Experience = player.Experience,
-                    ExperienceNeededToLevelUp = resourceOptions.LevelToExpNeededToLevelUp[player.Level],
-                    TierChances = poolOptions.TierChancesByLevel[player.Level]
+                    ExperienceNeededToLevelUp = resourceOptions.Value.LevelToExpNeededToLevelUp[player.Level],
+                    TierChances = poolOptions.Value.TierChancesByLevel[player.Level]
                 };
             }
             player.Money -= player.ExperienceCost;
         }
         playersService.AddExperience(player, player.ExperienceCost);
-        player.ExperienceNeededToLevelUp = resourceOptions.LevelToExpNeededToLevelUp[player.Level];
+        player.ExperienceNeededToLevelUp = resourceOptions.Value.LevelToExpNeededToLevelUp[player.Level];
         return new BuyExperienceDTO()
         {
             Money = player.Money,
             Level = player.Level,
             Experience = player.Experience,
             ExperienceNeededToLevelUp = player.ExperienceNeededToLevelUp,
-            TierChances = poolOptions.TierChancesByLevel[player.Level]
+            TierChances = poolOptions.Value.TierChancesByLevel[player.Level]
         };
     }
 
-    public async Task<RefreshShopDTO> RefreshShopAsync(Game game, Player player, bool freeShop)
+    public async Task<RefreshShopDTO> RefreshShopAsync(Game game, Player player, bool freeShop, AutoChessContext context)
     {
-        var isShopFree = freeShop || gameOptions.FreeRefreshShop;
+        var isShopFree = freeShop || gameOptions.Value.FreeRefreshShop;
         if (isShopFree == false)
         {
             if (player.Money < player.ShopCost)
@@ -64,8 +66,8 @@ public class ShopService(ILogger<ShopService> logger,
             }
             player.Money -= player.ShopCost;
         }
-        var unitsToReturn = await GetUnitsInShop(game, player);
-        var newUnits = await unitService.WithdrawManyAsync(game, player, unitsToReturn, gameOptions.ShopSize);
+        var unitsToReturn = await GetUnitsInShop(game, player, context);
+        var newUnits = await unitService.WithdrawManyAsync(game, player, unitsToReturn, gameOptions.Value.ShopSize, context);
         return new RefreshShopDTO()
         {
             NewMoneyBalance = player.Money,
@@ -73,10 +75,10 @@ public class ShopService(ILogger<ShopService> logger,
         };
     }
 
-    public async Task<UnitClaimedDTO?> TryToBuyUnit(Game game, Player player, Unit unit)
+    public async Task<UnitClaimedDTO?> TryToBuyUnit(Game game, Player player, Unit unit, AutoChessContext context)
     {
-        var availableBenchContainer = (await unitContainerService.GetContainersWithTags(player, EContainerTag.Bench)).FirstOrDefault();
-        var playersUnits = await unitQueryService.GetUnits(game, player);
+        var availableBenchContainer = (await unitContainerService.GetContainersWithTags(player, EContainerTag.Bench, context)).FirstOrDefault();
+        var playersUnits = await unitQueryService.GetUnits(game, player, context);
         var canClaimUnit = unitService.CanClaimUnit(game, player, unit, playersUnits, availableBenchContainer);
         if (canClaimUnit == false)
         {
@@ -111,9 +113,9 @@ public class ShopService(ILogger<ShopService> logger,
         return unitClaimedDto;
     }
 
-    public async Task<IEnumerable<Unit>> GetUnitsInShop(Game game, Player player)
+    public async Task<IEnumerable<Unit>> GetUnitsInShop(Game game, Player player, AutoChessContext context)
     {
-        var units = await unitQueryService.GetUnitsQuery(game, player)
+        var units = await unitQueryService.GetUnitsQuery(game, player, context)
             .Where(unit => unit.Container == null)
             .ToListAsync();
         return units;

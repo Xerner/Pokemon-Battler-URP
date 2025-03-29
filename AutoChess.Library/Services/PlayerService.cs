@@ -1,20 +1,19 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using AutoChess.Contracts.Interfaces;
 using AutoChess.Contracts.Models;
 using AutoChess.Contracts.Options;
 using AutoChess.Infrastructure.Context;
 using AutoChess.Library.Interfaces;
+using Microsoft.Extensions.Options;
 
 namespace AutoChess.Library.Services;
 
 public class PlayerService(ILogger<PlayerService> logger,
                            IGameService gameService,
-                           IResourceOptions resourceOptions,
-                           AutoChessContext context,
-                           IGameOptions gameOptions) : IPlayerService
+                           IOptions<ResourceOptions> resourceOptions,
+                           IOptions<GameOptions> gameOptions) : IPlayerService
 {
-    public async Task<bool> UpdateTrainerReady(Guid accountId, Guid gameId, bool ready)
+    public async Task<bool> UpdateTrainerReady(Guid accountId, Guid gameId, bool ready, AutoChessContext context)
     {
         var trainer = await context.Players.FirstOrDefaultAsync(player => player.AccountId == accountId && player.GameId == gameId);
         if (trainer is null)
@@ -26,14 +25,14 @@ public class PlayerService(ILogger<PlayerService> logger,
         return trainer.Ready;
     }
 
-    public async Task<Player?> GetPlayerAsync(Guid accountId, Guid gameId)
+    public async Task<Player?> GetPlayerAsync(Guid accountId, Guid gameId, AutoChessContext context)
     {
         return await context.Players.FirstOrDefaultAsync(player => player.GameId == gameId && player.AccountId == accountId);
     }
 
-    public async Task<Player> CreateOrFetchExisting(Account account, Game game)
+    public async Task<Player> CreateOrFetchExisting(Account account, Game game, AutoChessContext context)
     {
-        var players = await gameService.GetPlayers(game);
+        var players = await gameService.GetPlayers(game, context);
         var player = players.FirstOrDefault(p => p.AccountId == account.Id);
         //var player = new Player(account, resourceOptions.LevelToExpNeededToLevelUp[1]);
         // if trainer was already in-game and is reconnecting
@@ -43,7 +42,7 @@ public class PlayerService(ILogger<PlayerService> logger,
             throw new NotImplementedException();
         }
         // gameService slots are full
-        if (players.Count() >= gameOptions.PlayerCount)
+        if (players.Count() >= gameOptions.Value.PlayerCount)
         {
             logger.LogInformation($"Game is full, rejecting player with username {account.Username}");
             throw new NotImplementedException();
@@ -64,16 +63,16 @@ public class PlayerService(ILogger<PlayerService> logger,
     /// <returns>True if the player levels up</returns>
     public bool AddExperience(Player player, int expToAdd)
     {
-        int expNeeded = resourceOptions.LevelToExpNeededToLevelUp[player.Level];
+        int expNeeded = resourceOptions.Value.LevelToExpNeededToLevelUp[player.Level];
         int newExp = player.Experience + expToAdd;
         int difference = expNeeded - newExp;
         if (difference <= 0)
         { // leveled up
           // edge case: player is already max level
-            var isPlayerMaxLevel = resourceOptions.LevelToExpNeededToLevelUp.Count() - 1 >= player.Level;
+            var isPlayerMaxLevel = resourceOptions.Value.LevelToExpNeededToLevelUp.Count() - 1 >= player.Level;
             if (isPlayerMaxLevel == false)
             {
-                player.Experience = resourceOptions.LevelToExpNeededToLevelUp[player.Level];
+                player.Experience = resourceOptions.Value.LevelToExpNeededToLevelUp[player.Level];
                 difference = 1;
             }
             else

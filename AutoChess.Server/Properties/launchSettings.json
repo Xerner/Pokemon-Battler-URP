@@ -9,7 +9,7 @@
     }
   },
   "profiles": {
-    "PokeBattler.Server": {
+    "AutoChess.Server": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,

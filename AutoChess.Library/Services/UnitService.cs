@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using AutoChess.Contracts.DTOs;
 using AutoChess.Contracts.Interfaces;
 using AutoChess.Contracts.Models;
 using AutoChess.Contracts.Options;
@@ -8,13 +7,13 @@ using AutoChess.Contracts.Repositories;
 using AutoChess.Infrastructure.Context;
 using AutoChess.Library.Extensions;
 using AutoChess.Library.Interfaces;
+using Microsoft.Extensions.Options;
 
 namespace AutoChess.Library.Services;
 
 public class UnitService(ILogger<UnitService> logger,
-                             AutoChessContext context,
-                             IUnitCountService unitCountService,
-                             IPoolOptions poolOptions) : IUnitService
+                         IUnitCountService unitCountService,
+                         IOptions<PoolOptions> poolOptions) : IUnitService
 {
     public const int MAX_SELL_VALUE = 50;
 
@@ -52,13 +51,13 @@ public class UnitService(ILogger<UnitService> logger,
         unit.AccountId = player.AccountId;
     }
 
-    public async Task<Unit[]> WithdrawManyAsync(Game game, Player player, IEnumerable<Unit> unitsToReturn, int count)
+    public async Task<Unit[]> WithdrawManyAsync(Game game, Player player, IEnumerable<Unit> unitsToReturn, int count, AutoChessContext context)
     {
         DepositMany(unitsToReturn);
         Unit[] units = new Unit[count];
         for (int i = 0; i < units.Length; i++)
         {
-            units[i] = await Withdraw(game, player);
+            units[i] = await Withdraw(game, player, context);
         }
         logger.LogInformation($"Units withdrawed: " + string.Join(',', units.Select(unit => unit.ToString())));
         return units;
@@ -102,15 +101,15 @@ public class UnitService(ILogger<UnitService> logger,
 
     #region Private Methods
 
-    async Task<Unit> Withdraw(Game game, Player player)
+    async Task<Unit> Withdraw(Game game, Player player, AutoChessContext context)
     {
         var tier = RollForTier(player.Level);
-        var randomUnit = await CreateRandomUnit(game, tier);
+        var randomUnit = await CreateRandomUnit(game, tier, false, context);
         randomUnit.AccountId = player.AccountId;
         return randomUnit;
     }
 
-    async Task<Unit> CreateRandomUnit(Game game, int tier, bool remove = false)
+    async Task<Unit> CreateRandomUnit(Game game, int tier, bool remove, AutoChessContext context)
     {
         var random = new Random();
         var unitInfosOfTier = await context.Games.Where(game => game.Id == game.Id)
@@ -123,7 +122,7 @@ public class UnitService(ILogger<UnitService> logger,
         {
             int roll = random.Next(0, unitInfosOfTier.Count + 1);
             var randomUnitInfo = unitInfosOfTier[roll];
-            var countOfAvailableUnits = await unitCountService.GetUnitCount(game.Id, randomUnitInfo.Id);
+            var countOfAvailableUnits = await unitCountService.GetUnitCount(game.Id, randomUnitInfo.Id, context);
             if (countOfAvailableUnits is null)
             {
                 throw new Exception($"Unit count is null for unit info {randomUnitInfo}");
@@ -153,7 +152,7 @@ public class UnitService(ILogger<UnitService> logger,
         // rolls a tier 2 unit
         for (int i = 0; i < 5; i++)
         {
-            chanceSum += poolOptions.TierChancesByLevel[trainerLevel][i];
+            chanceSum += poolOptions.Value.TierChancesByLevel[trainerLevel][i];
             if (roll < chanceSum)
             {
                 return i + 1;

@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
     <Nullable>enable</Nullable>
-    <RootNamespace>PokeBattler.Library</RootNamespace>
+    <RootNamespace>AutoChess.Library</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

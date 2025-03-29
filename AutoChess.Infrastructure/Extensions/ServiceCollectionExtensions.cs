@@ -8,12 +8,13 @@ namespace AutoChess.Infrastructure.Extensions;
 
 public static class IServiceCollectionExtensions
 {
-    public static void UseAutoChessInfrastructure(this IServiceCollection services, Action<ServicesBuilder> configureAction)
+    public static void AddAutoChessInfrastructure(this IServiceCollection services, Action<ServicesBuilder> configureAction)
     {
-        services.AddOptionsWithValidateOnStart<IAutoChessInfrastructureOptions>(IAutoChessInfrastructureOptions.Key);
-        var options = services.BuildServiceProvider().GetService<IAutoChessInfrastructureOptions>()!;
+        services.AddOptionsWithValidateOnStart<InfrastructureOptions>(InfrastructureOptions.Key);
+        var options = services.BuildServiceProvider().GetService<InfrastructureOptions>()!;
         var optionsBuilder = new ServicesBuilder(services, options);
         services.AddSingleton<IJsonService, JsonService>();
         configureAction.Invoke(optionsBuilder);
     }
 }
+ 

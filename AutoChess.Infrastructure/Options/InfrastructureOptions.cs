@@ -2,8 +2,8 @@
 
 namespace AutoChess.Infrastructure.Options;
 
-public interface IAutoChessInfrastructureOptions : IOptions<IAutoChessInfrastructureOptions>
+public class InfrastructureOptions
 {
     public const string Key = "AutoChessInfrastructure";
-    string ConnectionString { get; }
+    public string ConnectionString { get; } = "";
 }

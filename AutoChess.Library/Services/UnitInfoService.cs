@@ -5,19 +5,18 @@ using AutoChess.Library.Interfaces;
 
 namespace AutoChess.Library.Services;
 
-public class UnitInfoService(IPoolOptions poolOptions,
-                                      AutoChessContext context) : IUnitInfoService
+public class UnitInfoService(PoolOptions poolOptions) : IUnitInfoService
 {
-    public async Task AddToGameAsync(Game game, IEnumerable<UnitInfo> units)
+    public async Task AddToGameAsync(Game game, IEnumerable<UnitInfo> units, AutoChessContext context)
     {
         foreach (var unit in units)
         {
-            AddToGameAsync(game, unit);
+            AddToGameAsync(game, unit, context);
         }
         await context.SaveChangesAsync();
     }
 
-    void AddToGameAsync(Game game, UnitInfo unit)
+    void AddToGameAsync(Game game, UnitInfo unit, AutoChessContext context)
     {
         // TODO
         throw new NotImplementedException();

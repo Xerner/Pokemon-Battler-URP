@@ -8,17 +8,17 @@ using AutoChess.Infrastructure.Context;
 
 namespace AutoChess.Infrastructure.Options;
 
-public class ServicesBuilder(IServiceCollection Services, IAutoChessInfrastructureOptions options)
+public class ServicesBuilder(IServiceCollection Services, InfrastructureOptions options)
 {
-    public void UseHttpInfrastructure()
+    public void AddHttpInfrastructure()
     {
         Services.AddSingleton<IHttpService, HttpService>();
         Services.AddSingleton<IPokeApiService, PokeAPIService>();
     }
 
-    public void UsePostgreSql()
+    public void AddPostgreSql()
     {
-        Services.AddDbContextPool<AutoChessContext>((provider, optionsBuilder) =>
+        Services.AddDbContext<AutoChessContext>((provider, optionsBuilder) =>
         {
             optionsBuilder.UseNpgsql(options.ConnectionString);
         });

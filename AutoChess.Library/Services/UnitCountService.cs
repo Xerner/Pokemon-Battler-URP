@@ -5,9 +5,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AutoChess.Library.Services;
 
-public class UnitCountService(AutoChessContext context) : IUnitCountService
+public class UnitCountService : IUnitCountService
 {
-    public async Task<UnitCount?> GetUnitCount(Guid gameId, Guid unitInfoId)
+    public async Task<UnitCount?> GetUnitCount(Guid gameId, Guid unitInfoId, AutoChessContext context)
     {
         var unitCount = await context.UnitCounts
             .Where(uc => uc.GameId == gameId && uc.UnitInfoId == unitInfoId)

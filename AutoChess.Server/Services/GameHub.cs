@@ -15,17 +15,21 @@ using SignalRSwaggerGen.Attributes;
 
 namespace AutoChess.Server.Services;
 
-[SignalRHub]
 public class GameHub(ILogger<GameHub> logger,
                      AutoChessContext context,
                      IGameService gameService,
                      IShopService shopService,
                      IPlayerService playerService,
-                     IPoolOptions poolOptions,
-                     IGameOptions defaultGameOptions) : Hub<IHubClient>, IHubServer
+                     PoolOptions poolOptions,
+                     GameOptions defaultGameOptions) : Hub<IHubClient>, IHubServer
 {
     public const string HubName = "Games";
 
+    /// <summary>
+    /// Ping! Pong!
+    /// </summary>
+    /// <param name="str">Ping!</param>
+    /// <returns>Pong!</returns>
     public string Ping(string str)
     {
         return str;
@@ -40,8 +44,8 @@ public class GameHub(ILogger<GameHub> logger,
             logger.LogInformation($"Account {accountId} not found");
             return null;
         }
-        var game = await gameService.CreateGameAsync(defaultGameOptions);
-        var player = await playerService.CreateOrFetchExisting(account, game);
+        var game = gameService.CreateGame(defaultGameOptions, context);
+        var player = await playerService.CreateOrFetchExisting(account, game, context);
         await context.SaveChangesAsync();
         return game;
     }
@@ -55,14 +59,14 @@ public class GameHub(ILogger<GameHub> logger,
             logger.LogInformation($"Account {accountId} or game {gameId} not found");
             return;
         }
-        var player = await playerService.CreateOrFetchExisting(account, game);
+        var player = await playerService.CreateOrFetchExisting(account, game, context);
         await context.SaveChangesAsync();
         await Clients.BroadcastToGame(gameId).AddPlayerToGame(player);
     }
 
     public async Task<bool> UpdateTrainerReady(Guid accountId, Guid gameId, bool isReady)
     {
-        await playerService.UpdateTrainerReady(accountId, gameId, isReady);
+        await playerService.UpdateTrainerReady(accountId, gameId, isReady, context);
         await context.SaveChangesAsync();
         _ = Clients.BroadcastToGame(gameId).UpdateTrainerReady(accountId, gameId, isReady);
         return true;
@@ -75,14 +79,14 @@ public class GameHub(ILogger<GameHub> logger,
 
     public async Task<RefreshShopDTO?> RefreshShop(Guid accountId, Guid gameId)
     {
-        var player = await playerService.GetPlayerAsync(accountId, gameId);
-        var game = await gameService.GetGameAsync(gameId);
+        var player = await playerService.GetPlayerAsync(accountId, gameId, context);
+        var game = await gameService.GetGameAsync(gameId, context);
         if (player is null || game is null)
         {
             logger.LogInformation($"Player with accountId {accountId} or gameId {gameId} not found");
             return null;
         }
-        var dto = await shopService.RefreshShopAsync(game, player, false);
+        var dto = await shopService.RefreshShopAsync(game, player, false, context);
         await context.SaveChangesAsync();
         return dto;
     }
@@ -112,15 +116,15 @@ public class GameHub(ILogger<GameHub> logger,
 
     public async Task TryToBuyUnit(Guid accountId, Guid gameId, Guid unitId)
     {
-        var game = await gameService.GetGameAsync(gameId);
-        var player = await playerService.GetPlayerAsync(accountId, gameId);
+        var game = await gameService.GetGameAsync(gameId, context);
+        var player = await playerService.GetPlayerAsync(accountId, gameId, context);
         var unit = await context.Units.FirstOrDefaultAsync(unit => unit.Id == unitId);
         if (game is null || player is null || unit is null)
         {
             logger.LogInformation($"Game with gameId {gameId}, player with accountId {accountId} or unit with unitId {unitId} not found");
             return;
         }
-        var dto = await shopService.TryToBuyUnit(game, player, unit);
+        var dto = await shopService.TryToBuyUnit(game, player, unit, context);
         await context.SaveChangesAsync();
         await Clients.All.UnitClaimed(dto);
     }

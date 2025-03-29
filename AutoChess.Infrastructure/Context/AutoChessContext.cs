@@ -4,7 +4,7 @@ using AutoChess.Contracts.Models;
 
 namespace AutoChess.Infrastructure.Context;
 
-public class AutoChessContext : DbContext
+public class AutoChessContext(DbContextOptions<AutoChessContext> options) : DbContext(options)
 {
     public DbSet<Account> Accounts { get; set; }
     public DbSet<Game> Games { get; set; }

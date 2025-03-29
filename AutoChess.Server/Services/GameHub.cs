@@ -11,9 +11,11 @@ using AutoChess.Contracts.Options;
 using AutoChess.Library.Interfaces;
 using AutoChess.Infrastructure.Context;
 using AutoChess.Server.Extensions;
+using SignalRSwaggerGen.Attributes;
 
 namespace AutoChess.Server.Services;
 
+[SignalRHub]
 public class GameHub(ILogger<GameHub> logger,
                      AutoChessContext context,
                      IGameService gameService,

@@ -1,12 +1,11 @@
 ﻿using Microsoft.Extensions.Logging;
-using AutoChess.Infrastructure.Services;
 using AutoChess.Contracts.Models;
 using AutoChess.Contracts.ExternalApi;
 using AutoChess.Infrastructure.Interfaces;
 
 namespace AutoChess.Infrastructure.ExternalApi;
 
-public class PokeAPIService(ILogger<PokeAPIService> logger, HttpService http, IJsonService jsonService) : IPokeApiService
+public class PokeAPIService(ILogger<PokeAPIService> logger, IHttpService http, IJsonService jsonService) : IPokeApiService
 {
     private static readonly string[] stringArray = ["bulbasaur", "squirtle", "charmander", "magnemite", "abra"];
     public Dictionary<int, Pokemon> CachedPokemon { get; set; } = [];

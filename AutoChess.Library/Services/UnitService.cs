@@ -13,7 +13,6 @@ namespace AutoChess.Library.Services;
 
 public class UnitService(ILogger<UnitService> logger,
                              AutoChessContext context,
-                             IUnitQueryService autoChessUnitQueryService,
                              IUnitCountService unitCountService,
                              IPoolOptions poolOptions) : IUnitService
 {

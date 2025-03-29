@@ -22,11 +22,17 @@ builder.Services.AddOptions<IPoolOptions>()
     .Bind(builder.Configuration.GetSection(IPoolOptions.Key))
     .ValidateDataAnnotations();
 
+builder.Services.AddSwagger();
+
 // API services
 //builder.Services.AddSingleton<GameHub>();
 // Services
-builder.Services.UseHttpInfrastructure();
-builder.Services.UseAutoChessServices();
+builder.Services.UseAutoChessInfrastructure((services) =>
+{
+    services.UsePostgreSql();
+    services.UseHttpInfrastructure();
+});
+builder.Services.AddAutoChessServices();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

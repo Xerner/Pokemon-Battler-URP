@@ -14,7 +14,7 @@ builder.Services.AddSignalR(options =>
 });
 
 builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
-builder.Services.AddSwagger();
+//builder.Services.AddSwagger();
 
 // API services
 //builder.Services.AddSingleton<GameHub>();
@@ -28,8 +28,8 @@ builder.Services.AddAutoChessServices();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-app.UseSwagger();
-app.UseSwaggerUI();
+//app.UseSwagger();
+//app.UseSwaggerUI();
 
 //app.UseHttpsRedirection();
 //app.UseAuthorization();

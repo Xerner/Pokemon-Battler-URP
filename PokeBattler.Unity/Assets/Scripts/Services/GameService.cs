@@ -28,12 +28,10 @@ namespace PokeBattler.Client.Services
         public Game Game { get; set; }
         public Action<Game> OnGameCreated { get; set; }
 
-        public GameService(HubConnection connection, 
-                           IAppConfig appConfig,
+        public GameService(IAppConfig appConfig,
                            IClientService clientService,
                            IModalService modalService)
         {
-            this.connection = connection;
             this.appConfig = appConfig;
             this.clientService = clientService;
             this.modalService = modalService;

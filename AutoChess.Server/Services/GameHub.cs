@@ -11,7 +11,6 @@ using AutoChess.Contracts.Options;
 using AutoChess.Library.Interfaces;
 using AutoChess.Infrastructure.Context;
 using AutoChess.Server.Extensions;
-using SignalRSwaggerGen.Attributes;
 
 namespace AutoChess.Server.Services;
 
@@ -23,8 +22,6 @@ public class GameHub(ILogger<GameHub> logger,
                      PoolOptions poolOptions,
                      GameOptions defaultGameOptions) : Hub<IHubClient>, IHubServer
 {
-    public const string HubName = "Games";
-
     /// <summary>
     /// Ping! Pong!
     /// </summary>
@@ -34,8 +31,6 @@ public class GameHub(ILogger<GameHub> logger,
     {
         return str;
     }
-
-    #region During Game
 
     public async Task<Game?> CreateGameAsync(Guid accountId)
     {
@@ -50,18 +45,19 @@ public class GameHub(ILogger<GameHub> logger,
         return game;
     }
 
-    public async Task AddToGame(Guid accountId, Guid gameId)
+    public async Task<bool> AddToGame(Guid accountId, Guid gameId)
     {
         var account = await context.Accounts.FirstOrDefaultAsync(account => account.Id == accountId);
         var game = await context.Games.FirstOrDefaultAsync(game => game.Id == gameId);
         if (account == null || game == null)
         {
             logger.LogInformation($"Account {accountId} or game {gameId} not found");
-            return;
+            return false;
         }
         var player = await playerService.CreateOrFetchExisting(account, game, context);
         await context.SaveChangesAsync();
         await Clients.BroadcastToGame(gameId).AddPlayerToGame(player);
+        return true;
     }
 
     public async Task<bool> UpdateTrainerReady(Guid accountId, Guid gameId, bool isReady)
@@ -114,7 +110,7 @@ public class GameHub(ILogger<GameHub> logger,
         return dto;
     }
 
-    public async Task TryToBuyUnit(Guid accountId, Guid gameId, Guid unitId)
+    public async Task<bool> TryToBuyUnit(Guid accountId, Guid gameId, Guid unitId)
     {
         var game = await gameService.GetGameAsync(gameId, context);
         var player = await playerService.GetPlayerAsync(accountId, gameId, context);
@@ -122,12 +118,11 @@ public class GameHub(ILogger<GameHub> logger,
         if (game is null || player is null || unit is null)
         {
             logger.LogInformation($"Game with gameId {gameId}, player with accountId {accountId} or unit with unitId {unitId} not found");
-            return;
+            return false;
         }
         var dto = await shopService.TryToBuyUnit(game, player, unit, context);
         await context.SaveChangesAsync();
-        await Clients.All.UnitClaimed(dto);
+        await Clients.All.UnitClaimed(dto); 
+        return true;
     }
-
-    #endregion
 }

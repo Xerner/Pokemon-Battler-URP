@@ -19,6 +19,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoChess.Server", "AutoChe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoChess.Infrastructure", "AutoChess.Infrastructure\AutoChess.Infrastructure.csproj", "{E6099C33-91DC-4D69-AED0-FBA5EB871295}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoChess.Client", "AutoChess.Client\AutoChess.Client.csproj", "{3C8ED53B-B989-48D8-B8F6-783F64CF839A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{75968F4A-175B-4064-875F-9B674F21256C} = {75968F4A-175B-4064-875F-9B674F21256C}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoChess.Client.Tests", "AutoChess.Client.Tests\AutoChess.Client.Tests.csproj", "{F22D589B-1AFD-4046-910A-AB0F1399FDC4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug.InternalCloud|Any CPU = Debug.InternalCloud|Any CPU
@@ -75,6 +82,22 @@ Global
 		{E6099C33-91DC-4D69-AED0-FBA5EB871295}.Release.InternalCloud|Any CPU.Build.0 = Release|Any CPU
 		{E6099C33-91DC-4D69-AED0-FBA5EB871295}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E6099C33-91DC-4D69-AED0-FBA5EB871295}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3C8ED53B-B989-48D8-B8F6-783F64CF839A}.Debug.InternalCloud|Any CPU.ActiveCfg = Debug|Any CPU
+		{3C8ED53B-B989-48D8-B8F6-783F64CF839A}.Debug.InternalCloud|Any CPU.Build.0 = Debug|Any CPU
+		{3C8ED53B-B989-48D8-B8F6-783F64CF839A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3C8ED53B-B989-48D8-B8F6-783F64CF839A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3C8ED53B-B989-48D8-B8F6-783F64CF839A}.Release.InternalCloud|Any CPU.ActiveCfg = Release|Any CPU
+		{3C8ED53B-B989-48D8-B8F6-783F64CF839A}.Release.InternalCloud|Any CPU.Build.0 = Release|Any CPU
+		{3C8ED53B-B989-48D8-B8F6-783F64CF839A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3C8ED53B-B989-48D8-B8F6-783F64CF839A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F22D589B-1AFD-4046-910A-AB0F1399FDC4}.Debug.InternalCloud|Any CPU.ActiveCfg = Debug|Any CPU
+		{F22D589B-1AFD-4046-910A-AB0F1399FDC4}.Debug.InternalCloud|Any CPU.Build.0 = Debug|Any CPU
+		{F22D589B-1AFD-4046-910A-AB0F1399FDC4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F22D589B-1AFD-4046-910A-AB0F1399FDC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F22D589B-1AFD-4046-910A-AB0F1399FDC4}.Release.InternalCloud|Any CPU.ActiveCfg = Release|Any CPU
+		{F22D589B-1AFD-4046-910A-AB0F1399FDC4}.Release.InternalCloud|Any CPU.Build.0 = Release|Any CPU
+		{F22D589B-1AFD-4046-910A-AB0F1399FDC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F22D589B-1AFD-4046-910A-AB0F1399FDC4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -86,6 +109,8 @@ Global
 		{99DE7AB0-BB86-4D11-9394-89658A17E941} = {7E42DA26-F928-4724-906C-AF6F29EE87E1}
 		{6A6697E2-13F9-4840-A042-96DE984A7A09} = {7E42DA26-F928-4724-906C-AF6F29EE87E1}
 		{E6099C33-91DC-4D69-AED0-FBA5EB871295} = {7E42DA26-F928-4724-906C-AF6F29EE87E1}
+		{3C8ED53B-B989-48D8-B8F6-783F64CF839A} = {E8AA7132-369D-4E0A-87AC-1D07C756BFC2}
+		{F22D589B-1AFD-4046-910A-AB0F1399FDC4} = {E8AA7132-369D-4E0A-87AC-1D07C756BFC2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0EA507BC-8C36-4A43-81C2-2F3C2EC7A256}

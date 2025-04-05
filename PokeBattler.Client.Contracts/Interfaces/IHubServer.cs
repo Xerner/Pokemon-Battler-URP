@@ -15,11 +15,11 @@ namespace AutoChess.Contracts.Interfaces
     {
         string Ping(string str);
         Task<Game?> CreateGameAsync(Guid accountId);
-        Task AddToGame(Guid accountId, Guid gameId);
+        Task<bool> AddToGame(Guid accountId, Guid gameId);
         Task<bool> UpdateTrainerReady(Guid accountId, Guid gameId, bool isReady);
         IEnumerable<int> GetTierChances(int playerLevel);
         Task<BuyExperienceDTO?> BuyExperience(Guid accountId, Guid gameId);
-        Task TryToBuyUnit(Guid accountId, Guid gameId, Guid unitId);
+        Task<bool> TryToBuyUnit(Guid accountId, Guid gameId, Guid unitId);
         Task<RefreshShopDTO?> RefreshShop(Guid accountId, Guid gameId);
     }
 }

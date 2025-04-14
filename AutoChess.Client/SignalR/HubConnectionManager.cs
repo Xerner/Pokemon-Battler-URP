@@ -14,7 +14,7 @@ namespace AutoChess.Client.SignalR
         private readonly ILogger<AutoChessServer> Logger;
         private readonly IOptions<ServerOptions> ServerOptions;
 
-        public HubConnection? Connection { get; private set; } = null;
+        public HubConnection Connection { get; private set; } = null;
 
         public HubConnectionManager(ILogger<AutoChessServer> logger, IOptions<ServerOptions> serverOptions)
         {

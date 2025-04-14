@@ -27,9 +27,9 @@ public class GameHub(ILogger<GameHub> logger,
     /// </summary>
     /// <param name="str">Ping!</param>
     /// <returns>Pong!</returns>
-    public string Ping(string str)
+    public Task<string> Ping(string str)
     {
-        return str;
+        return Task.FromResult(str);
     }
 
     public async Task<Game?> CreateGameAsync(Guid accountId)
@@ -68,9 +68,10 @@ public class GameHub(ILogger<GameHub> logger,
         return true;
     }
 
-    public IEnumerable<int> GetTierChances(int playerLevel)
+    public Task<IEnumerable<int>> GetTierChances(int playerLevel)
     {
-        return poolOptions.TierChancesByLevel[playerLevel];
+        IEnumerable<int> tierChances = poolOptions.TierChancesByLevel[playerLevel];
+        return Task.FromResult(tierChances);
     }
 
     public async Task<RefreshShopDTO?> RefreshShop(Guid accountId, Guid gameId)

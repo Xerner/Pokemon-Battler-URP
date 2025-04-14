@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Options;
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using AutoChess.Contracts.Interfaces;
@@ -26,14 +25,14 @@ namespace AutoChess.Client.SignalR
             return await Hub.Connection.InvokeAsync<bool>(nameof(AddToGame), accountId, gameId);
         }
 
-        public async Task<BuyExperienceDTO?> BuyExperience(Guid accountId, Guid gameId)
+        public async Task<BuyExperienceDTO> BuyExperience(Guid accountId, Guid gameId)
         {
             return await Hub.Connection.InvokeAsync<BuyExperienceDTO>(nameof(BuyExperience), accountId, gameId);
         }
 
-        public async Task<Game?> CreateGameAsync(Guid accountId)
+        public async Task<Game> CreateGameAsync(Guid accountId)
         {
-            return await Hub.Connection.InvokeAsync<Game?>(nameof(CreateGameAsync), accountId);
+            return await Hub.Connection.InvokeAsync<Game>(nameof(CreateGameAsync), accountId);
         }
 
         public async Task<IEnumerable<int>> GetTierChances(int playerLevel)
@@ -46,19 +45,19 @@ namespace AutoChess.Client.SignalR
             return await Hub.Connection.InvokeAsync<string>(nameof(Ping), "Pong");
         }
 
-        public Task<RefreshShopDTO?> RefreshShop(Guid accountId, Guid gameId)
+        public async Task<RefreshShopDTO> RefreshShop(Guid accountId, Guid gameId)
         {
-            return await Hub.Connection.InvokeAsync<RefreshShopDTO?>(nameof(RefreshShop), accountId, gameId);
+            return await Hub.Connection.InvokeAsync<RefreshShopDTO>(nameof(RefreshShop), accountId, gameId);
         }
 
-        public Task TryToBuyUnit(Guid accountId, Guid gameId, Guid unitId)
+        public async Task<bool> TryToBuyUnit(Guid accountId, Guid gameId, Guid unitId)
         {
-            return await Hub.Connection.InvokeAsync<string>(nameof(TryToBuyUnit), "Pong");
+            return await Hub.Connection.InvokeAsync<bool>(nameof(TryToBuyUnit), gameId, unitId);
         }
 
-        public Task<bool> UpdateTrainerReady(Guid accountId, Guid gameId, bool isReady)
+        public async Task<bool> UpdateTrainerReady(Guid accountId, Guid gameId, bool isReady)
         {
-            return await Hub.Connection.InvokeAsync<string>(nameof(Ping), "Pong");
+            return await Hub.Connection.InvokeAsync<bool>(nameof(UpdateTrainerReady), accountId, gameId, isReady);
         }
     }
 }
